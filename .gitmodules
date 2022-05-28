@@ -16,3 +16,6 @@
 [submodule "lib/gwei-slim-erc721"]
 	path = lib/gwei-slim-erc721
 	url = https://github.com/iainnash/gwei-slim-erc721
+[submodule "lib/zora-drops-contracts"]
+	path = lib/zora-drops-contracts
+	url = https://github.com/ourzora/zora-drops-contracts
