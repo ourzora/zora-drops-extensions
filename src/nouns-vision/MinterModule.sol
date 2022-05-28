@@ -3,7 +3,6 @@ pragma solidity ^0.8.10;
 
 import {ERC721DropMinterInterface} from "./ERC721DropMinterInterface.sol";
 import {ERC721OwnerInterface} from "./ERC721OwnerInterface.sol";
-// import {ERC721Drop} from "zora-drops-contracts/src/ERC721Drop.sol";
 
 /// @notice Exchanges one drop for another through burn mechanism
 contract ExchangeMinterModule {
@@ -34,6 +33,7 @@ contract ExchangeMinterModule {
                 source.burn(targetId);
             }
             uint256 resultChunk = sink.adminMint(msg.sender, targetLength);
+
             emit ExchangedTokens({
                 sender: msg.sender,
                 resultChunk: resultChunk,
