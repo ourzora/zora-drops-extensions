@@ -38,8 +38,8 @@ contract ExchangeMinterModule is IMetadataRenderer, MetadataRenderAdminCheck {
 
     string description;
 
-    mapping(string => ColorInfo) internal colors;
-    mapping(uint256 => string) idToColor;
+    mapping(string => ColorInfo) public colors;
+    mapping(uint256 => string) public idToColor;
 
     constructor(
         ERC721Drop _source,
@@ -90,34 +90,33 @@ contract ExchangeMinterModule is IMetadataRenderer, MetadataRenderAdminCheck {
     {
         require(
             source.isApprovedForAll(msg.sender, address(this)),
-            "exchange module is not approved to manage tokens"
+            "Exchange module is not approved to manage tokens"
         );
         uint128 targetLength = uint128(fromIds.length);
         require(
             colors[color].claimedCount + targetLength <= colors[color].maxCount,
-            "ran out of color"
+            "Ran out of color"
         );
         colors[color].claimedCount += targetLength;
 
+        uint256 totalSupply = sink.totalSupply();
+
+        uint256 resultChunk = sink.adminMint(msg.sender, targetLength);
         for (uint256 i = 0; i < targetLength; ) {
-            if (source.ownerOf(fromIds[i]) == msg.sender) {
-                uint256 targetId = fromIds[i];
-                source.burn(targetId);
-            }
-            uint256 resultChunk = sink.adminMint(msg.sender, targetLength);
-
-            idToColor[resultChunk] = color;
-
-            emit ExchangedTokens({
-                sender: msg.sender,
-                resultChunk: resultChunk,
-                targetLength: targetLength,
-                fromIds: fromIds
-            });
+            // TODO(iain): Should we check that the minter user is the owner of these tokens?
+            source.burn(fromIds[i]);
             unchecked {
+                idToColor[resultChunk - i] = color;
                 ++i;
             }
         }
+
+        emit ExchangedTokens({
+            sender: msg.sender,
+            resultChunk: resultChunk,
+            targetLength: targetLength,
+            fromIds: fromIds
+        });
     }
 
     function tokenURI(uint256 tokenId) external view returns (string memory) {
