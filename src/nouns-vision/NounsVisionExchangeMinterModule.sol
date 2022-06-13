@@ -3,13 +3,14 @@ pragma solidity ^0.8.10;
 
 // import {ERC721DropMinterInterface} from "./ERC721DropMinterInterface.sol";
 // import {ERC721OwnerInterface} from "./ERC721OwnerInterface.sol";
+import {IERC721Drop} from "zora-drops-contracts/interfaces/IERC721Drop.sol";
 import {ERC721Drop} from "zora-drops-contracts/ERC721Drop.sol";
 import {IMetadataRenderer} from "zora-drops-contracts/interfaces/IMetadataRenderer.sol";
 import {MetadataRenderAdminCheck} from "zora-drops-contracts/metadata/MetadataRenderAdminCheck.sol";
 import {SharedNFTLogic} from "zora-drops-contracts/utils/SharedNFTLogic.sol";
 
 /// @notice Exchanges one drop for another through burn mechanism
-contract ExchangeMinterModule is IMetadataRenderer, MetadataRenderAdminCheck {
+contract NounsVisionExchangeMinterModule is IMetadataRenderer, MetadataRenderAdminCheck {
     struct ColorInfo {
         uint128 claimedCount;
         uint128 maxCount;
@@ -33,7 +34,7 @@ contract ExchangeMinterModule is IMetadataRenderer, MetadataRenderAdminCheck {
     event UpdatedDescription(string newDescription);
 
     ERC721Drop public immutable source;
-    ERC721Drop public immutable sink;
+    ERC721Drop public sink;
     SharedNFTLogic private immutable sharedNFTLogic;
 
     string description;
@@ -42,12 +43,10 @@ contract ExchangeMinterModule is IMetadataRenderer, MetadataRenderAdminCheck {
     mapping(uint256 => string) public idToColor;
 
     constructor(
-        ERC721Drop _source,
-        ERC721Drop _sink,
+        IERC721Drop _source,
         SharedNFTLogic _sharedNFTLogic
     ) {
-        source = _source;
-        sink = _sink;
+        source = ERC721Drop(payable(address(_source)));
         sharedNFTLogic = _sharedNFTLogic;
     }
 
@@ -58,7 +57,12 @@ contract ExchangeMinterModule is IMetadataRenderer, MetadataRenderAdminCheck {
         emit UpdatedDescription(newDescription);
     }
 
-    function initializeWithData(bytes memory initData) external {}
+    // This is called along with the create callcode in the deployer contract as one
+    // function call allowing the init to be a public function since it's within one transaction.
+    function initializeWithData(bytes memory) external {
+        require(address(sink) == address(0x0), "Can only be initialized once");
+        sink = ERC721Drop(payable(msg.sender));
+    }
 
     function setColorLimits(ColorSetting[] calldata colorSettings)
         external
@@ -69,7 +73,7 @@ contract ExchangeMinterModule is IMetadataRenderer, MetadataRenderAdminCheck {
             string memory color = colorSettings[i].color;
             require(
                 colors[color].claimedCount <= colorSettings[i].maxCount,
-                "Cant decrease beyond claimed"
+                "Cannot decrease beyond claimed"
             );
             maxCountCache -= colors[color].maxCount;
             maxCountCache += colorSettings[i].maxCount;
@@ -99,11 +103,10 @@ contract ExchangeMinterModule is IMetadataRenderer, MetadataRenderAdminCheck {
         );
         colors[color].claimedCount += targetLength;
 
-        uint256 totalSupply = sink.totalSupply();
-
         uint256 resultChunk = sink.adminMint(msg.sender, targetLength);
         for (uint256 i = 0; i < targetLength; ) {
-            // TODO(iain): Should we check that the minter user is the owner of these tokens?
+            // If the user (account) is able to burn then they also are able to exchange.
+            // If they are not allowed, the burn call will fail.
             source.burn(fromIds[i]);
             unchecked {
                 idToColor[resultChunk - i] = color;
@@ -127,9 +130,9 @@ contract ExchangeMinterModule is IMetadataRenderer, MetadataRenderAdminCheck {
             sharedNFTLogic.createMetadataEdition({
                 name: string(abi.encodePacked(sink.name(), " ", color)),
                 description: description,
-                imageUrl: string(abi.encodePacked(colorInfo.baseUri, "/image")),
+                imageUrl: string(abi.encodePacked(colorInfo.baseUri, ".png")),
                 animationUrl: string(
-                    abi.encodePacked(colorInfo.baseUri, "/animation")
+                    abi.encodePacked(colorInfo.baseUri, ".mov")
                 ),
                 tokenOfEdition: tokenId,
                 editionSize: maxCount
