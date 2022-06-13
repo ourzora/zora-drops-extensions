@@ -112,11 +112,16 @@ contract DistributedGraphicsEdition is
         ) = abi.decode(data, (string, string, string, uint256, bool));
 
         require(bytes(imageURIBase).length > 0, "imageURIBase is required");
-        require(numberVariations > 0, "Number variations needs to be at least 1");
+        require(
+            numberVariations > 0,
+            "Number variations needs to be at least 1"
+        );
 
         bytes32 randomSeed;
         if (assignRandomish) {
-          randomSeed = keccak256(abi.encodePacked(blockhash(block.number - 1), msg.sender));
+            randomSeed = keccak256(
+                abi.encodePacked(blockhash(block.number - 1), msg.sender)
+            );
         }
 
         tokenInfos[msg.sender] = TokenEditionInfo({
@@ -187,19 +192,34 @@ contract DistributedGraphicsEdition is
 
         uint256 choice;
         if (info.randomSeed != bytes32(0x0)) {
-          unchecked {
-            choice = (uint256(info.randomSeed) / 1000 * tokenId % info.numberVariations) + 1;
-          }
+            unchecked {
+                choice =
+                    (((uint256(info.randomSeed) / 1000) * tokenId) %
+                        info.numberVariations) +
+                    1;
+            }
         } else {
-          choice = (tokenId % info.numberVariations) + 1;
+            choice = (tokenId % info.numberVariations) + 1;
         }
 
         return
             sharedNFTLogic.createMetadataEdition({
                 name: IERC721MetadataUpgradeable(target).name(),
                 description: info.description,
-                imageUrl: string(abi.encodePacked(info.imageURIBase, tokenId % info.numberVariations)),
-                animationUrl: bytes(info.animationURIBase).length == 0 ? "" : string(abi.encodePacked(info.animationURIBase, tokenId % info.numberVariations)),
+                imageUrl: string(
+                    abi.encodePacked(
+                        info.imageURIBase,
+                        tokenId % info.numberVariations
+                    )
+                ),
+                animationUrl: bytes(info.animationURIBase).length == 0
+                    ? ""
+                    : string(
+                        abi.encodePacked(
+                            info.animationURIBase,
+                            tokenId % info.numberVariations
+                        )
+                    ),
                 tokenOfEdition: tokenId,
                 editionSize: maxSupply
             });
