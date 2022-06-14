@@ -8,6 +8,10 @@ import {NounsVisionExchangeMinterModule} from "./NounsVisionExchangeMinterModule
 
 contract NounsVisionExchangeDeployer {
     constructor(
+        string memory name,
+        string memory symbol,
+        uint64 editionSize,
+        uint16 royaltyBPS,
         address payable admin,
         address creator,
         SharedNFTLogic sharedNFTLogic,
@@ -18,13 +22,13 @@ contract NounsVisionExchangeDeployer {
                 sharedNFTLogic
             );
         ZoraNFTCreatorV1(creator).setupDropsContract(
-            "Nouns Vision Exchanged",
-            "NOUNSVISIONREDEEMED",
+            name,
+            symbol,
             admin,
             // edition size
-            7000,
+            editionSize,
             // royalty bps
-            1000,
+            royaltyBPS,
             admin,
             IERC721Drop.SalesConfiguration({
                 publicSaleStart: 0,
