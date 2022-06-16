@@ -10,7 +10,10 @@ import {MetadataRenderAdminCheck} from "zora-drops-contracts/metadata/MetadataRe
 import {SharedNFTLogic} from "zora-drops-contracts/utils/SharedNFTLogic.sol";
 
 /// @notice Exchanges one drop for another through burn mechanism
-contract NounsVisionExchangeMinterModule is IMetadataRenderer, MetadataRenderAdminCheck {
+contract NounsVisionExchangeMinterModule is
+    IMetadataRenderer,
+    MetadataRenderAdminCheck
+{
     struct ColorInfo {
         uint128 claimedCount;
         uint128 maxCount;
@@ -42,17 +45,18 @@ contract NounsVisionExchangeMinterModule is IMetadataRenderer, MetadataRenderAdm
     mapping(string => ColorInfo) public colors;
     mapping(uint256 => string) public idToColor;
 
-    constructor(
-        IERC721Drop _source,
-        SharedNFTLogic _sharedNFTLogic
-    ) {
+    constructor(IERC721Drop _source, SharedNFTLogic _sharedNFTLogic, string memory _description) {
         source = ERC721Drop(payable(address(_source)));
         sharedNFTLogic = _sharedNFTLogic;
+        description = _description;
     }
 
     uint128 public maxCount;
 
-    function setDescription(string memory newDescription) public {
+    function setDescription(string memory newDescription)
+        public
+        requireSenderAdmin(address(source))
+    {
         description = newDescription;
         emit UpdatedDescription(newDescription);
     }

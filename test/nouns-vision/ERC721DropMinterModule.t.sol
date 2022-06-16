@@ -64,7 +64,8 @@ contract ERC721DropMinterModuleTest is DSTest {
         );
         NounsVisionExchangeMinterModule exchangeModule = new NounsVisionExchangeMinterModule(
                 source,
-                sharedLogic
+                sharedLogic,
+                "test description"
             );
         ERC721Drop sink = ERC721Drop(
             payable(

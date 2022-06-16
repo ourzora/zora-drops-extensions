@@ -46,6 +46,7 @@ contract ERC721DropMinterModuleTest is DSTest {
                             ERC721Drop.initialize.selector,
                             "Source NFT",
                             "SRC",
+                            "TSTZ",
                             OWNER_ADDRESS,
                             address(0x0),
                             10,
@@ -69,6 +70,7 @@ contract ERC721DropMinterModuleTest is DSTest {
         NounsVisionExchangeDeployer deployer = new NounsVisionExchangeDeployer(
             "DROP TARGET",
             "DRPTG",
+            "TARG",
             100,
             1000,
             payable(0x9444390c01Dd5b7249E53FAc31290F7dFF53450D),

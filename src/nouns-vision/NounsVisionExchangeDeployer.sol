@@ -10,6 +10,7 @@ contract NounsVisionExchangeDeployer {
     constructor(
         string memory name,
         string memory symbol,
+        string memory description,
         uint64 editionSize,
         uint16 royaltyBPS,
         address payable admin,
@@ -19,7 +20,8 @@ contract NounsVisionExchangeDeployer {
     ) {
         NounsVisionExchangeMinterModule exchangeModule = new NounsVisionExchangeMinterModule(
                 IERC721Drop(sourceContract),
-                sharedNFTLogic
+                sharedNFTLogic,
+                description
             );
         ZoraNFTCreatorV1(creator).setupDropsContract(
             name,
