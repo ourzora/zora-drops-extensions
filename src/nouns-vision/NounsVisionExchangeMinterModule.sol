@@ -17,13 +17,15 @@ contract NounsVisionExchangeMinterModule is
     struct ColorInfo {
         uint128 claimedCount;
         uint128 maxCount;
-        string baseUri;
+        string animationURI;
+        string imageURI;
     }
 
     struct ColorSetting {
         string color;
         uint128 maxCount;
-        string baseUri;
+        string animationURI;
+        string imageURI;
     }
 
     event ExchangedTokens(
@@ -41,11 +43,16 @@ contract NounsVisionExchangeMinterModule is
     SharedNFTLogic private immutable sharedNFTLogic;
 
     string description;
+    string public contractURI;
 
     mapping(string => ColorInfo) public colors;
     mapping(uint256 => string) public idToColor;
 
-    constructor(IERC721Drop _source, SharedNFTLogic _sharedNFTLogic, string memory _description) {
+    constructor(
+        IERC721Drop _source,
+        SharedNFTLogic _sharedNFTLogic,
+        string memory _description
+    ) {
         source = ERC721Drop(payable(address(_source)));
         sharedNFTLogic = _sharedNFTLogic;
         description = _description;
@@ -59,6 +66,13 @@ contract NounsVisionExchangeMinterModule is
     {
         description = newDescription;
         emit UpdatedDescription(newDescription);
+    }
+
+    function setContractURI(string memory newContractURI)
+        public
+        requireSenderAdmin(address(source))
+    {
+        contractURI = newContractURI;
     }
 
     // This is called along with the create callcode in the deployer contract as one
@@ -82,7 +96,8 @@ contract NounsVisionExchangeMinterModule is
             maxCountCache -= colors[color].maxCount;
             maxCountCache += colorSettings[i].maxCount;
             colors[color].maxCount = colorSettings[i].maxCount;
-            colors[color].baseUri = colorSettings[i].baseUri;
+            colors[color].animationURI = colorSettings[i].animationURI;
+            colors[color].imageURI = colorSettings[i].imageURI;
 
             emit UpdatedColor(color, colorSettings[i]);
 
@@ -134,16 +149,10 @@ contract NounsVisionExchangeMinterModule is
             sharedNFTLogic.createMetadataEdition({
                 name: string(abi.encodePacked(sink.name(), " ", color)),
                 description: description,
-                imageUrl: string(abi.encodePacked(colorInfo.baseUri, ".png")),
-                animationUrl: string(
-                    abi.encodePacked(colorInfo.baseUri, ".mov")
-                ),
+                imageUrl: colorInfo.imageURI,
+                animationUrl: colorInfo.animationURI,
                 tokenOfEdition: tokenId,
                 editionSize: maxCount
             });
-    }
-
-    function contractURI() external pure returns (string memory) {
-        return "";
     }
 }

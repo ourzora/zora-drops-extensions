@@ -104,10 +104,12 @@ contract ERC721DropMinterModuleTest is DSTest {
                 2
             );
         settings[0].color = "Blue";
-        settings[0].baseUri = "https://example.com/base/black";
+        settings[0].imageURI = "https://example.com/base/black";
+        settings[0].animationURI = "https://example.com/base/black";
         settings[0].maxCount = 2;
         settings[1].color = "Red";
-        settings[1].baseUri = "https://example.com/base/red";
+        settings[1].imageURI = "https://example.com/base/red";
+        settings[1].animationURI = "https://example.com/base/red";
         settings[1].maxCount = 2;
         exchangeModule.setColorLimits(settings);
 
