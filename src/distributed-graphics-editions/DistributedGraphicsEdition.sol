@@ -209,7 +209,7 @@ contract DistributedGraphicsEdition is
                 imageUrl: string(
                     abi.encodePacked(
                         info.imageURIBase,
-                        tokenId % info.numberVariations
+                        sharedNFTLogic.numberToString(tokenId % info.numberVariations)
                     )
                 ),
                 animationUrl: bytes(info.animationURIBase).length == 0
@@ -217,7 +217,7 @@ contract DistributedGraphicsEdition is
                     : string(
                         abi.encodePacked(
                             info.animationURIBase,
-                            tokenId % info.numberVariations
+                            sharedNFTLogic.numberToString(tokenId % info.numberVariations)
                         )
                     ),
                 tokenOfEdition: tokenId,
