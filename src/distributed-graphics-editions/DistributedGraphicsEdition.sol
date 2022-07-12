@@ -150,7 +150,7 @@ contract DistributedGraphicsEdition is
             imageSpace = abi.encodePacked(
                 '", "image": "',
                 tokenInfos[target].imageURIBase,
-                "/0"
+                "0"
             );
         }
         return
@@ -191,15 +191,15 @@ contract DistributedGraphicsEdition is
         }
 
         uint256 choice;
-        if (info.randomSeed != bytes32(0x0)) {
-            unchecked {
+        unchecked {
+            if (info.randomSeed != bytes32(0x0)) {
                 choice =
-                    (((uint256(info.randomSeed) / 1000) * tokenId) %
+                    (((uint256(info.randomSeed) / 1000) * (tokenId + 3)) %
                         info.numberVariations) +
                     1;
+            } else {
+                choice = (tokenId - (1 % info.numberVariations)) + 1;
             }
-        } else {
-            choice = (tokenId % info.numberVariations) + 1;
         }
 
         return
@@ -209,7 +209,7 @@ contract DistributedGraphicsEdition is
                 imageUrl: string(
                     abi.encodePacked(
                         info.imageURIBase,
-                        sharedNFTLogic.numberToString(tokenId % info.numberVariations)
+                        sharedNFTLogic.numberToString(choice)
                     )
                 ),
                 animationUrl: bytes(info.animationURIBase).length == 0
@@ -217,7 +217,7 @@ contract DistributedGraphicsEdition is
                     : string(
                         abi.encodePacked(
                             info.animationURIBase,
-                            sharedNFTLogic.numberToString(tokenId % info.numberVariations)
+                            sharedNFTLogic.numberToString(choice)
                         )
                     ),
                 tokenOfEdition: tokenId,

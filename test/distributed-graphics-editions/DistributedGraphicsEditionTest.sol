@@ -96,11 +96,37 @@ contract ERC721DropMinterModuleTest is DSTest {
         );
         assertEq(
             drop.tokenURI(3),
-            "data:application/json;base64,eyJuYW1lIjogIlNvdXJjZSBORlQgMy8xMCIsICJkZXNjcmlwdGlvbiI6ICJUZXN0aW5nIERlc2NyaXB0aW9uIiwgImltYWdlIjogImh0dHBzOi8vdmlkZW9zLmV4YW1wbGUvMD9pZD0zIiwgImFuaW1hdGlvbl91cmwiOiAiaHR0cHM6Ly9pbWFnZXMuZXhhbXBsZS8wP2lkPTMiLCAicHJvcGVydGllcyI6IHsibnVtYmVyIjogMywgIm5hbWUiOiAiU291cmNlIE5GVCJ9fQ=="
+            "data:application/json;base64,eyJuYW1lIjogIlNvdXJjZSBORlQgMy8xMCIsICJkZXNjcmlwdGlvbiI6ICJUZXN0aW5nIERlc2NyaXB0aW9uIiwgImltYWdlIjogImh0dHBzOi8vdmlkZW9zLmV4YW1wbGUvMz9pZD0zIiwgImFuaW1hdGlvbl91cmwiOiAiaHR0cHM6Ly9pbWFnZXMuZXhhbXBsZS8zP2lkPTMiLCAicHJvcGVydGllcyI6IHsibnVtYmVyIjogMywgIm5hbWUiOiAiU291cmNlIE5GVCJ9fQ=="
         );
         assertEq(
             drop.tokenURI(4),
-            "data:application/json;base64,eyJuYW1lIjogIlNvdXJjZSBORlQgNC8xMCIsICJkZXNjcmlwdGlvbiI6ICJUZXN0aW5nIERlc2NyaXB0aW9uIiwgImltYWdlIjogImh0dHBzOi8vdmlkZW9zLmV4YW1wbGUvMT9pZD00IiwgImFuaW1hdGlvbl91cmwiOiAiaHR0cHM6Ly9pbWFnZXMuZXhhbXBsZS8xP2lkPTQiLCAicHJvcGVydGllcyI6IHsibnVtYmVyIjogNCwgIm5hbWUiOiAiU291cmNlIE5GVCJ9fQ=="
+            "data:application/json;base64,eyJuYW1lIjogIlNvdXJjZSBORlQgNC8xMCIsICJkZXNjcmlwdGlvbiI6ICJUZXN0aW5nIERlc2NyaXB0aW9uIiwgImltYWdlIjogImh0dHBzOi8vdmlkZW9zLmV4YW1wbGUvND9pZD00IiwgImFuaW1hdGlvbl91cmwiOiAiaHR0cHM6Ly9pbWFnZXMuZXhhbXBsZS80P2lkPTQiLCAicHJvcGVydGllcyI6IHsibnVtYmVyIjogNCwgIm5hbWUiOiAiU291cmNlIE5GVCJ9fQ=="
+        );
+    }
+
+    function testForDropRandomThree()
+        public
+        withDrop(
+            20,
+            abi.encode(
+                "Testing Description",
+                "https://videos.example/",
+                "https://images.example/",
+                3,
+                true
+            )
+        )
+    {
+        vm.startPrank(OWNER_ADDRESS);
+        drop.adminMint(RECIPIENT_ADDRESS, 10);
+        drop.tokenURI(1);
+        drop.tokenURI(2);
+        drop.tokenURI(3);
+        drop.tokenURI(4);
+        drop.tokenURI(5);
+        assertEq(
+            drop.tokenURI(4),
+            ""
         );
     }
 }
