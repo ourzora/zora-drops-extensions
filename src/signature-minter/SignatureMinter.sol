@@ -37,6 +37,7 @@ contract SignatureMinter is EIP712 {
     function mintWithSignature(
         address target,
         address signer,
+        address to,
         uint256 totalPrice,
         uint256 quantity,
         uint256 nonce,
@@ -54,11 +55,13 @@ contract SignatureMinter is EIP712 {
         }
         usedNonces[signer][nonce] = true;
 
-        address from = msg.sender;
+        if (to != address(0) && to != msg.sender) {
+            revert WrongRecipient();
+        }
 
         if (
             !SignatureChecker.isValidSignatureNow(
-                from,
+                signer,
                 _hashTypedDataV4(
                     keccak256(
                         abi.encode(
@@ -78,7 +81,6 @@ contract SignatureMinter is EIP712 {
             revert InvalidSignature();
         }
         if (
-            !ERC721DropSignatureInterface(target).isAdmin(signer) ||
             !ERC721DropSignatureInterface(target).hasRole(signer, MINTER_ROLE)
         ) {
             revert SignerNotAuthorized();
@@ -86,6 +88,8 @@ contract SignatureMinter is EIP712 {
         try
             ERC721DropSignatureInterface(target).adminMint(msg.sender, quantity)
         {
+            metadata.setHashForToken(tokenId);
+            
             if (msg.value > 0) {
                 // Send value to root contract
                 (bool success, ) = payable(target).call{value: msg.value}("");

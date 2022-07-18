@@ -2,17 +2,25 @@
 pragma solidity ^0.8.10;
 
 import {ERC721DropMinterInterface} from "./ERC721DropMinterInterface.sol";
+import {IERC721} from "@openzeppelin/contracts/interfaces/IERC721.sol";
 import {MetadataRenderAdminCheck} from "zora-drops-contracts/metadata/MetadataRenderAdminCheck.sol";
 
 contract ZorbMinter is MetadataRenderAdminCheck {
     error AlreadyMintedZorbId(uint256);
     error MintedBeyondLimit();
+    error DoesNotOwnZorb(address minter, uint256 zorbId);
 
     event UpdatedMintLimit(address, uint256);
 
     mapping(address => mapping(address => uint256)) zorbsMintedByContractPerUser;
     mapping(address => mapping(uint256 => bool)) zorbIdMintedByContract;
     mapping(address => uint256) mintLimitOverride;
+
+    address internal immutable zorbContract;
+
+    constructor(address _zorbContract) {
+        zorbContract = _zorbContract;
+    }
 
     function mintWithZorbs(address target, uint256[] calldata zorbIds)
         external
@@ -33,6 +41,9 @@ contract ZorbMinter is MetadataRenderAdminCheck {
             uint256 zorbId = zorbIds[i];
             if (zorbIdMintedByContract[target][zorbId]) {
                 revert AlreadyMintedZorbId(zorbId);
+            }
+            if (IERC721(zorbContract).ownerOf(zorbId) != msg.sender) {
+                revert DoesNotOwnZorb(msg.sender, zorbId);
             }
             zorbIdMintedByContract[target][zorbId] = true;
         }

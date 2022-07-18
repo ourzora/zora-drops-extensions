@@ -1,6 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
+/**
+ @@@@@@@@@@@@@@@@@@@   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*              @@@@@@   
+ @@@@@@@@@@@@@@@@@@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*           @@@@@@@@@   
+         @@@@@@@   @@@@@@@        @@@@@@@        @@@@@         @@@@@@@@@@@   
+       @@@@@@@    @@@@@@            @@@@@@     @@@@@@@      @@@@@@@@*@@@@@   
+    @@@@@@*       @@@@@              @@@@@   @@@@@@@      @@@@@@@    @@@@@   
+ @@@@@@@*         @@@@@@            @@@@@@  @@@@@@     @@@@@@@@      @@@@@   
+ @@@@@@*           @@@@@@@        @@@@@@@    @@@@@@@ @@@@@@@         @@@@@   
+  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       @@@@@@@@@@@           @@@@@   
+   *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@           @@@@@@**            @@@@@ 
+ */
+
 import {IMetadataRenderer} from "zora-drops-contracts/interfaces/IMetadataRenderer.sol";
 import {IERC721Drop} from "zora-drops-contracts/interfaces/IERC721Drop.sol";
 import {IERC721MetadataUpgradeable} from "zora-drops-contracts/../lib/openzeppelin-contracts-upgradeable/contracts/interfaces/IERC721MetadataUpgradeable.sol";
@@ -8,6 +20,7 @@ import {SharedNFTLogic} from "zora-drops-contracts/utils/SharedNFTLogic.sol";
 import {MetadataRenderAdminCheck} from "zora-drops-contracts/metadata/MetadataRenderAdminCheck.sol";
 
 /// @notice DistributedGraphicsEdition for editions support with shuffled graphics for more visual interest
+/// @author Iain <iain@zora.co>
 contract DistributedGraphicsEdition is
     IMetadataRenderer,
     MetadataRenderAdminCheck
