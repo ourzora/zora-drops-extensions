@@ -13,6 +13,7 @@ contract SignatureMinter is EIP712 {
     error MintingError();
     error InvalidSignature();
     error ErrorTransferringFunds();
+    error WrongRecipient();
 
     event MintedFromSignature(
         address target,
@@ -24,14 +25,41 @@ contract SignatureMinter is EIP712 {
     /// @notice Used to keep track of previously used nonces
     mapping(address => mapping(uint256 => bool)) usedNonces;
 
+    struct Mint {
+        address target;
+        address from;
+        uint256 totalPrice;
+        uint256 quantity;
+        uint256 nonce;
+        uint256 deadline;
+    }
+
     bytes32 private immutable _MINT_TYPEHASH =
         keccak256(
             "Mint(address target,address from,uint256 totalPrice,uint256 quantity,uint256 nonce,uint256 deadline)"
         );
     bytes32 private immutable MINTER_ROLE = keccak256("MINTER");
 
-    constructor() EIP712("SignatureMinter", "1") {
+    constructor() EIP712("SignatureMinter", "1") {}
 
+    // TODO: I think we need the next two functions?
+    function getMintHash(Mint memory _mint) internal view returns (bytes32) {
+        return
+            keccak256(
+                abi.encode(
+                    _MINT_TYPEHASH,
+                    _mint.target,
+                    _mint.from,
+                    _mint.totalPrice,
+                    _mint.quantity,
+                    _mint.nonce,
+                    _mint.deadline
+                )
+            );
+    }
+
+    function getTypedDataHash(Mint memory _mint) public view returns (bytes32) {
+        return _hashTypedDataV4(getMintHash(_mint));
     }
 
     function mintWithSignature(
@@ -88,8 +116,8 @@ contract SignatureMinter is EIP712 {
         try
             ERC721DropSignatureInterface(target).adminMint(msg.sender, quantity)
         {
-            metadata.setHashForToken(tokenId);
-            
+            // metadata.setHashForToken(tokenId);
+
             if (msg.value > 0) {
                 // Send value to root contract
                 (bool success, ) = payable(target).call{value: msg.value}("");
