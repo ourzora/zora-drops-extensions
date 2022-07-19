@@ -78,15 +78,13 @@ contract SignatureMinter is EIP712 {
         if (usedNonces[signer][nonce]) {
             revert UsedNonceAlready();
         }
-        if (deadline > block.timestamp) {
+        if (block.timestamp > deadline) {
             revert DeadlinePassed();
         }
         usedNonces[signer][nonce] = true;
-
         if (to != address(0) && to != msg.sender) {
             revert WrongRecipient();
         }
-
         if (
             !SignatureChecker.isValidSignatureNow(
                 signer,
@@ -95,7 +93,7 @@ contract SignatureMinter is EIP712 {
                         abi.encode(
                             _MINT_TYPEHASH,
                             target,
-                            msg.sender,
+                            signer,
                             totalPrice,
                             quantity,
                             nonce,
@@ -113,11 +111,8 @@ contract SignatureMinter is EIP712 {
         ) {
             revert SignerNotAuthorized();
         }
-        try
-            ERC721DropSignatureInterface(target).adminMint(msg.sender, quantity)
-        {
+        try ERC721DropSignatureInterface(target).adminMint(to, quantity) {
             // metadata.setHashForToken(tokenId);
-
             if (msg.value > 0) {
                 // Send value to root contract
                 (bool success, ) = payable(target).call{value: msg.value}("");
