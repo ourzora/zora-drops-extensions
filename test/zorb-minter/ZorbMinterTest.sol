@@ -12,10 +12,7 @@ import {IZoraFeeManager} from "zora-drops-contracts/interfaces/IZoraFeeManager.s
 import {FactoryUpgradeGate} from "zora-drops-contracts/FactoryUpgradeGate.sol";
 
 import {ZorbMinter} from "../../src/zorb-minter/ZorbMinter.sol";
-
-contract MockRenderer {
-    function initializeWithData(bytes memory) external {}
-}
+import {MockRenderer} from "../utils/MockRenderer.sol";
 
 contract ZorbMinterTest is DSTest {
     address constant OWNER_ADDRESS = address(0x123);

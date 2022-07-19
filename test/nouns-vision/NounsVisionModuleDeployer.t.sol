@@ -14,10 +14,7 @@ import {IZoraFeeManager} from "zora-drops-contracts/interfaces/IZoraFeeManager.s
 import {IERC721Drop} from "zora-drops-contracts/interfaces/IERC721Drop.sol";
 import {FactoryUpgradeGate} from "zora-drops-contracts/FactoryUpgradeGate.sol";
 import {SharedNFTLogic} from "zora-drops-contracts/utils/SharedNFTLogic.sol";
-
-contract MockRenderer {
-    function initializeWithData(bytes memory) external {}
-}
+import {MockRenderer} from "../utils/MockRenderer.sol";
 
 contract ERC721DropMinterModuleTest is DSTest {
     address constant OWNER_ADDRESS = address(0x123);
