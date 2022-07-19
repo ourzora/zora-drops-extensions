@@ -95,8 +95,8 @@ contract SignatureMinterModuleTest is Test {
         SignatureMinter.Mint memory mint = SignatureMinter.Mint({
             target: address(drop),
             from: signer,
-            totalPrice: 1 ether,
             quantity: 1,
+            totalPrice: 1 ether,
             nonce: 0,
             deadline: 1 days
         });
@@ -116,8 +116,8 @@ contract SignatureMinterModuleTest is Test {
             mint.target, // target
             signer, // signer
             collector, // to
-            mint.totalPrice, // totalPrice
             mint.quantity, // quantity
+            mint.totalPrice, // totalPrice
             mint.nonce, // nonce
             mint.deadline, // deadline
             signature // signature
@@ -157,8 +157,8 @@ contract SignatureMinterModuleTest is Test {
             mint.target, // target
             signer, // signer
             collector, // to
-            mint.totalPrice, // totalPrice
             mint.quantity, // quantity
+            mint.totalPrice, // totalPrice
             mint.nonce, // nonce
             mint.deadline, // deadline
             signature // signature
@@ -194,8 +194,8 @@ contract SignatureMinterModuleTest is Test {
             mint.target, // target
             signer, // signer
             collector, // to
-            mint.totalPrice, // totalPrice
             mint.quantity, // quantity
+            mint.totalPrice, // totalPrice
             mint.nonce, // nonce
             mint.deadline, // deadline
             signature // signature
@@ -231,8 +231,8 @@ contract SignatureMinterModuleTest is Test {
             mint.target, // target
             signer, // signer
             whoDat, // to
-            mint.totalPrice, // totalPrice
             mint.quantity, // quantity
+            mint.totalPrice, // totalPrice
             mint.nonce, // nonce
             mint.deadline, // deadline
             signature // signature
@@ -267,8 +267,8 @@ contract SignatureMinterModuleTest is Test {
             mint.target, // target
             signer, // signer
             collector, // to
-            mint.totalPrice, // totalPrice
             mint.quantity, // quantity
+            mint.totalPrice, // totalPrice
             mint.nonce, // nonce
             mint.deadline, // deadline
             signature // signature
@@ -286,8 +286,8 @@ contract SignatureMinterModuleTest is Test {
             mint.target, // target
             signer, // signer
             collector, // to
-            mint.totalPrice, // totalPrice
             100, // quantity
+            mint.totalPrice, // totalPrice
             mint.nonce, // nonce
             mint.deadline, // deadline
             signature // signature
@@ -325,8 +325,8 @@ contract SignatureMinterModuleTest is Test {
             mint.target, // target
             signer, // signer
             collector, // to
-            mint.totalPrice, // totalPrice
             mint.quantity, // quantity
+            mint.totalPrice, // totalPrice
             mint.nonce, // nonce
             mint.deadline, // deadline
             signature // signature
@@ -347,7 +347,8 @@ contract SignatureMinterModuleTest is Test {
 
     event MintedFromSignature(
         address target,
-        address sender,
+        address signer,
+        address to,
         uint256 quantity,
         uint256 totalPrice
     );
@@ -356,7 +357,7 @@ contract SignatureMinterModuleTest is Test {
         vm.startPrank(collector);
 
         vm.expectEmit(true, true, false, true);
-        emit MintedFromSignature(address(drop), collector, 1, 1);
+        emit MintedFromSignature(address(drop), signer, collector, 1, 1);
     }
 
     function test_transfersFunds() public withDrop("") {
