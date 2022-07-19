@@ -44,7 +44,7 @@ contract SignatureMinter is EIP712 {
     );
 
     /// @notice Used to keep track of previously used nonces
-    mapping(address => mapping(uint256 => bool)) usedNonces;
+    mapping(address => mapping(uint256 => bool)) public usedNonces;
 
     struct Mint {
         address target;
