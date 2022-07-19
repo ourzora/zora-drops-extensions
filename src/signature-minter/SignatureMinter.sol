@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
-import {ERC721DropSignatureInterface} from "./ERC721DropSignatureInterface.sol";
-import {SignatureChecker} from "@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol";
 import {EIP712} from "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
+import {SignatureChecker} from "@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol";
+
+import {ERC721DropSignatureInterface} from "./ERC721DropSignatureInterface.sol";
 
 /**
  * @title SignatureMinterModule
@@ -28,8 +29,7 @@ contract SignatureMinter is EIP712 {
     error ErrorTransferringFunds();
     error WrongRecipient();
 
-    /// @notice hell yeah, it worked lfg!!!
-    /// @dev Emitted upon a successful mint
+    /// @notice Emitted upon a successful mint
     /// @param target implements IERC721Drop.adminMint
     /// @param signer signature-signer, e.g. your API server
     /// @param to     receiver of the token

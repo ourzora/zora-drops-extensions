@@ -30,13 +30,13 @@ contract SignatureMinterModuleTest is Test {
     SignatureMinter minter;
 
     function setUp() public {
-        ownerPrivateKey = 0x420420;
+        ownerPrivateKey = 0x111;
         owner = vm.addr(ownerPrivateKey);
 
-        signerPrivateKey = 0x42069420;
+        signerPrivateKey = 0x333;
         signer = vm.addr(signerPrivateKey);
 
-        collectorPrivateKey = 0x696969;
+        collectorPrivateKey = 0x888;
         collector = vm.addr(collectorPrivateKey);
 
         vm.deal(collector, 1 ether);
@@ -205,7 +205,7 @@ contract SignatureMinterModuleTest is Test {
     }
 
     function test_withWrongRecepient() public withDrop("") {
-        address whoDat = address(0x42069);
+        address rando = address(0x999);
 
         SignatureMinter.Mint memory mint = SignatureMinter.Mint({
             target: address(drop),
@@ -230,7 +230,7 @@ contract SignatureMinterModuleTest is Test {
         minter.mintWithSignature{value: mint.totalPrice}(
             mint.target, // target
             signer, // signer
-            whoDat, // to
+            rando, // to
             mint.quantity, // quantity
             mint.totalPrice, // totalPrice
             mint.nonce, // nonce
