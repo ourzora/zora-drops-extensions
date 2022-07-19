@@ -6,7 +6,7 @@ interface ERC721DropSignatureInterface {
         external
         returns (uint256);
 
-    function hasRole(address, bytes32) external returns (bool);
+    function hasRole(bytes32, address) external returns (bool);
 
     function isAdmin(address) external returns (bool);
 }

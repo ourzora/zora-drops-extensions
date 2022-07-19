@@ -47,8 +47,6 @@ contract SignatureMinterModuleTest is Test {
     }
 
     modifier withDrop(bytes memory init) {
-        vm.startPrank(owner);
-
         MockRenderer mockRenderer = new MockRenderer();
 
         drop = ERC721Drop(
@@ -81,9 +79,12 @@ contract SignatureMinterModuleTest is Test {
             )
         );
 
-        minter = new SignatureMinter();
+        minter = new SignatureMinter("1");
 
+        vm.startPrank(owner);
         drop.grantRole(drop.MINTER_ROLE(), signer);
+        drop.grantRole(drop.MINTER_ROLE(), address(minter));
+
         vm.stopPrank();
 
         _;
@@ -92,7 +93,7 @@ contract SignatureMinterModuleTest is Test {
     function test_withWrongPrice() public withDrop("") {
         SignatureMinter.Mint memory mint = SignatureMinter.Mint({
             target: address(drop),
-            from: signer,
+            signer: signer,
             quantity: 1,
             totalPrice: 1 ether,
             nonce: 0,
@@ -104,7 +105,7 @@ contract SignatureMinterModuleTest is Test {
             minter.getTypedDataHash(mint)
         );
 
-        bytes memory signature = abi.encode(v, r, s);
+        bytes memory signature = abi.encodePacked(r, s, v);
 
         vm.startPrank(collector);
 
@@ -133,9 +134,9 @@ contract SignatureMinterModuleTest is Test {
 
         SignatureMinter.Mint memory mint = SignatureMinter.Mint({
             target: address(drop),
-            from: signer,
-            totalPrice: 0 ether,
+            signer: signer,
             quantity: 1,
+            totalPrice: 0 ether,
             nonce: nonce,
             deadline: 1 days
         });
@@ -145,7 +146,7 @@ contract SignatureMinterModuleTest is Test {
             minter.getTypedDataHash(mint)
         );
 
-        bytes memory signature = abi.encode(v, r, s);
+        bytes memory signature = abi.encodePacked(r, s, v);
 
         vm.startPrank(collector);
 
@@ -168,9 +169,9 @@ contract SignatureMinterModuleTest is Test {
     function test_withPassedDeadline() public withDrop("") {
         SignatureMinter.Mint memory mint = SignatureMinter.Mint({
             target: address(drop),
-            from: signer,
-            totalPrice: 0 ether,
+            signer: signer,
             quantity: 1,
+            totalPrice: 0 ether,
             nonce: 0,
             deadline: 1 days
         });
@@ -180,7 +181,7 @@ contract SignatureMinterModuleTest is Test {
             minter.getTypedDataHash(mint)
         );
 
-        bytes memory signature = abi.encode(v, r, s);
+        bytes memory signature = abi.encodePacked(r, s, v);
 
         vm.warp(1 days + 1 seconds);
 
@@ -202,14 +203,14 @@ contract SignatureMinterModuleTest is Test {
         vm.stopPrank();
     }
 
-    function test_withWrongRecepient() public withDrop("") {
+    function test_withWrongRecipient() public withDrop("") {
         address rando = address(0x999);
 
         SignatureMinter.Mint memory mint = SignatureMinter.Mint({
             target: address(drop),
-            from: signer,
-            totalPrice: 0 ether,
+            signer: signer,
             quantity: 1,
+            totalPrice: 0 ether,
             nonce: 0,
             deadline: 1 days
         });
@@ -219,7 +220,7 @@ contract SignatureMinterModuleTest is Test {
             minter.getTypedDataHash(mint)
         );
 
-        bytes memory signature = abi.encode(v, r, s);
+        bytes memory signature = abi.encodePacked(r, s, v);
 
         vm.startPrank(collector);
 
@@ -242,9 +243,9 @@ contract SignatureMinterModuleTest is Test {
     function test_withInvalidSignature() public withDrop("") {
         SignatureMinter.Mint memory mint = SignatureMinter.Mint({
             target: address(drop),
-            from: signer,
-            totalPrice: 0 ether,
+            signer: signer,
             quantity: 1,
+            totalPrice: 0 ether,
             nonce: 0,
             deadline: 1 days
         });
@@ -255,7 +256,7 @@ contract SignatureMinterModuleTest is Test {
             minter.getTypedDataHash(mint)
         );
 
-        bytes memory signature = abi.encode(v, r, s);
+        bytes memory signature = abi.encodePacked(r, s, v);
 
         vm.startPrank(collector);
 
@@ -276,7 +277,7 @@ contract SignatureMinterModuleTest is Test {
 
         (v, r, s) = vm.sign(signerPrivateKey, minter.getTypedDataHash(mint));
 
-        signature = abi.encode(v, r, s);
+        signature = abi.encodePacked(r, s, v);
 
         vm.expectRevert(SignatureMinter.InvalidSignature.selector);
 
@@ -301,9 +302,9 @@ contract SignatureMinterModuleTest is Test {
 
         SignatureMinter.Mint memory mint = SignatureMinter.Mint({
             target: address(drop),
-            from: signer,
-            totalPrice: 0 ether,
+            signer: signer,
             quantity: 1,
+            totalPrice: 0 ether,
             nonce: 0,
             deadline: 1 days
         });
@@ -313,7 +314,7 @@ contract SignatureMinterModuleTest is Test {
             minter.getTypedDataHash(mint)
         );
 
-        bytes memory signature = abi.encode(v, r, s);
+        bytes memory signature = abi.encodePacked(r, s, v);
 
         vm.startPrank(collector);
 
@@ -351,11 +352,62 @@ contract SignatureMinterModuleTest is Test {
         uint256 totalPrice
     );
 
-    function Xtest_withCorrectSignature() public withDrop("") {
+    function test_withCorrectSignature(uint256 quantity, uint256 totalPrice)
+        public
+        withDrop("")
+    {
+        quantity = bound(quantity, 1, 10);
+        vm.assume(totalPrice < collector.balance);
+
+        SignatureMinter.Mint memory mint = SignatureMinter.Mint({
+            target: address(drop),
+            signer: signer,
+            quantity: quantity,
+            totalPrice: totalPrice,
+            nonce: 0,
+            deadline: 1 days
+        });
+
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(
+            signerPrivateKey,
+            minter.getTypedDataHash(mint)
+        );
+
+        emit log_named_uint("current balance", collector.balance);
+        bytes memory signature = abi.encodePacked(r, s, v);
+
         vm.startPrank(collector);
 
         vm.expectEmit(true, true, false, true);
-        emit MintedFromSignature(address(drop), signer, collector, 1, 1);
+        emit MintedFromSignature(
+            address(drop),
+            signer,
+            collector,
+            quantity,
+            totalPrice
+        );
+
+        uint256 preBalanceMinter = address(minter).balance;
+        uint256 preBalanceDrop = address(drop).balance;
+
+        minter.mintWithSignature{value: totalPrice}(
+            mint.target, // target
+            signer, // signer
+            collector, // to
+            mint.quantity, // quantity
+            mint.totalPrice, // totalPrice
+            mint.nonce, // nonce
+            mint.deadline, // deadline
+            signature // signature
+        );
+
+        uint256 postBalanceMinter = address(minter).balance;
+        uint256 postBalanceDrop = address(drop).balance;
+
+        assertEq(preBalanceMinter, postBalanceMinter);
+        assertEq(preBalanceDrop + totalPrice, postBalanceDrop);
+
+        vm.stopPrank();
     }
 
     function test_transfersFunds() public withDrop("") {

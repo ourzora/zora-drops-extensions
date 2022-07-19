@@ -3,7 +3,7 @@ pragma solidity ^0.8.10;
 
 import {EIP712} from "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
 import {SignatureChecker} from "@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol";
-
+import {console2} from "forge-std/console2.sol";
 import {ERC721DropSignatureInterface} from "./ERC721DropSignatureInterface.sol";
 
 /**
@@ -15,7 +15,7 @@ import {ERC721DropSignatureInterface} from "./ERC721DropSignatureInterface.sol";
  * @author Jem <jem@zora.co>
  *
  * @dev can be used by any contract
- * @dev grant signers (not this contract!) ERC721Drop.MINTER_ROLE()
+ * @dev grant ERC721Drop.MINTER_ROLE() to signers AND this contract
  * @dev
  *
  */
@@ -48,21 +48,21 @@ contract SignatureMinter is EIP712 {
 
     struct Mint {
         address target;
-        address from;
-        uint256 totalPrice;
+        address signer;
         uint256 quantity;
+        uint256 totalPrice;
         uint256 nonce;
         uint256 deadline;
     }
 
     bytes32 private immutable _MINT_TYPEHASH =
         keccak256(
-            "Mint(address target,address from,uint256 totalPrice,uint256 quantity,uint256 nonce,uint256 deadline)"
+            "Mint(address target,address signer,uint256 quantity,uint256 totalPrice,uint256 nonce,uint256 deadline)"
         );
 
     bytes32 private immutable MINTER_ROLE = keccak256("MINTER");
 
-    constructor() EIP712("SignatureMinter", "1") {}
+    constructor(string memory version) EIP712("SignatureMinter", version) {}
 
     /// @notice AdminMints on an ERC721Drop
     /// @dev totalPrice is independent of prices set in IERC721.SaleDetails
@@ -71,8 +71,8 @@ contract SignatureMinter is EIP712 {
     /// @param target implements IERC721Drop.adminMint
     /// @param signer signature-signer, e.g. your API server
     /// @param to     receiver of the token
-    /// @param totalPrice total cost of minting to sender
     /// @param quantity number of NFTs to mint
+    /// @param totalPrice total cost of minting to sender
     /// @param nonce scoped to the signer
     /// @param deadline signature expiry date (seconds since UNIX epoch)
     /// @param signature the signature!
@@ -99,29 +99,27 @@ contract SignatureMinter is EIP712 {
         if (to != address(0) && to != msg.sender) {
             revert WrongRecipient();
         }
-        if (
-            !SignatureChecker.isValidSignatureNow(
-                signer,
-                _hashTypedDataV4(
-                    keccak256(
-                        abi.encode(
-                            _MINT_TYPEHASH,
-                            target,
-                            signer,
-                            totalPrice,
-                            quantity,
-                            nonce,
-                            deadline
-                        )
-                    )
-                ),
-                signature
+
+        bytes32 sigHash = _hashTypedDataV4(
+            keccak256(
+                abi.encode(
+                    _MINT_TYPEHASH,
+                    target,
+                    signer,
+                    quantity,
+                    totalPrice,
+                    nonce,
+                    deadline
+                )
             )
-        ) {
+        );
+
+        if (!SignatureChecker.isValidSignatureNow(signer, sigHash, signature)) {
             revert InvalidSignature();
         }
+
         if (
-            !ERC721DropSignatureInterface(target).hasRole(signer, MINTER_ROLE)
+            !ERC721DropSignatureInterface(target).hasRole(MINTER_ROLE, signer)
         ) {
             revert SignerNotAuthorized();
         }
@@ -141,16 +139,15 @@ contract SignatureMinter is EIP712 {
         }
     }
 
-    // TODO: I think we need the next two functions?
     function getMintHash(Mint memory _mint) internal view returns (bytes32) {
         return
             keccak256(
                 abi.encode(
                     _MINT_TYPEHASH,
                     _mint.target,
-                    _mint.from,
-                    _mint.totalPrice,
+                    _mint.signer,
                     _mint.quantity,
+                    _mint.totalPrice,
                     _mint.nonce,
                     _mint.deadline
                 )
