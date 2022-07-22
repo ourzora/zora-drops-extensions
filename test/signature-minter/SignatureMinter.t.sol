@@ -24,8 +24,6 @@ contract SignatureMinterModuleTest is Test {
     uint256 internal collectorPrivateKey;
     address internal collector;
 
-    uint256 chainId = 4;
-
     ERC721Drop impl;
     ERC721Drop drop;
 
@@ -100,8 +98,7 @@ contract SignatureMinterModuleTest is Test {
             to: collector,
             totalPrice: 1 ether,
             nonce: 0,
-            deadline: 1 days,
-            chainId: chainId
+            deadline: 1 days
         });
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
@@ -123,7 +120,6 @@ contract SignatureMinterModuleTest is Test {
             mint.totalPrice, // totalPrice
             mint.nonce, // nonce
             mint.deadline, // deadline
-            mint.chainId,
             signature // signature
         );
 
@@ -147,8 +143,7 @@ contract SignatureMinterModuleTest is Test {
             quantity: 1,
             totalPrice: 0 ether,
             nonce: nonce,
-            deadline: 1 days,
-            chainId: chainId
+            deadline: 1 days
         });
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
@@ -170,7 +165,6 @@ contract SignatureMinterModuleTest is Test {
             mint.totalPrice, // totalPrice
             mint.nonce, // nonce
             mint.deadline, // deadline
-            mint.chainId,
             signature // signature
         );
 
@@ -185,8 +179,7 @@ contract SignatureMinterModuleTest is Test {
             quantity: 1,
             totalPrice: 0 ether,
             nonce: 0,
-            deadline: 1 days,
-            chainId: chainId
+            deadline: 1 days
         });
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
@@ -210,7 +203,6 @@ contract SignatureMinterModuleTest is Test {
             mint.totalPrice, // totalPrice
             mint.nonce, // nonce
             mint.deadline, // deadline
-            mint.chainId,
             signature // signature
         );
 
@@ -227,8 +219,7 @@ contract SignatureMinterModuleTest is Test {
             quantity: 1,
             totalPrice: 0 ether,
             nonce: 0,
-            deadline: 1 days,
-            chainId: chainId
+            deadline: 1 days
         });
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
@@ -250,7 +241,6 @@ contract SignatureMinterModuleTest is Test {
             mint.totalPrice, // totalPrice
             mint.nonce, // nonce
             mint.deadline, // deadline
-            mint.chainId,
             signature // signature
         );
 
@@ -265,8 +255,7 @@ contract SignatureMinterModuleTest is Test {
             quantity: 1,
             totalPrice: 0 ether,
             nonce: 0,
-            deadline: 1 days,
-            chainId: chainId
+            deadline: 1 days
         });
 
         // test with a garbage private key
@@ -289,7 +278,6 @@ contract SignatureMinterModuleTest is Test {
             mint.totalPrice, // totalPrice
             mint.nonce, // nonce
             mint.deadline, // deadline
-            chainId,
             signature // signature
         );
 
@@ -309,7 +297,6 @@ contract SignatureMinterModuleTest is Test {
             mint.totalPrice, // totalPrice
             mint.nonce, // nonce
             mint.deadline, // deadline
-            mint.chainId,
             signature // signature
         );
 
@@ -328,8 +315,7 @@ contract SignatureMinterModuleTest is Test {
             quantity: 1,
             totalPrice: 0 ether,
             nonce: 0,
-            deadline: 1 days,
-            chainId: chainId
+            deadline: 1 days
         });
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
@@ -351,7 +337,6 @@ contract SignatureMinterModuleTest is Test {
             mint.totalPrice, // totalPrice
             mint.nonce, // nonce
             mint.deadline, // deadline
-            mint.chainId,
             signature // signature
         );
 
@@ -369,8 +354,7 @@ contract SignatureMinterModuleTest is Test {
             quantity: quantity,
             totalPrice: totalPrice,
             nonce: 0,
-            deadline: 1 days,
-            chainId: chainId
+            deadline: 1 days
         });
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
@@ -392,7 +376,6 @@ contract SignatureMinterModuleTest is Test {
             mint.totalPrice, // totalPrice
             mint.nonce, // nonce
             mint.deadline, // deadline
-            mint.chainId,
             signature // signature
         );
 
@@ -410,8 +393,7 @@ contract SignatureMinterModuleTest is Test {
             quantity: quantity,
             totalPrice: totalPrice,
             nonce: 0,
-            deadline: 1 days,
-            chainId: chainId
+            deadline: 1 days
         });
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
@@ -433,7 +415,6 @@ contract SignatureMinterModuleTest is Test {
             mint.totalPrice, // totalPrice
             mint.nonce, // nonce
             mint.deadline, // deadline
-            mint.chainId,
             signature // signature
         );
 
@@ -462,8 +443,7 @@ contract SignatureMinterModuleTest is Test {
             quantity: quantity,
             totalPrice: totalPrice,
             nonce: 0,
-            deadline: 1 days,
-            chainId: chainId
+            deadline: 1 days
         });
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
@@ -495,7 +475,6 @@ contract SignatureMinterModuleTest is Test {
             mint.totalPrice, // totalPrice
             mint.nonce, // nonce
             mint.deadline, // deadline
-            chainId,
             signature // signature
         );
 

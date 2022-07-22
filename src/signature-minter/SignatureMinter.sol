@@ -54,12 +54,11 @@ contract SignatureMinter is EIP712 {
         uint256 totalPrice;
         uint256 nonce;
         uint256 deadline;
-        uint256 chainId;
     }
 
     bytes32 private immutable _MINT_TYPEHASH =
         keccak256(
-            "Mint(address target,address signer,address to,uint256 quantity,uint256 totalPrice,uint256 nonce,uint256 deadline,uint256 chainId)"
+            "Mint(address target,address signer,address to,uint256 quantity,uint256 totalPrice,uint256 nonce,uint256 deadline)"
         );
 
     bytes32 private immutable MINTER_ROLE = keccak256("MINTER");
@@ -77,7 +76,6 @@ contract SignatureMinter is EIP712 {
     /// @param totalPrice total cost of minting to sender
     /// @param nonce scoped to the signer
     /// @param deadline signature expiry date (seconds since UNIX epoch)
-    /// @param chainId the chainId
     /// @param signature the signature!
     function mintWithSignature(
         address target,
@@ -87,7 +85,6 @@ contract SignatureMinter is EIP712 {
         uint256 totalPrice,
         uint256 nonce,
         uint256 deadline,
-        uint256 chainId,
         bytes calldata signature
     ) external payable {
         if (totalPrice != msg.value) {
@@ -115,8 +112,7 @@ contract SignatureMinter is EIP712 {
                     quantity,
                     totalPrice,
                     nonce,
-                    deadline,
-                    chainId
+                    deadline
                 )
             )
         );
@@ -157,8 +153,7 @@ contract SignatureMinter is EIP712 {
                     _mint.quantity,
                     _mint.totalPrice,
                     _mint.nonce,
-                    _mint.deadline,
-                    _mint.chainId
+                    _mint.deadline
                 )
             );
     }
