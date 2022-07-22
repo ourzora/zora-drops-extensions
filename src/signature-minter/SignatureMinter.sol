@@ -89,13 +89,14 @@ contract SignatureMinter is EIP712 {
         if (totalPrice != msg.value) {
             revert WrongPrice();
         }
-        if (usedNonces[signer][nonce]) {
+        if (usedNonces[target][nonce]) {
             revert UsedNonceAlready();
         }
+        usedNonces[target][nonce] = true;
+
         if (block.timestamp > deadline) {
             revert DeadlinePassed();
         }
-        usedNonces[signer][nonce] = true;
         if (to != address(0) && to != msg.sender) {
             revert WrongRecipient();
         }
