@@ -11,10 +11,7 @@ import {ERC721DropProxy} from "zora-drops-contracts/ERC721DropProxy.sol";
 import {NounsVisionExchangeMinterModule} from "../../src/nouns-vision/NounsVisionExchangeMinterModule.sol";
 import {IZoraFeeManager} from "zora-drops-contracts/interfaces/IZoraFeeManager.sol";
 import {FactoryUpgradeGate} from "zora-drops-contracts/FactoryUpgradeGate.sol";
-
-contract MockRenderer {
-    function initializeWithData(bytes memory) external {}
-}
+import {MockRenderer} from "../utils/MockRenderer.sol";
 
 contract ERC721DropMinterModuleTest is DSTest {
     address constant OWNER_ADDRESS = address(0x123);

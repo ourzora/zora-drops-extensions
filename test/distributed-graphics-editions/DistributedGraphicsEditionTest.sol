@@ -14,10 +14,7 @@ import {ERC721DropProxy} from "zora-drops-contracts/ERC721DropProxy.sol";
 import {IZoraFeeManager} from "zora-drops-contracts/interfaces/IZoraFeeManager.sol";
 import {FactoryUpgradeGate} from "zora-drops-contracts/FactoryUpgradeGate.sol";
 import {IERC721AUpgradeable} from "erc721a-upgradeable/IERC721AUpgradeable.sol";
-
-contract MockRenderer {
-    function initializeWithData(bytes memory) external {}
-}
+import {MockRenderer} from "../utils/MockRenderer.sol";
 
 contract ERC721DropMinterModuleTest is DSTest {
     address constant OWNER_ADDRESS = address(0x123);
@@ -124,9 +121,6 @@ contract ERC721DropMinterModuleTest is DSTest {
         drop.tokenURI(3);
         drop.tokenURI(4);
         drop.tokenURI(5);
-        assertEq(
-            drop.tokenURI(4),
-            ""
-        );
+        assertEq(drop.tokenURI(4), "");
     }
 }
