@@ -1,3 +1,6 @@
-# Rhizome Ken Knowlton Contracts
+# Extensions for ZORA NFT Drops
 
-Deployed to: 0x169d9147dfc9409afa4e558df2c9abeebc020182
+1. Distributed Graphics Editions - on-chain shuffled graphics
+2. Nouns Vision - Bucketed project redeem flow
+3. Signature Minter - Minter for editions based off of a user's signature
+4. Zorb minter - Minter for editions based off of Zorb ownership (or any other ERC721)
