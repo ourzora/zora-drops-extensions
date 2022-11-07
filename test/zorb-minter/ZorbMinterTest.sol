@@ -1,10 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
-import {Vm} from "forge-std/Vm.sol";
-import {DSTest} from "ds-test/test.sol";
+import {Test} from "forge-std/Test.sol";
 
-import {SharedNFTLogic} from "zora-drops-contracts/utils/SharedNFTLogic.sol";
 import {ERC721Drop} from "zora-drops-contracts/ERC721Drop.sol";
 import {IERC721Drop} from "zora-drops-contracts/interfaces/IERC721Drop.sol";
 import {ERC721DropProxy} from "zora-drops-contracts/ERC721DropProxy.sol";
@@ -14,10 +12,9 @@ import {FactoryUpgradeGate} from "zora-drops-contracts/FactoryUpgradeGate.sol";
 import {ZorbMinter} from "../../src/zorb-minter/ZorbMinter.sol";
 import {MockRenderer} from "../utils/MockRenderer.sol";
 
-contract ZorbMinterTest is DSTest {
+contract ZorbMinterTest is Test {
     address constant OWNER_ADDRESS = address(0x123);
     ERC721Drop impl;
-    Vm public constant vm = Vm(HEVM_ADDRESS);
 
     function setUp() public {
         impl = new ERC721Drop(

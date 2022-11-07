@@ -6,8 +6,8 @@ pragma solidity ^0.8.10;
 import {IERC721Drop} from "zora-drops-contracts/interfaces/IERC721Drop.sol";
 import {ERC721Drop} from "zora-drops-contracts/ERC721Drop.sol";
 import {IMetadataRenderer} from "zora-drops-contracts/interfaces/IMetadataRenderer.sol";
+import {NFTMetadataRenderer} from "zora-drops-contracts/utils/NFTMetadataRenderer.sol";
 import {MetadataRenderAdminCheck} from "zora-drops-contracts/metadata/MetadataRenderAdminCheck.sol";
-import {SharedNFTLogic} from "zora-drops-contracts/utils/SharedNFTLogic.sol";
 
 /// @notice Exchanges one drop for another through burn mechanism
 contract NounsVisionExchangeMinterModule is
@@ -40,7 +40,6 @@ contract NounsVisionExchangeMinterModule is
 
     ERC721Drop public immutable source;
     ERC721Drop public sink;
-    SharedNFTLogic private immutable sharedNFTLogic;
 
     string description;
     string public contractURI;
@@ -48,13 +47,8 @@ contract NounsVisionExchangeMinterModule is
     mapping(string => ColorInfo) public colors;
     mapping(uint256 => string) public idToColor;
 
-    constructor(
-        IERC721Drop _source,
-        SharedNFTLogic _sharedNFTLogic,
-        string memory _description
-    ) {
+    constructor(IERC721Drop _source, string memory _description) {
         source = ERC721Drop(payable(address(_source)));
-        sharedNFTLogic = _sharedNFTLogic;
         description = _description;
     }
 
@@ -146,11 +140,11 @@ contract NounsVisionExchangeMinterModule is
         ColorInfo storage colorInfo = colors[color];
 
         return
-            sharedNFTLogic.createMetadataEdition({
+            NFTMetadataRenderer.createMetadataEdition({
                 name: string(abi.encodePacked(sink.name(), " ", color)),
                 description: description,
-                imageUrl: colorInfo.imageURI,
-                animationUrl: colorInfo.animationURI,
+                imageURI: colorInfo.imageURI,
+                animationURI: colorInfo.animationURI,
                 tokenOfEdition: tokenId,
                 editionSize: maxCount
             });

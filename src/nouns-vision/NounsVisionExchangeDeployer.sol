@@ -3,7 +3,6 @@ pragma solidity ^0.8.10;
 
 import {ZoraNFTCreatorV1} from "zora-drops-contracts/ZoraNFTCreatorV1.sol";
 import {IERC721Drop} from "zora-drops-contracts/interfaces/IERC721Drop.sol";
-import {SharedNFTLogic} from "zora-drops-contracts/utils/SharedNFTLogic.sol";
 import {NounsVisionExchangeMinterModule} from "./NounsVisionExchangeMinterModule.sol";
 
 contract NounsVisionExchangeDeployer {
@@ -15,12 +14,10 @@ contract NounsVisionExchangeDeployer {
         uint16 royaltyBPS,
         address payable admin,
         address creator,
-        SharedNFTLogic sharedNFTLogic,
         IERC721Drop sourceContract
     ) {
         NounsVisionExchangeMinterModule exchangeModule = new NounsVisionExchangeMinterModule(
                 IERC721Drop(sourceContract),
-                sharedNFTLogic,
                 description
             );
         ZoraNFTCreatorV1(creator).setupDropsContract(
