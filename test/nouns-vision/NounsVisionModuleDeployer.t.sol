@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
-import {Vm} from "forge-std/Vm.sol";
-import {DSTest} from "ds-test/test.sol";
+import {Test} from "forge-std/Test.sol";
 
 import {NounsVisionExchangeDeployer} from "../../src/nouns-vision/NounsVisionExchangeDeployer.sol";
 import {ERC721Drop} from "zora-drops-contracts/ERC721Drop.sol";
@@ -13,12 +12,10 @@ import {EditionMetadataRenderer} from "zora-drops-contracts/metadata/EditionMeta
 import {IZoraFeeManager} from "zora-drops-contracts/interfaces/IZoraFeeManager.sol";
 import {IERC721Drop} from "zora-drops-contracts/interfaces/IERC721Drop.sol";
 import {FactoryUpgradeGate} from "zora-drops-contracts/FactoryUpgradeGate.sol";
-import {SharedNFTLogic} from "zora-drops-contracts/utils/SharedNFTLogic.sol";
 import {MockRenderer} from "../utils/MockRenderer.sol";
 
-contract ERC721DropMinterModuleTest is DSTest {
+contract ERC721DropMinterModuleTest is Test {
     address constant OWNER_ADDRESS = address(0x123);
-    Vm public constant vm = Vm(HEVM_ADDRESS);
 
     function test_SetupMinter() public {
         MockRenderer mockRenderer = new MockRenderer();
@@ -43,7 +40,6 @@ contract ERC721DropMinterModuleTest is DSTest {
                             ERC721Drop.initialize.selector,
                             "Source NFT",
                             "SRC",
-                            "TSTZ",
                             OWNER_ADDRESS,
                             address(0x0),
                             10,
@@ -72,7 +68,6 @@ contract ERC721DropMinterModuleTest is DSTest {
             1000,
             payable(0x9444390c01Dd5b7249E53FAc31290F7dFF53450D),
             address(creator),
-            SharedNFTLogic(0x2a3245d54E5407E276c47f0C181a22bf90c797Ce),
             IERC721Drop(source)
         );
     }

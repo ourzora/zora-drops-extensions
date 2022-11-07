@@ -1,10 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
-import {Vm} from "forge-std/Vm.sol";
-import {DSTest} from "ds-test/test.sol";
+import {Test} from "forge-std/Test.sol";
 
-import {SharedNFTLogic} from "zora-drops-contracts/utils/SharedNFTLogic.sol";
 import {ERC721Drop} from "zora-drops-contracts/ERC721Drop.sol";
 import {IERC721Drop} from "zora-drops-contracts/interfaces/IERC721Drop.sol";
 import {ERC721DropProxy} from "zora-drops-contracts/ERC721DropProxy.sol";
@@ -13,11 +11,9 @@ import {IZoraFeeManager} from "zora-drops-contracts/interfaces/IZoraFeeManager.s
 import {FactoryUpgradeGate} from "zora-drops-contracts/FactoryUpgradeGate.sol";
 import {MockRenderer} from "../utils/MockRenderer.sol";
 
-contract ERC721DropMinterModuleTest is DSTest {
+contract ERC721DropMinterModuleTest is Test {
     address constant OWNER_ADDRESS = address(0x123);
     ERC721Drop impl;
-    SharedNFTLogic sharedLogic;
-    Vm public constant vm = Vm(HEVM_ADDRESS);
 
     function setUp() public {
         impl = new ERC721Drop(
@@ -25,7 +21,6 @@ contract ERC721DropMinterModuleTest is DSTest {
             address(0x0),
             FactoryUpgradeGate(address(0x0))
         );
-        sharedLogic = new SharedNFTLogic();
     }
 
     function test_SetupExchange() public {
@@ -61,7 +56,6 @@ contract ERC721DropMinterModuleTest is DSTest {
         );
         NounsVisionExchangeMinterModule exchangeModule = new NounsVisionExchangeMinterModule(
                 source,
-                sharedLogic,
                 "test description"
             );
         ERC721Drop sink = ERC721Drop(
@@ -123,7 +117,7 @@ contract ERC721DropMinterModuleTest is DSTest {
         exchangeModule.exchange(fromIds, "Blue");
         assertEq(
             sink.tokenURI(1),
-            "data:application/json;base64,eyJuYW1lIjogIlNpbmsgTkZUIEJsdWUgMS80IiwgImRlc2NyaXB0aW9uIjogIiIsICJpbWFnZSI6ICJodHRwczovL2V4YW1wbGUuY29tL2Jhc2UvYmxhY2sucG5nP2lkPTEiLCAiYW5pbWF0aW9uX3VybCI6ICJodHRwczovL2V4YW1wbGUuY29tL2Jhc2UvYmxhY2subW92P2lkPTEiLCAicHJvcGVydGllcyI6IHsibnVtYmVyIjogMSwgIm5hbWUiOiAiU2luayBORlQgQmx1ZSJ9fQ=="
+            "data:application/json;base64,eyJuYW1lIjogIlNpbmsgTkZUIEJsdWUgMS80IiwgImRlc2NyaXB0aW9uIjogInRlc3QgZGVzY3JpcHRpb24iLCAiaW1hZ2UiOiAiaHR0cHM6Ly9leGFtcGxlLmNvbS9iYXNlL2JsYWNrIiwgImFuaW1hdGlvbl91cmwiOiAiaHR0cHM6Ly9leGFtcGxlLmNvbS9iYXNlL2JsYWNrIiwgInByb3BlcnRpZXMiOiB7Im51bWJlciI6IDEsICJuYW1lIjogIlNpbmsgTkZUIEJsdWUifX0="
         );
         fromIds[0] = 3;
         fromIds[1] = 4;

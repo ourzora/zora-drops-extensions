@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.10;
+pragma solidity ^0.8.13;
 
 /**
  @@@@@@@@@@@@@@@@@@@   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*              @@@@@@   
@@ -15,9 +15,11 @@ pragma solidity ^0.8.10;
 
 import {IMetadataRenderer} from "zora-drops-contracts/interfaces/IMetadataRenderer.sol";
 import {IERC721Drop} from "zora-drops-contracts/interfaces/IERC721Drop.sol";
+import {IERC2981Upgradeable} from "zora-drops-contracts/ERC721Drop.sol";
 import {IERC721MetadataUpgradeable} from "zora-drops-contracts/../lib/openzeppelin-contracts-upgradeable/contracts/interfaces/IERC721MetadataUpgradeable.sol";
-import {SharedNFTLogic} from "zora-drops-contracts/utils/SharedNFTLogic.sol";
+import {NFTMetadataRenderer} from "zora-drops-contracts/utils/NFTMetadataRenderer.sol";
 import {MetadataRenderAdminCheck} from "zora-drops-contracts/metadata/MetadataRenderAdminCheck.sol";
+import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 
 /// @notice DistributedGraphicsEdition for editions support with shuffled graphics for more visual interest
 /// @author Iain <iain@zora.co>
@@ -63,15 +65,6 @@ contract DistributedGraphicsEdition is
 
     /// @notice Token information mapping storage
     mapping(address => TokenEditionInfo) public tokenInfos;
-
-    /// @notice Reference to Shared NFT logic library
-    SharedNFTLogic private immutable sharedNFTLogic;
-
-    /// @notice Constructor for library
-    /// @param _sharedNFTLogic reference to shared NFT logic library
-    constructor(SharedNFTLogic _sharedNFTLogic) {
-        sharedNFTLogic = _sharedNFTLogic;
-    }
 
     /// @notice Update media URIs
     /// @param target target for contract to update metadata for
@@ -158,27 +151,29 @@ contract DistributedGraphicsEdition is
     /// @return contract uri (if set)
     function contractURI() external view override returns (string memory) {
         address target = msg.sender;
-        bytes memory imageSpace = bytes("");
-        if (bytes(tokenInfos[target].imageURIBase).length > 0) {
-            imageSpace = abi.encodePacked(
-                '", "image": "',
-                tokenInfos[target].imageURIBase,
-                "0"
-            );
+
+        string memory animationURI = tokenInfos[target].animationURIBase;
+        string memory imageURI = tokenInfos[target].imageURIBase;
+        if (bytes(animationURI).length > 0) {
+            animationURI = string.concat(animationURI, "0");
         }
+        if (bytes(imageURI).length > 0) {
+            imageURI = string.concat(imageURI, "0");
+        }
+
+        (address royaltyRecipient, uint256 royaltyCharged) = IERC2981Upgradeable(
+            target
+        ).royaltyInfo(0, 10_000);
+
         return
-            string(
-                sharedNFTLogic.encodeMetadataJSON(
-                    abi.encodePacked(
-                        '{"name": "',
-                        IERC721MetadataUpgradeable(target).name(),
-                        '", "description": "',
-                        tokenInfos[target].description,
-                        imageSpace,
-                        '"}'
-                    )
-                )
-            );
+            NFTMetadataRenderer.encodeContractURIJSON({
+                name: IERC721MetadataUpgradeable(target).name(),
+                description: tokenInfos[target].description,
+                imageURI: imageURI,
+                animationURI: animationURI,
+                royaltyBPS: royaltyCharged,
+                royaltyRecipient: royaltyRecipient
+            });
     }
 
     /// @notice Token URI information getter
@@ -214,25 +209,19 @@ contract DistributedGraphicsEdition is
                 choice = (tokenId - (1 % info.numberVariations)) + 1;
             }
         }
+        string memory imageURI = bytes(info.imageURIBase).length == 0
+            ? ""
+            : string.concat(info.imageURIBase, Strings.toString(choice));
+        string memory animationURI = bytes(info.animationURIBase).length == 0
+            ? ""
+            : string.concat(info.animationURIBase, Strings.toString(choice));
 
         return
-            sharedNFTLogic.createMetadataEdition({
+            NFTMetadataRenderer.createMetadataEdition({
                 name: IERC721MetadataUpgradeable(target).name(),
                 description: info.description,
-                imageUrl: string(
-                    abi.encodePacked(
-                        info.imageURIBase,
-                        sharedNFTLogic.numberToString(choice)
-                    )
-                ),
-                animationUrl: bytes(info.animationURIBase).length == 0
-                    ? ""
-                    : string(
-                        abi.encodePacked(
-                            info.animationURIBase,
-                            sharedNFTLogic.numberToString(choice)
-                        )
-                    ),
+                imageURI: imageURI,
+                animationURI: animationURI,
                 tokenOfEdition: tokenId,
                 editionSize: maxSupply
             });

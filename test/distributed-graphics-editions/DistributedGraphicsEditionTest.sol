@@ -1,13 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
-import {Vm} from "forge-std/Vm.sol";
-import {DSTest} from "ds-test/test.sol";
+import {Test} from "forge-std/Test.sol";
 
 import {NounsVisionExchangeMinterModule} from "../../src/nouns-vision/NounsVisionExchangeMinterModule.sol";
 import {DistributedGraphicsEdition} from "../../src/distributed-graphics-editions/DistributedGraphicsEdition.sol";
 
-import {SharedNFTLogic} from "zora-drops-contracts/utils/SharedNFTLogic.sol";
 import {ERC721Drop} from "zora-drops-contracts/ERC721Drop.sol";
 import {IERC721Drop} from "zora-drops-contracts/interfaces/IERC721Drop.sol";
 import {ERC721DropProxy} from "zora-drops-contracts/ERC721DropProxy.sol";
@@ -16,14 +14,12 @@ import {FactoryUpgradeGate} from "zora-drops-contracts/FactoryUpgradeGate.sol";
 import {IERC721AUpgradeable} from "erc721a-upgradeable/IERC721AUpgradeable.sol";
 import {MockRenderer} from "../utils/MockRenderer.sol";
 
-contract ERC721DropMinterModuleTest is DSTest {
+contract ERC721DropMinterModuleTest is Test {
     address constant OWNER_ADDRESS = address(0x123);
     address constant RECIPIENT_ADDRESS = address(0x333);
     ERC721Drop impl;
     ERC721Drop drop;
     DistributedGraphicsEdition renderer;
-    SharedNFTLogic sharedLogic;
-    Vm public constant vm = Vm(HEVM_ADDRESS);
 
     function setUp() public {
         impl = new ERC721Drop(
@@ -31,8 +27,7 @@ contract ERC721DropMinterModuleTest is DSTest {
             address(0x0),
             FactoryUpgradeGate(address(0x0))
         );
-        sharedLogic = new SharedNFTLogic();
-        renderer = new DistributedGraphicsEdition(sharedLogic);
+        renderer = new DistributedGraphicsEdition();
     }
 
     modifier withDrop(uint256 limit, bytes memory init) {
@@ -85,19 +80,19 @@ contract ERC721DropMinterModuleTest is DSTest {
         drop.adminMint(RECIPIENT_ADDRESS, 10);
         assertEq(
             drop.tokenURI(1),
-            "data:application/json;base64,eyJuYW1lIjogIlNvdXJjZSBORlQgMS8xMCIsICJkZXNjcmlwdGlvbiI6ICJUZXN0aW5nIERlc2NyaXB0aW9uIiwgImltYWdlIjogImh0dHBzOi8vdmlkZW9zLmV4YW1wbGUvMT9pZD0xIiwgImFuaW1hdGlvbl91cmwiOiAiaHR0cHM6Ly9pbWFnZXMuZXhhbXBsZS8xP2lkPTEiLCAicHJvcGVydGllcyI6IHsibnVtYmVyIjogMSwgIm5hbWUiOiAiU291cmNlIE5GVCJ9fQ=="
+            "data:application/json;base64,eyJuYW1lIjogIlNvdXJjZSBORlQgMS8xMCIsICJkZXNjcmlwdGlvbiI6ICJUZXN0aW5nIERlc2NyaXB0aW9uIiwgImltYWdlIjogImh0dHBzOi8vdmlkZW9zLmV4YW1wbGUvMSIsICJhbmltYXRpb25fdXJsIjogImh0dHBzOi8vaW1hZ2VzLmV4YW1wbGUvMSIsICJwcm9wZXJ0aWVzIjogeyJudW1iZXIiOiAxLCAibmFtZSI6ICJTb3VyY2UgTkZUIn19"
         );
         assertEq(
             drop.tokenURI(2),
-            "data:application/json;base64,eyJuYW1lIjogIlNvdXJjZSBORlQgMi8xMCIsICJkZXNjcmlwdGlvbiI6ICJUZXN0aW5nIERlc2NyaXB0aW9uIiwgImltYWdlIjogImh0dHBzOi8vdmlkZW9zLmV4YW1wbGUvMj9pZD0yIiwgImFuaW1hdGlvbl91cmwiOiAiaHR0cHM6Ly9pbWFnZXMuZXhhbXBsZS8yP2lkPTIiLCAicHJvcGVydGllcyI6IHsibnVtYmVyIjogMiwgIm5hbWUiOiAiU291cmNlIE5GVCJ9fQ=="
+            "data:application/json;base64,eyJuYW1lIjogIlNvdXJjZSBORlQgMi8xMCIsICJkZXNjcmlwdGlvbiI6ICJUZXN0aW5nIERlc2NyaXB0aW9uIiwgImltYWdlIjogImh0dHBzOi8vdmlkZW9zLmV4YW1wbGUvMiIsICJhbmltYXRpb25fdXJsIjogImh0dHBzOi8vaW1hZ2VzLmV4YW1wbGUvMiIsICJwcm9wZXJ0aWVzIjogeyJudW1iZXIiOiAyLCAibmFtZSI6ICJTb3VyY2UgTkZUIn19"
         );
         assertEq(
             drop.tokenURI(3),
-            "data:application/json;base64,eyJuYW1lIjogIlNvdXJjZSBORlQgMy8xMCIsICJkZXNjcmlwdGlvbiI6ICJUZXN0aW5nIERlc2NyaXB0aW9uIiwgImltYWdlIjogImh0dHBzOi8vdmlkZW9zLmV4YW1wbGUvMz9pZD0zIiwgImFuaW1hdGlvbl91cmwiOiAiaHR0cHM6Ly9pbWFnZXMuZXhhbXBsZS8zP2lkPTMiLCAicHJvcGVydGllcyI6IHsibnVtYmVyIjogMywgIm5hbWUiOiAiU291cmNlIE5GVCJ9fQ=="
+            "data:application/json;base64,eyJuYW1lIjogIlNvdXJjZSBORlQgMy8xMCIsICJkZXNjcmlwdGlvbiI6ICJUZXN0aW5nIERlc2NyaXB0aW9uIiwgImltYWdlIjogImh0dHBzOi8vdmlkZW9zLmV4YW1wbGUvMyIsICJhbmltYXRpb25fdXJsIjogImh0dHBzOi8vaW1hZ2VzLmV4YW1wbGUvMyIsICJwcm9wZXJ0aWVzIjogeyJudW1iZXIiOiAzLCAibmFtZSI6ICJTb3VyY2UgTkZUIn19"
         );
         assertEq(
             drop.tokenURI(4),
-            "data:application/json;base64,eyJuYW1lIjogIlNvdXJjZSBORlQgNC8xMCIsICJkZXNjcmlwdGlvbiI6ICJUZXN0aW5nIERlc2NyaXB0aW9uIiwgImltYWdlIjogImh0dHBzOi8vdmlkZW9zLmV4YW1wbGUvND9pZD00IiwgImFuaW1hdGlvbl91cmwiOiAiaHR0cHM6Ly9pbWFnZXMuZXhhbXBsZS80P2lkPTQiLCAicHJvcGVydGllcyI6IHsibnVtYmVyIjogNCwgIm5hbWUiOiAiU291cmNlIE5GVCJ9fQ=="
+            "data:application/json;base64,eyJuYW1lIjogIlNvdXJjZSBORlQgNC8xMCIsICJkZXNjcmlwdGlvbiI6ICJUZXN0aW5nIERlc2NyaXB0aW9uIiwgImltYWdlIjogImh0dHBzOi8vdmlkZW9zLmV4YW1wbGUvNCIsICJhbmltYXRpb25fdXJsIjogImh0dHBzOi8vaW1hZ2VzLmV4YW1wbGUvNCIsICJwcm9wZXJ0aWVzIjogeyJudW1iZXIiOiA0LCAibmFtZSI6ICJTb3VyY2UgTkZUIn19"
         );
     }
 
@@ -121,6 +116,9 @@ contract ERC721DropMinterModuleTest is DSTest {
         drop.tokenURI(3);
         drop.tokenURI(4);
         drop.tokenURI(5);
-        assertEq(drop.tokenURI(4), "");
+        assertEq(
+            drop.tokenURI(4),
+            "data:application/json;base64,eyJuYW1lIjogIlNvdXJjZSBORlQgNC8xMCIsICJkZXNjcmlwdGlvbiI6ICJUZXN0aW5nIERlc2NyaXB0aW9uIiwgImltYWdlIjogImh0dHBzOi8vdmlkZW9zLmV4YW1wbGUvMSIsICJhbmltYXRpb25fdXJsIjogImh0dHBzOi8vaW1hZ2VzLmV4YW1wbGUvMSIsICJwcm9wZXJ0aWVzIjogeyJudW1iZXIiOiA0LCAibmFtZSI6ICJTb3VyY2UgTkZUIn19"
+        );
     }
 }
