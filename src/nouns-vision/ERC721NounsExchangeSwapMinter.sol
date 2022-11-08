@@ -55,9 +55,13 @@ contract ERC721NounsExchangeSwapMinter is SafeOwnable {
 
         claimedPerNoun[nounId] = true;
 
-        uint256 newId = ++discoHoldingsIndex;
+        uint256 newId = discoHoldingsIndex++;
 
-        discoGlasses.transferFrom(address(discoGlasses), msg.sender, newId);
+        discoGlasses.transferFrom(
+            discoGlasses.ownerOf(newId),
+            msg.sender,
+            newId
+        );
 
         emit ClaimedFromNoun(msg.sender, newId, nounId);
     }
