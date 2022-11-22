@@ -23,7 +23,7 @@ import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 
 /// @notice TimeBasedDisplay for editions support with time-based graphics
 /// @author Iain <iain@zora.co>
-contract DistributedGraphicsEdition is
+contract TimeBasedDisplayRenderer is
     IMetadataRenderer,
     MetadataRenderAdminCheck
 {
@@ -144,8 +144,10 @@ contract DistributedGraphicsEdition is
         uint256 i;
         DateTime memory dateTime = _timestampToDate(timestamp);
         for (i = 0; i < tokenInfo[target].length; i++) {
+
             // check if period works
             TimedTokenInfo storage item = tokenInfo[target][i];
+
             if (item.period == Period.DAY_OF_YEAR) {
                 if (
                     item.start >= dateTime.daysInYear &&
@@ -154,15 +156,15 @@ contract DistributedGraphicsEdition is
                     return item;
                 }
             } else if (item.period == Period.HOUR_OF_DAY) {
-                if (item.start >= dateTime.hour && item.end < dateTime.hour) {
+                if (item.start <= dateTime.hour && item.end > dateTime.hour) {
                     return item;
                 }
             } else if (item.period == Period.MONTH_OF_YEAR) {
-                if (item.start >= dateTime.month && item.end < dateTime.month) {
+                if (item.start <= dateTime.month && item.end > dateTime.month) {
                     return item;
                 }
             } else if (item.period == Period.YEAR) {
-                if (item.start >= dateTime.year && item.end < dateTime.year) {
+                if (item.start <= dateTime.year && item.end > dateTime.year) {
                     return item;
                 }
             }
