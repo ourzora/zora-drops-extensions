@@ -12,14 +12,14 @@ contract ERC721NounsExchangeSwapMinter is SafeOwnable {
     mapping(uint256 => bool) public claimedPerNoun;
 
     constructor(
-        IERC721 _nounsToken,
-        IERC721 _discoGlasses,
+        address _nounsToken,
+        address _discoGlasses,
         uint256 _discoHoldingsIndex,
         address initialOwner
     ) {
         // Set variables
-        discoGlasses = _discoGlasses;
-        nounsToken = _nounsToken;
+        discoGlasses = IERC721(_discoGlasses);
+        nounsToken = IERC721(_nounsToken);
         discoHoldingsIndex = _discoHoldingsIndex;
 
         // Setup ownership
