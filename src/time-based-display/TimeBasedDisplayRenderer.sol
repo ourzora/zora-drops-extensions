@@ -51,6 +51,7 @@ contract TimeBasedDisplayRenderer is
 
     error InsertingRequiresZeroIndex();
     error NoTokenURISetup();
+    error FallbackPeriodRequired();
 
     /// @notice Storage for token edition information
     struct TimedTokenInfo {
@@ -129,8 +130,15 @@ contract TimeBasedDisplayRenderer is
             (TimedTokenInfo[])
         );
 
+        bool hasFallback;
         for (uint256 i = 0; i < tokenData.length; i++) {
             tokenInfo[target].push(tokenData[i]);
+            if (tokenData[i].period == Period.DEFAULT_FALLBACK) {
+                hasFallback = true;
+            }
+        }
+        if (!hasFallback) {
+            revert FallbackPeriodRequired();
         }
 
         emit EditionInitialized({target: target});
@@ -144,14 +152,13 @@ contract TimeBasedDisplayRenderer is
         uint256 i;
         DateTime memory dateTime = _timestampToDate(timestamp);
         for (i = 0; i < tokenInfo[target].length; i++) {
-
             // check if period works
             TimedTokenInfo storage item = tokenInfo[target][i];
 
             if (item.period == Period.DAY_OF_YEAR) {
                 if (
-                    item.start >= dateTime.daysInYear &&
-                    item.end < dateTime.daysInYear
+                    item.start <= dateTime.daysInYear &&
+                    item.end > dateTime.daysInYear
                 ) {
                     return item;
                 }
