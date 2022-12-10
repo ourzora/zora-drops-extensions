@@ -10,10 +10,19 @@ import {ERC721NounsExchangeSwapMinter} from "../../src/nouns-vision/ERC721NounsE
 import {IZoraFeeManager} from "zora-drops-contracts/interfaces/IZoraFeeManager.sol";
 import {FactoryUpgradeGate} from "zora-drops-contracts/FactoryUpgradeGate.sol";
 import {MockRenderer} from "../utils/MockRenderer.sol";
+import {ISafeOwnable} from "../../src/utils/ISafeOwnable.sol";
 
 contract ERC721NounsExchangeSwapMinterTest is Test {
     address constant OWNER_ADDRESS = address(0x123);
     ERC721Drop impl;
+
+    ERC721NounsExchangeSwapMinter swapModule;
+    ERC721Drop nounTokens;
+    ERC721Drop discoGlasses;
+    MockRenderer mockRenderer;
+
+    address immutable nounHolder1 = address(0x10);
+    address immutable nounHolder2 = address(0x11);
 
     function setUp() public {
         impl = new ERC721Drop(
@@ -23,40 +32,10 @@ contract ERC721NounsExchangeSwapMinterTest is Test {
         );
     }
 
-    function test_SetupExchange() public {
-        MockRenderer mockRenderer = new MockRenderer();
-        ERC721Drop nounsMock = ERC721Drop(
-            payable(
-                address(
-                    new ERC721DropProxy(
-                        address(impl),
-                        abi.encodeWithSelector(
-                            ERC721Drop.initialize.selector,
-                            "Nouns",
-                            "NOUNS",
-                            OWNER_ADDRESS,
-                            address(0x0),
-                            10,
-                            10,
-                            IERC721Drop.SalesConfiguration({
-                                publicSaleStart: 0,
-                                publicSaleEnd: 0,
-                                presaleStart: 0,
-                                presaleEnd: 0,
-                                publicSalePrice: 0,
-                                maxSalePurchasePerAddress: 0,
-                                presaleMerkleRoot: 0x0
-                            }),
-                            mockRenderer,
-                            ""
-                        )
-                    )
-                )
-            )
-        );
-        vm.prank(OWNER_ADDRESS);
+    function createSwapContracts() internal {
+        mockRenderer = new MockRenderer();
 
-        ERC721Drop nounTokens = ERC721Drop(
+        nounTokens = ERC721Drop(
             payable(
                 address(
                     new ERC721DropProxy(
@@ -85,8 +64,9 @@ contract ERC721NounsExchangeSwapMinterTest is Test {
                 )
             )
         );
+        vm.label(address(nounTokens), "Noun Tokens");
 
-        ERC721Drop discoGlasses = ERC721Drop(
+        discoGlasses = ERC721Drop(
             payable(
                 address(
                     new ERC721DropProxy(
@@ -115,41 +95,84 @@ contract ERC721NounsExchangeSwapMinterTest is Test {
                 )
             )
         );
+        vm.label(address(discoGlasses), "Disco Glasses");
         vm.startPrank(OWNER_ADDRESS);
-        discoGlasses.adminMint(OWNER_ADDRESS, 100);
-
-        address nounHolder1 = address(0x10);
-        address nounHolder2 = address(0x11);
         nounTokens.adminMint(nounHolder1, 10);
         nounTokens.adminMint(nounHolder2, 10);
 
-        ERC721NounsExchangeSwapMinter swapModule = new ERC721NounsExchangeSwapMinter(
-          address(nounTokens),
-          address(discoGlasses),
-          10,
-          0.1 ether,
-          OWNER_ADDRESS
+        swapModule = new ERC721NounsExchangeSwapMinter(
+            address(nounTokens),
+            address(discoGlasses),
+            1,
+            0.1 ether,
+            OWNER_ADDRESS
         );
 
-        discoGlasses.setApprovalForAll(address(swapModule), true);
+        discoGlasses.grantRole(discoGlasses.DEFAULT_ADMIN_ROLE(), address(swapModule));
+
+        vm.stopPrank();
+    }
+
+    function test_SetupExchange() public {
+        createSwapContracts();
 
         // mint holder 1
         vm.stopPrank();
         vm.startPrank(nounHolder1);
+        vm.deal(nounHolder1, 1 ether);
         uint256[] memory nounsList = new uint256[](1);
         nounsList[0] = 1;
-        swapModule.mintWithNouns(nounsList);
-        vm.expectRevert(ERC721NounsExchangeSwapMinter.YouAlreadyMinted.selector);
-
-        swapModule.mintWithNouns(nounsList);
+        swapModule.mintWithNouns{value: 0}(nounsList);
+        vm.expectRevert(
+            ERC721NounsExchangeSwapMinter.YouAlreadyMinted.selector
+        );
+        swapModule.mintWithNouns{value: 0.1 ether}(nounsList);
         vm.stopPrank();
 
         // mint holder 2
         vm.startPrank(nounHolder2);
         uint256[] memory nounsList2 = new uint256[](2);
+        vm.deal(nounHolder2, 1 ether);
         nounsList2[0] = 11;
         nounsList2[1] = 12;
-        swapModule.mintWithNouns(nounsList2);
+        swapModule.mintWithNouns{value: 0.2 ether}(nounsList2);
         vm.stopPrank();
+    }
+
+    function test_MintAdminSwap() public {
+        createSwapContracts();
+
+        uint256[] memory nounsList = new uint256[](1);
+        // admin mint
+        nounsList[0] = 10;
+        vm.expectRevert(ISafeOwnable.ONLY_OWNER.selector);
+        swapModule.ownerMintWithNouns(nounsList);
+        vm.prank(OWNER_ADDRESS);
+        swapModule.ownerMintWithNouns(nounsList);
+    }
+
+    function test_CanUpdateDiscoIndex() public {
+        createSwapContracts();
+
+        vm.expectRevert(ISafeOwnable.ONLY_OWNER.selector);
+        swapModule.updateDiscoIndex(2);
+
+        vm.prank(OWNER_ADDRESS);
+        swapModule.updateDiscoIndex(4);
+    }
+
+    function test_CanWithdraw() public {
+        createSwapContracts();
+
+        vm.deal(address(swapModule), 2 ether);
+        assertEq(address(swapModule).balance, 2 ether);
+
+        vm.expectRevert(ISafeOwnable.ONLY_OWNER.selector);
+        swapModule.withdraw();
+
+        uint256 ownerOriginalBalance = OWNER_ADDRESS.balance;
+        vm.prank(OWNER_ADDRESS);
+        swapModule.withdraw();
+        assertEq(OWNER_ADDRESS.balance - ownerOriginalBalance, 2 ether);
     }
 }

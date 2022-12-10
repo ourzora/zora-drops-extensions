@@ -55,7 +55,7 @@ contract NounsVisionExchangeMinterModule is
     uint128 public maxCount;
 
     function setDescription(string memory newDescription)
-        public
+        external
         requireSenderAdmin(address(source))
     {
         description = newDescription;
@@ -63,7 +63,7 @@ contract NounsVisionExchangeMinterModule is
     }
 
     function setContractURI(string memory newContractURI)
-        public
+        external
         requireSenderAdmin(address(source))
     {
         contractURI = newContractURI;

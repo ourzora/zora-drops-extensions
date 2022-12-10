@@ -59,8 +59,13 @@ contract ERC721NounsExchangeSwapMinter is SafeOwnable {
         emit ClaimedFromNoun(msg.sender, newId, nounId);
     }
 
+    /// @notice admin function to update the cost to mint per noun
+    function updateCostPerNoun(uint256 _newCost) external onlyOwner {
+        costPerNoun = _newCost;
+    }
+
     function mintWithNouns(uint256[] memory nounIds) external payable {
-        if (discoGlasses.saleDetails().totalMinted > freeMintMaxCount) {
+        if (discoGlasses.saleDetails().totalMinted >= freeMintMaxCount) {
             if (msg.value != nounIds.length * costPerNoun) {
                 revert WrongPrice();
             }
