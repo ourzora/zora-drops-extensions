@@ -127,6 +127,7 @@ contract ERC721NounsExchangeSwapMinterTest is Test {
           address(nounTokens),
           address(discoGlasses),
           10,
+          0.1 ether,
           OWNER_ADDRESS
         );
 
