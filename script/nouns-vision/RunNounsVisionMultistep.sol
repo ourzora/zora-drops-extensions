@@ -129,8 +129,6 @@ contract DeployerSignatureMinter is Script {
                 _description: "Nouns Vision Disco Redeemed"
             });
 
-        // Inits the sink of the drop
-        nounsDiscoDrop.setMetadataRenderer(IMetadataRenderer(address(exchangeMinterModule)), "0xcafe");
         nounsDiscoDrop.grantRole(bytes32(0), address(exchangeMinterModule));
 
         // 6 exchange disco token with NounsVisionExchangeMinterModule to DISCO_VISION_REDEEMED
@@ -138,7 +136,7 @@ contract DeployerSignatureMinter is Script {
         // sets redeemed metadata renderer
         ERC721Drop(payable(nounsDiscoRedeemed)).setMetadataRenderer(
             exchangeMinterModule,
-            ""
+            "0xcafe"
         );
 
         // 5 claim disco token from NOUNS_HOLDER_ONE
@@ -149,6 +147,8 @@ contract DeployerSignatureMinter is Script {
             1
         );
 
+
+        // Can be hard-coded into the drop with data from @salvino, can also be done via etherscan
         NounsVisionExchangeMinterModule.ColorSetting[]
             memory colorSettings = new NounsVisionExchangeMinterModule.ColorSetting[](
                 1
@@ -161,26 +161,23 @@ contract DeployerSignatureMinter is Script {
         });
         exchangeMinterModule.setColorLimits(colorSettings);
 
+        // Part 2: User interaction flow
+
         vm.stopBroadcast();
         vm.startBroadcast(nounsHolder1);
         uint256[] memory nounIds = new uint256[](1);
         nounIds[0] = nounId;
         uint256 newMintedId = swapMinter.mintWithNouns(nounIds);
 
-        ERC721Drop(payable(nounsDiscoDrop)).setApprovalForAll(address(exchangeMinterModule), true);
+        ERC721Drop(payable(nounsDiscoDrop)).setApprovalForAll(
+            address(exchangeMinterModule),
+            true
+        );
 
         uint256[] memory discoIds = new uint256[](1);
         discoIds[0] = newMintedId;
         exchangeMinterModule.exchange(discoIds, "disco");
 
-        vm.stopPrank();
-
         vm.stopBroadcast();
-
-        // ---- alternate plan -----
-
-        // admin mint first 200 / 250
-
-        // set presale list for all other holder
     }
 }
