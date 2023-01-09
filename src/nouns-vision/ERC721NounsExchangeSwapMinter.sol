@@ -46,7 +46,7 @@ contract ERC721NounsExchangeSwapMinter is SafeOwnable {
         emit UpdatedHoldingsIndex(_freeMintMaxCount);
     }
 
-    function _mintWithNoun(uint256 nounId) internal {
+    function _mintWithNoun(uint256 nounId) internal returns (uint256) {
         if (claimedPerNoun[nounId]) {
             revert YouAlreadyMinted();
         }
@@ -57,6 +57,8 @@ contract ERC721NounsExchangeSwapMinter is SafeOwnable {
         uint256 newId = discoGlasses.adminMint(msg.sender, 1);
 
         emit ClaimedFromNoun(msg.sender, newId, nounId);
+
+        return newId;
     }
 
     /// @notice admin function to update the cost to mint per noun
@@ -64,7 +66,11 @@ contract ERC721NounsExchangeSwapMinter is SafeOwnable {
         costPerNoun = _newCost;
     }
 
-    function mintWithNouns(uint256[] memory nounIds) external payable {
+    function mintWithNouns(uint256[] memory nounIds)
+        external
+        payable
+        returns (uint256)
+    {
         if (discoGlasses.saleDetails().totalMinted >= freeMintMaxCount) {
             if (msg.value != nounIds.length * costPerNoun) {
                 revert WrongPrice();
@@ -74,22 +80,30 @@ contract ERC721NounsExchangeSwapMinter is SafeOwnable {
                 revert WrongPrice();
             }
         }
+        uint256 mintedId;
         // cost would be minted < 200 – 0 otherwise 0.2 (admin set)
         for (uint256 i = 0; i < nounIds.length; i++) {
             if (nounsToken.ownerOf(nounIds[i]) != msg.sender) {
                 revert YouNeedtoOwnClaimedNoun();
             }
-            _mintWithNoun(nounIds[i]);
+            mintedId = _mintWithNoun(nounIds[i]);
         }
+        return mintedId;
     }
 
     function withdraw() external onlyOwner {
         Address.sendValue(payable(owner()), address(this).balance);
     }
 
-    function ownerMintWithNouns(uint256[] memory nounIds) external onlyOwner {
+    function ownerMintWithNouns(uint256[] memory nounIds)
+        external
+        onlyOwner
+        returns (uint256)
+    {
+        uint256 mintedId;
         for (uint256 i = 0; i < nounIds.length; i++) {
-            _mintWithNoun(nounIds[i]);
+            mintedId = _mintWithNoun(nounIds[i]);
         }
+        return mintedId;
     }
 }
