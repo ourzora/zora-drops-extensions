@@ -120,8 +120,6 @@ contract DeployerSignatureMinter is Script {
             });
         ERC721Drop nounsDiscoDrop = ERC721Drop(payable(nounsDisco));
         bytes32 minterRole = nounsDiscoDrop.MINTER_ROLE();
-        // Inits the sink of the drop
-        nounsDiscoDrop.setMetadataRenderer(IMetadataRenderer(address(swapMinter)), "0x00");
         nounsDiscoDrop.grantRole(minterRole, address(swapMinter));
 
         // 4 setup the NounsVisionExchangeMinterModule
@@ -130,6 +128,10 @@ contract DeployerSignatureMinter is Script {
                 _source: nounsDiscoDrop,
                 _description: "Nouns Vision Disco Redeemed"
             });
+
+        // Inits the sink of the drop
+        nounsDiscoDrop.setMetadataRenderer(IMetadataRenderer(address(exchangeMinterModule)), "0xcafe");
+        nounsDiscoDrop.grantRole(bytes32(0), address(exchangeMinterModule));
 
         // 6 exchange disco token with NounsVisionExchangeMinterModule to DISCO_VISION_REDEEMED
 
@@ -159,10 +161,13 @@ contract DeployerSignatureMinter is Script {
         });
         exchangeMinterModule.setColorLimits(colorSettings);
 
-        vm.startPrank(nounsHolder1);
+        vm.stopBroadcast();
+        vm.startBroadcast(nounsHolder1);
         uint256[] memory nounIds = new uint256[](1);
         nounIds[0] = nounId;
         uint256 newMintedId = swapMinter.mintWithNouns(nounIds);
+
+        ERC721Drop(payable(nounsDiscoDrop)).setApprovalForAll(address(exchangeMinterModule), true);
 
         uint256[] memory discoIds = new uint256[](1);
         discoIds[0] = newMintedId;
