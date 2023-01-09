@@ -129,7 +129,8 @@ contract DeployerSignatureMinter is Script {
                 _description: "Nouns Vision Disco Redeemed"
             });
 
-        nounsDiscoDrop.grantRole(bytes32(0), address(exchangeMinterModule));
+        // Allow exchange module to mint redeemed tokens
+        ERC721Drop(payable(nounsDiscoRedeemed)).grantRole(bytes32(0), address(exchangeMinterModule));
 
         // 6 exchange disco token with NounsVisionExchangeMinterModule to DISCO_VISION_REDEEMED
 
@@ -138,6 +139,7 @@ contract DeployerSignatureMinter is Script {
             exchangeMinterModule,
             "0xcafe"
         );
+
 
         // 5 claim disco token from NOUNS_HOLDER_ONE
 
