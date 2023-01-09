@@ -8,6 +8,7 @@ import {ZoraNFTCreatorProxy} from "zora-drops-contracts/ZoraNFTCreatorProxy.sol"
 import {ZoraFeeManager} from "zora-drops-contracts/ZoraFeeManager.sol";
 import {ERC721Drop} from "zora-drops-contracts/ERC721Drop.sol";
 import {IERC721Drop} from "zora-drops-contracts/interfaces/IERC721Drop.sol";
+import {IMetadataRenderer} from "zora-drops-contracts/interfaces/IMetadataRenderer.sol";
 import {FactoryUpgradeGate} from "zora-drops-contracts/FactoryUpgradeGate.sol";
 import {EditionMetadataRenderer} from "zora-drops-contracts/metadata/EditionMetadataRenderer.sol";
 import {DropMetadataRenderer} from "zora-drops-contracts/metadata/DropMetadataRenderer.sol";
@@ -50,26 +51,27 @@ contract DeployerSignatureMinter is Script {
         address owner
     ) internal returns (address) {
         ZoraNFTCreatorV1 creator = _getOrCreateCreator();
-        return creator.createEdition(
-            name,
-            symbol,
-            supply,
-            0,
-            payable(owner),
-            owner,
-            IERC721Drop.SalesConfiguration({
-                publicSaleStart: 0,
-                publicSaleEnd: 0,
-                presaleStart: 0,
-                presaleEnd: 0,
-                publicSalePrice: 0,
-                maxSalePurchasePerAddress: 0,
-                presaleMerkleRoot: bytes32(0)
-            }),
-            name,
-            "",
-            "ipfs://"
-        );
+        return
+            creator.createEdition(
+                name,
+                symbol,
+                supply,
+                0,
+                payable(owner),
+                owner,
+                IERC721Drop.SalesConfiguration({
+                    publicSaleStart: 0,
+                    publicSaleEnd: 0,
+                    presaleStart: 0,
+                    presaleEnd: 0,
+                    publicSalePrice: 0,
+                    maxSalePurchasePerAddress: 0,
+                    presaleMerkleRoot: bytes32(0)
+                }),
+                name,
+                "",
+                "ipfs://"
+            );
     }
 
     function run() external {
@@ -116,10 +118,10 @@ contract DeployerSignatureMinter is Script {
                 _costPerNoun: 0.1 ether,
                 _initialOwner: deployer
             });
-
         ERC721Drop nounsDiscoDrop = ERC721Drop(payable(nounsDisco));
-
         bytes32 minterRole = nounsDiscoDrop.MINTER_ROLE();
+        // Inits the sink of the drop
+        nounsDiscoDrop.setMetadataRenderer(IMetadataRenderer(address(swapMinter)), "0x00");
         nounsDiscoDrop.grantRole(minterRole, address(swapMinter));
 
         // 4 setup the NounsVisionExchangeMinterModule
@@ -129,17 +131,51 @@ contract DeployerSignatureMinter is Script {
                 _description: "Nouns Vision Disco Redeemed"
             });
 
-        // 5 claim disco token from NOUNS_HOLDER_ONE
         // 6 exchange disco token with NounsVisionExchangeMinterModule to DISCO_VISION_REDEEMED
 
+        // sets redeemed metadata renderer
+        ERC721Drop(payable(nounsDiscoRedeemed)).setMetadataRenderer(
+            exchangeMinterModule,
+            ""
+        );
 
+        // 5 claim disco token from NOUNS_HOLDER_ONE
+
+        address nounsHolder1 = address(0x004029);
+        uint256 nounId = ERC721Drop(payable(nounsMock)).adminMint(
+            nounsHolder1,
+            1
+        );
+
+        NounsVisionExchangeMinterModule.ColorSetting[]
+            memory colorSettings = new NounsVisionExchangeMinterModule.ColorSetting[](
+                1
+            );
+        colorSettings[0] = NounsVisionExchangeMinterModule.ColorSetting({
+            color: "disco",
+            maxCount: 100,
+            animationURI: "",
+            imageURI: ""
+        });
+        exchangeMinterModule.setColorLimits(colorSettings);
+
+        vm.startPrank(nounsHolder1);
+        uint256[] memory nounIds = new uint256[](1);
+        nounIds[0] = nounId;
+        uint256 newMintedId = swapMinter.mintWithNouns(nounIds);
+
+        uint256[] memory discoIds = new uint256[](1);
+        discoIds[0] = newMintedId;
+        exchangeMinterModule.exchange(discoIds, "disco");
+
+        vm.stopPrank();
+
+        vm.stopBroadcast();
 
         // ---- alternate plan -----
 
         // admin mint first 200 / 250
 
         // set presale list for all other holder
-
-        vm.stopBroadcast();
     }
 }
