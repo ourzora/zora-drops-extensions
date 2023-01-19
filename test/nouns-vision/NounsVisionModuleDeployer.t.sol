@@ -3,7 +3,6 @@ pragma solidity ^0.8.10;
 
 import {Test} from "forge-std/Test.sol";
 
-import {NounsVisionExchangeDeployer} from "../../src/nouns-vision/NounsVisionExchangeDeployer.sol";
 import {ERC721Drop} from "zora-drops-contracts/ERC721Drop.sol";
 import {ZoraNFTCreatorV1} from "zora-drops-contracts/ZoraNFTCreatorV1.sol";
 import {ERC721DropProxy} from "zora-drops-contracts/ERC721DropProxy.sol";
@@ -12,6 +11,7 @@ import {EditionMetadataRenderer} from "zora-drops-contracts/metadata/EditionMeta
 import {IZoraFeeManager} from "zora-drops-contracts/interfaces/IZoraFeeManager.sol";
 import {IERC721Drop} from "zora-drops-contracts/interfaces/IERC721Drop.sol";
 import {FactoryUpgradeGate} from "zora-drops-contracts/FactoryUpgradeGate.sol";
+import {NounsVisionExchangeDeployer} from "../../src/nouns-vision/NounsVisionExchangeDeployer.sol";
 import {MockRenderer} from "../utils/MockRenderer.sol";
 
 contract ERC721DropMinterModuleTest is Test {
