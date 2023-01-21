@@ -114,9 +114,10 @@ contract DeployerSignatureMinter is Script {
         ERC721NounsExchangeSwapMinter swapMinter = new ERC721NounsExchangeSwapMinter({
                 _nounsToken: nounsMock,
                 _discoGlasses: nounsDisco,
-                _freeMintMaxCount: 200,
+                _maxAirdropCutoffNounId: 100,
                 _costPerNoun: 0.1 ether,
-                _initialOwner: deployer
+                _initialOwner: deployer,
+                _claimPeriodEnd: block.timestamp + 10000
             });
         ERC721Drop nounsDiscoDrop = ERC721Drop(payable(nounsDisco));
         bytes32 minterRole = nounsDiscoDrop.MINTER_ROLE();
@@ -130,7 +131,10 @@ contract DeployerSignatureMinter is Script {
             });
 
         // Allow exchange module to mint redeemed tokens
-        ERC721Drop(payable(nounsDiscoRedeemed)).grantRole(bytes32(0), address(exchangeMinterModule));
+        ERC721Drop(payable(nounsDiscoRedeemed)).grantRole(
+            bytes32(0),
+            address(exchangeMinterModule)
+        );
 
         // 6 exchange disco token with NounsVisionExchangeMinterModule to DISCO_VISION_REDEEMED
 
@@ -140,7 +144,6 @@ contract DeployerSignatureMinter is Script {
             "0xcafe"
         );
 
-
         // 5 claim disco token from NOUNS_HOLDER_ONE
 
         address nounsHolder1 = address(0x004029);
@@ -148,7 +151,6 @@ contract DeployerSignatureMinter is Script {
             nounsHolder1,
             1
         );
-
 
         // Can be hard-coded into the drop with data from @salvino, can also be done via etherscan
         NounsVisionExchangeMinterModule.ColorSetting[]
@@ -169,7 +171,7 @@ contract DeployerSignatureMinter is Script {
         vm.startBroadcast(nounsHolder1);
         uint256[] memory nounIds = new uint256[](1);
         nounIds[0] = nounId;
-        uint256 newMintedId = swapMinter.mintWithNouns(nounIds);
+        uint256 newMintedId = swapMinter.claimAirdrop(nounIds);
 
         ERC721Drop(payable(nounsDiscoDrop)).setApprovalForAll(
             address(exchangeMinterModule),

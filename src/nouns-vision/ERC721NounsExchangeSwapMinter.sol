@@ -10,7 +10,7 @@ import {SafeOwnable} from "../utils/SafeOwnable.sol";
 contract ERC721NounsExchangeSwapMinter is SafeOwnable {
     IERC721 internal immutable nounsToken; // the nouns contract
     IERC721Drop internal immutable discoGlasses; // the disco contract
-    uint256 public maxAirdropQuantity; // max number of free disco units
+    uint256 public maxAirdropCutoffNounId; // max number of free disco units
     uint256 public costPerNoun; // cost of each disco unit
 
     uint256 public claimPeriodEnd; // end of the claim period
@@ -31,12 +31,12 @@ contract ERC721NounsExchangeSwapMinter is SafeOwnable {
         uint256 nounId
     );
 
-    event UpdatedHoldingsIndex(uint256);
+    event UpdatedMaxAirdropCutoffNounId(uint256);
 
     constructor(
         address _nounsToken,
         address _discoGlasses,
-        uint256 _maxAirdropQuantity,
+        uint256 _maxAirdropCutoffNounId,
         uint256 _costPerNoun,
         address _initialOwner,
         uint256 _claimPeriodEnd
@@ -44,7 +44,7 @@ contract ERC721NounsExchangeSwapMinter is SafeOwnable {
         // Set variables
         discoGlasses = IERC721Drop(_discoGlasses);
         nounsToken = IERC721(_nounsToken);
-        maxAirdropQuantity = _maxAirdropQuantity;
+        maxAirdropCutoffNounId = _maxAirdropCutoffNounId;
         costPerNoun = _costPerNoun;
         claimPeriodEnd = _claimPeriodEnd;
 
@@ -53,12 +53,12 @@ contract ERC721NounsExchangeSwapMinter is SafeOwnable {
     }
 
     /// @notice admin function to update the max number of free disco units
-    function updateAirdropQuantity(uint256 _maxAirdropQuantity)
+    function updateAirdropQuantity(uint256 _maxAirdropCutoffNounId)
         external
         onlyOwner
     {
-        maxAirdropQuantity = _maxAirdropQuantity;
-        emit UpdatedHoldingsIndex(_maxAirdropQuantity);
+        maxAirdropCutoffNounId = _maxAirdropCutoffNounId;
+        emit UpdatedMaxAirdropCutoffNounId(_maxAirdropCutoffNounId);
     }
 
     /// @notice admin function to update the cost to mint per noun
@@ -67,8 +67,8 @@ contract ERC721NounsExchangeSwapMinter is SafeOwnable {
     }
 
     /// @notice admin function that lets the admin update the claim period end
-    function updateClaimPeriodEnd(uint256 claimPeriodEnd) external onlyOwner {
-        claimPeriodEnd = claimPeriodEnd;
+    function updateClaimPeriodEnd(uint256 _claimPeriodEnd) external onlyOwner {
+        claimPeriodEnd = _claimPeriodEnd;
     }
 
     // internal minting function which checks if the noun has been claimed
@@ -88,7 +88,7 @@ contract ERC721NounsExchangeSwapMinter is SafeOwnable {
         return newId;
     }
 
-    function claimAirdrop(uint256[] memory nounIds) external {
+    function claimAirdrop(uint256[] memory nounIds) external returns (uint256) {
         if (block.timestamp > claimPeriodEnd) {
             revert ClaimPeriodOver();
         }
@@ -101,12 +101,12 @@ contract ERC721NounsExchangeSwapMinter is SafeOwnable {
             }
 
             // if the user provided nounID is outside the airdrop range, revert.
-            if (nounID >= maxAirdropQuantity) {
+            if (nounID >= maxAirdropCutoffNounId) {
                 revert NotQualifiedForAirdrop();
             }
 
             // If your noun ID qualifies for the aidrop, then mint a disco unit
-            _mintWithNoun(nounIds[i]);
+            return _mintWithNoun(nounIds[i]);
         }
     }
 
@@ -136,10 +136,12 @@ contract ERC721NounsExchangeSwapMinter is SafeOwnable {
             if (block.timestamp < claimPeriodEnd) {
                 // if the user provided nounID is within the aidrop,
                 // revert because they qualify for an airdrop.
-                if (nounID < maxAirdropQuantity) {
+                if (nounID < maxAirdropCutoffNounId) {
                     revert QualifiedForAirdrop();
                 }
 
+                // TODO(iain): Review
+                //
                 // During the claim period, only nounIDs that are less than the max supply
                 // are allowed to buy a disco unit. If the nounID is greater than the max supply
                 // of the disco units, revert.
