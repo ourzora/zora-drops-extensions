@@ -88,7 +88,10 @@ contract ERC721NounsExchangeSwapMinter is SafeOwnable {
         return newId;
     }
 
-    function claimAirdrop(uint256[] memory nounIds) external returns (uint256) {
+    function claimAirdrop(uint256[] memory nounIds)
+        external
+        returns (uint256 mintedId)
+    {
         if (block.timestamp > claimPeriodEnd) {
             revert ClaimPeriodOver();
         }
@@ -106,8 +109,10 @@ contract ERC721NounsExchangeSwapMinter is SafeOwnable {
             }
 
             // If your noun ID qualifies for the aidrop, then mint a disco unit
-            return _mintWithNoun(nounIds[i]);
+            mintedId = _mintWithNoun(nounIds[i]);
         }
+
+        return mintedId;
     }
 
     function mintDiscoWithNouns(uint256[] memory nounIds)
