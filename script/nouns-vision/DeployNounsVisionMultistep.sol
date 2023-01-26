@@ -18,8 +18,6 @@ import {NounsVisionExchangeMinterModule} from "../../src/nouns-vision/NounsVisio
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 
 contract DeployerSignatureMinter is Script {
-    ZoraNFTCreatorV1 creatorProxy;
-
     struct Addresses {
         address payable deployer;
         address nounsTokenAddress;
@@ -29,61 +27,19 @@ contract DeployerSignatureMinter is Script {
     }
 
     function run() external {
+        // step 1 create a a Nouns Vision Disco drop
+        // step 2 create a a Nouns Vision Disco Redeemed drop
+        // step 3 grant nouns vision disco admin to deployer address
+
         Addresses memory adrs = Addresses({
             deployer: payable(vm.envAddress("deployer")),
             nounsTokenAddress: vm.envAddress("nouns_token"),
             newAdminAddress: vm.envAddress("new_admin_address"),
-            nounsDiscoAddress: address(0),
-            nounsDiscoRedeemedAddress: address(0)
+            nounsDiscoAddress: vm.envAddress("nouns_vision_disco"),
+            nounsDiscoRedeemedAddress: vm.envAddress("nouns_vision_redeemed")
         });
 
         vm.startBroadcast(adrs.deployer);
-
-        adrs.nounsDiscoAddress = ZoraNFTCreatorV1(
-            vm.envAddress("creator_proxy")
-        ).createEdition({
-                name: "Nouns Vision Disco",
-                symbol: "NOUNSDISCO",
-                editionSize: 100,
-                royaltyBPS: 20,
-                fundsRecipient: payable(adrs.newAdminAddress),
-                defaultAdmin: adrs.newAdminAddress,
-                saleConfig: IERC721Drop.SalesConfiguration({
-                    publicSaleStart: 0,
-                    publicSaleEnd: 0,
-                    presaleStart: 0,
-                    presaleEnd: 0,
-                    publicSalePrice: 0,
-                    maxSalePurchasePerAddress: 0,
-                    presaleMerkleRoot: bytes32(0)
-                }),
-                description: "DESC",
-                animationURI: "",
-                imageURI: ""
-            });
-
-        adrs.nounsDiscoRedeemedAddress = ZoraNFTCreatorV1(
-            vm.envAddress("creator_proxy")
-        ).createEdition({
-                name: "Nouns Vision Disco REDEEMED",
-                symbol: "NOUNSDISCO REDEEMEDS",
-                editionSize: 100,
-                royaltyBPS: 100,
-                fundsRecipient: payable(adrs.newAdminAddress),
-                defaultAdmin: adrs.deployer,
-                saleConfig: IERC721Drop.SalesConfiguration({
-                    publicSaleStart: 0,
-                    publicSaleEnd: 0,
-                    presaleStart: 0,
-                    presaleEnd: 0,
-                    publicSalePrice: 0,
-                    maxSalePurchasePerAddress: 0,
-                    presaleMerkleRoot: bytes32(0)
-                }),
-                description: "DESC",
-                animationURI: "",
-                imageURI: ""
-            });
 
         // 3 setup the ERC721NounsExchangeSwapMinter (standalone contract that takes nouns and nouns vision contracts)
         //
