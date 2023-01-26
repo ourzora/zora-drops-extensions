@@ -32,61 +32,22 @@ contract DeployNounsVision is Script {
     uint256 public constant PRICE_PER_DISCO = 0.19 ether;
 
     function run() external {
+        // step 1 create a a Nouns Vision Disco drop
+        // step 2 grant nouns vision disco redeemed admin to deployer address
+        // step 2a: important: keep your admin access from another address. deployer will revoke
+        // step 3 create a a Nouns Vision Disco Redeemed drop
+        // step 3a: important: keep your admin access from another address. deployer will revoke
+        // step 4 grant nouns vision disco admin to deployer address
+
         Addresses memory adrs = Addresses({
             deployer: payable(vm.envAddress("deployer")),
             nounsTokenAddress: vm.envAddress("nouns_token"),
             newAdminAddress: vm.envAddress("new_admin_address"),
-            nounsDiscoAddress: address(0),
-            nounsDiscoRedeemedAddress: address(0)
+            nounsDiscoAddress: vm.envAddress("nouns_vision_disco"),
+            nounsDiscoRedeemedAddress: vm.envAddress("nouns_vision_redeemed")
         });
 
         vm.startBroadcast(adrs.deployer);
-
-        adrs.nounsDiscoAddress = ZoraNFTCreatorV1(
-            vm.envAddress("creator_proxy")
-        ).createEdition({
-                name: "Nouns Vision Disco",
-                symbol: "DISCO_GLASSES",
-                editionSize: MAX_DISCO_SUPPLY,
-                royaltyBPS: 20,
-                fundsRecipient: payable(adrs.newAdminAddress),
-                defaultAdmin: adrs.newAdminAddress,
-                saleConfig: IERC721Drop.SalesConfiguration({
-                    publicSaleStart: 0,
-                    publicSaleEnd: 0,
-                    presaleStart: 0,
-                    presaleEnd: 0,
-                    publicSalePrice: 0,
-                    maxSalePurchasePerAddress: 0,
-                    presaleMerkleRoot: bytes32(0)
-                }),
-                description: "This is an NFT collection of a physical, luxury version of the disco glasses only available to Noun holders. Each NFT is permanently burned to redeem a physical pair of sunglasses.",
-                animationURI: "",
-                imageURI: ""
-            });
-
-        adrs.nounsDiscoRedeemedAddress = ZoraNFTCreatorV1(
-            vm.envAddress("creator_proxy")
-        ).createEdition({
-                name: "Nouns Vision Disco (Redeemed)",
-                symbol: "DISCO_GLASSES_REDEEMED",
-                editionSize: MAX_DISCO_SUPPLY,
-                royaltyBPS: 100,
-                fundsRecipient: payable(adrs.newAdminAddress),
-                defaultAdmin: adrs.deployer,
-                saleConfig: IERC721Drop.SalesConfiguration({
-                    publicSaleStart: 0,
-                    publicSaleEnd: 0,
-                    presaleStart: 0,
-                    presaleEnd: 0,
-                    publicSalePrice: 0,
-                    maxSalePurchasePerAddress: 0,
-                    presaleMerkleRoot: bytes32(0)
-                }),
-                description: "This is a commemorative NFT given to holders of the nouns disco glasses after redemption.",
-                animationURI: "",
-                imageURI: ""
-            });
 
         // 3 setup the ERC721NounsExchangeSwapMinter (standalone contract that takes nouns and nouns vision contracts)
         // set minter for NOUNS_VISION_DISCO as ERC721NounsExchangeSwapMinter contract
@@ -95,7 +56,7 @@ contract DeployNounsVision is Script {
                 _discoGlasses: adrs.nounsDiscoAddress,
                 _maxAirdropCutoffNounId: 200,
                 _costPerNoun: PRICE_PER_DISCO,
-                _initialOwner: adrs.deployer,
+                _initialOwner: adrs.newAdminAddress,
                 _claimPeriodEnd: 0
             });
 
@@ -116,9 +77,7 @@ contract DeployNounsVision is Script {
             address(exchangeMinterModule)
         );
 
-        // 6 exchange disco token with NounsVisionExchangeMinterModule to DISCO_VISION_REDEEMED
-
-        // sets redeemed metadata renderer
+        // Sets redeemed metadata renderer and updates address of underlying redeemed edition
         ERC721Drop(payable(adrs.nounsDiscoRedeemedAddress)).setMetadataRenderer(
                 exchangeMinterModule,
                 "0xcafe"
@@ -138,9 +97,9 @@ contract DeployNounsVision is Script {
         exchangeMinterModule.setColorLimits(colorSettings);
 
         if (adrs.newAdminAddress != adrs.deployer) {
-            ERC721Drop(payable(adrs.nounsDiscoRedeemedAddress)).grantRole(
+            ERC721Drop(payable(adrs.nounsDiscoAddress)).revokeRole(
                 bytes32(0),
-                address(adrs.newAdminAddress)
+                address(adrs.deployer)
             );
 
             ERC721Drop(payable(adrs.nounsDiscoRedeemedAddress)).revokeRole(
