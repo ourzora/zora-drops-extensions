@@ -145,12 +145,9 @@ contract ERC721NounsExchangeSwapMinter is SafeOwnable {
                     revert QualifiedForAirdrop();
                 }
 
-                // TODO(iain): Review
-                //
                 // During the claim period, only nounIDs that are less than the max supply
                 // are allowed to buy a disco unit. If the nounID is greater than the max supply
                 // of the disco units, revert.
-                // TODO: check this logic because nouns are 0 indexed?
                 if (nounID >= discoGlasses.saleDetails().maxSupply) {
                     revert MustWaitUntilAfterClaimPeriod();
                 }

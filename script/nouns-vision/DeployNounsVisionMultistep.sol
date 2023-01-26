@@ -57,7 +57,7 @@ contract DeployNounsVision is Script {
                 _maxAirdropCutoffNounId: 200,
                 _costPerNoun: PRICE_PER_DISCO,
                 _initialOwner: adrs.newAdminAddress,
-                _claimPeriodEnd: 0
+                _claimPeriodEnd: 1677474000
             });
 
         ERC721Drop nounsDiscoDrop = ERC721Drop(payable(adrs.nounsDiscoAddress));
