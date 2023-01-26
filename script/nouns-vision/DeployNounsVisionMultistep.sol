@@ -17,7 +17,7 @@ import {NounsVisionExchangeMinterModule} from "../../src/nouns-vision/NounsVisio
 
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 
-contract DeployerSignatureMinter is Script {
+contract DeployNounsVision is Script {
     ZoraNFTCreatorV1 creatorProxy;
 
     struct Addresses {
@@ -27,6 +27,9 @@ contract DeployerSignatureMinter is Script {
         address nounsDiscoAddress;
         address nounsDiscoRedeemedAddress;
     }
+
+    uint64 public constant MAX_DISCO_SUPPLY = 500;
+    uint256 public constant PRICE_PER_DISCO = 0.19 ether;
 
     function run() external {
         Addresses memory adrs = Addresses({
@@ -43,8 +46,8 @@ contract DeployerSignatureMinter is Script {
             vm.envAddress("creator_proxy")
         ).createEdition({
                 name: "Nouns Vision Disco",
-                symbol: "NOUNSDISCO",
-                editionSize: 100,
+                symbol: "DISCO_GLASSES",
+                editionSize: MAX_DISCO_SUPPLY,
                 royaltyBPS: 20,
                 fundsRecipient: payable(adrs.newAdminAddress),
                 defaultAdmin: adrs.newAdminAddress,
@@ -57,7 +60,7 @@ contract DeployerSignatureMinter is Script {
                     maxSalePurchasePerAddress: 0,
                     presaleMerkleRoot: bytes32(0)
                 }),
-                description: "DESC",
+                description: "This is an NFT collection of a physical, luxury version of the disco glasses only available to Noun holders. Each NFT is permanently burned to redeem a physical pair of sunglasses.",
                 animationURI: "",
                 imageURI: ""
             });
@@ -65,9 +68,9 @@ contract DeployerSignatureMinter is Script {
         adrs.nounsDiscoRedeemedAddress = ZoraNFTCreatorV1(
             vm.envAddress("creator_proxy")
         ).createEdition({
-                name: "Nouns Vision Disco REDEEMED",
-                symbol: "NOUNSDISCO REDEEMEDS",
-                editionSize: 100,
+                name: "Nouns Vision Disco (Redeemed)",
+                symbol: "DISCO_GLASSES_REDEEMED",
+                editionSize: MAX_DISCO_SUPPLY,
                 royaltyBPS: 100,
                 fundsRecipient: payable(adrs.newAdminAddress),
                 defaultAdmin: adrs.deployer,
@@ -80,23 +83,22 @@ contract DeployerSignatureMinter is Script {
                     maxSalePurchasePerAddress: 0,
                     presaleMerkleRoot: bytes32(0)
                 }),
-                description: "DESC",
+                description: "This is a commemorative NFT given to holders of the nouns disco glasses after redemption.",
                 animationURI: "",
                 imageURI: ""
             });
 
         // 3 setup the ERC721NounsExchangeSwapMinter (standalone contract that takes nouns and nouns vision contracts)
-        //
-        //  - Allows for admin to claim on behalf of nouns holder
         // set minter for NOUNS_VISION_DISCO as ERC721NounsExchangeSwapMinter contract
         ERC721NounsExchangeSwapMinter swapMinter = new ERC721NounsExchangeSwapMinter({
                 _nounsToken: adrs.nounsTokenAddress,
                 _discoGlasses: adrs.nounsDiscoAddress,
                 _maxAirdropCutoffNounId: 200,
-                _costPerNoun: 0.1 ether,
+                _costPerNoun: PRICE_PER_DISCO,
                 _initialOwner: adrs.deployer,
                 _claimPeriodEnd: 0
             });
+
         ERC721Drop nounsDiscoDrop = ERC721Drop(payable(adrs.nounsDiscoAddress));
         bytes32 minterRole = nounsDiscoDrop.MINTER_ROLE();
         nounsDiscoDrop.grantRole(minterRole, address(swapMinter));
@@ -129,7 +131,7 @@ contract DeployerSignatureMinter is Script {
             );
         colorSettings[0] = NounsVisionExchangeMinterModule.ColorSetting({
             color: "disco",
-            maxCount: 100,
+            maxCount: MAX_DISCO_SUPPLY,
             animationURI: "",
             imageURI: ""
         });
