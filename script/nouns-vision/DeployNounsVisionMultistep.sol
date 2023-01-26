@@ -17,7 +17,9 @@ import {NounsVisionExchangeMinterModule} from "../../src/nouns-vision/NounsVisio
 
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 
-contract DeployerSignatureMinter is Script {
+contract DeployNounsVision is Script {
+    ZoraNFTCreatorV1 creatorProxy;
+
     struct Addresses {
         address payable deployer;
         address nounsTokenAddress;
@@ -26,10 +28,16 @@ contract DeployerSignatureMinter is Script {
         address nounsDiscoRedeemedAddress;
     }
 
+    uint64 public constant MAX_DISCO_SUPPLY = 500;
+    uint256 public constant PRICE_PER_DISCO = 0.19 ether;
+
     function run() external {
         // step 1 create a a Nouns Vision Disco drop
-        // step 2 create a a Nouns Vision Disco Redeemed drop
-        // step 3 grant nouns vision disco admin to deployer address
+        // step 2 grant nouns vision disco redeemed admin to deployer address
+        // step 2a: important: keep your admin access from another address. deployer will revoke
+        // step 3 create a a Nouns Vision Disco Redeemed drop
+        // step 3a: important: keep your admin access from another address. deployer will revoke
+        // step 4 grant nouns vision disco admin to deployer address
 
         Addresses memory adrs = Addresses({
             deployer: payable(vm.envAddress("deployer")),
@@ -42,17 +50,16 @@ contract DeployerSignatureMinter is Script {
         vm.startBroadcast(adrs.deployer);
 
         // 3 setup the ERC721NounsExchangeSwapMinter (standalone contract that takes nouns and nouns vision contracts)
-        //
-        //  - Allows for admin to claim on behalf of nouns holder
         // set minter for NOUNS_VISION_DISCO as ERC721NounsExchangeSwapMinter contract
         ERC721NounsExchangeSwapMinter swapMinter = new ERC721NounsExchangeSwapMinter({
                 _nounsToken: adrs.nounsTokenAddress,
                 _discoGlasses: adrs.nounsDiscoAddress,
                 _maxAirdropCutoffNounId: 200,
-                _costPerNoun: 0.1 ether,
-                _initialOwner: adrs.deployer,
+                _costPerNoun: PRICE_PER_DISCO,
+                _initialOwner: adrs.newAdminAddress,
                 _claimPeriodEnd: 0
             });
+
         ERC721Drop nounsDiscoDrop = ERC721Drop(payable(adrs.nounsDiscoAddress));
         bytes32 minterRole = nounsDiscoDrop.MINTER_ROLE();
         nounsDiscoDrop.grantRole(minterRole, address(swapMinter));
@@ -70,9 +77,7 @@ contract DeployerSignatureMinter is Script {
             address(exchangeMinterModule)
         );
 
-        // 6 exchange disco token with NounsVisionExchangeMinterModule to DISCO_VISION_REDEEMED
-
-        // sets redeemed metadata renderer
+        // Sets redeemed metadata renderer and updates address of underlying redeemed edition
         ERC721Drop(payable(adrs.nounsDiscoRedeemedAddress)).setMetadataRenderer(
                 exchangeMinterModule,
                 "0xcafe"
@@ -85,16 +90,16 @@ contract DeployerSignatureMinter is Script {
             );
         colorSettings[0] = NounsVisionExchangeMinterModule.ColorSetting({
             color: "disco",
-            maxCount: 100,
+            maxCount: MAX_DISCO_SUPPLY,
             animationURI: "",
             imageURI: ""
         });
         exchangeMinterModule.setColorLimits(colorSettings);
 
         if (adrs.newAdminAddress != adrs.deployer) {
-            ERC721Drop(payable(adrs.nounsDiscoRedeemedAddress)).grantRole(
+            ERC721Drop(payable(adrs.nounsDiscoAddress)).revokeRole(
                 bytes32(0),
-                address(adrs.newAdminAddress)
+                address(adrs.deployer)
             );
 
             ERC721Drop(payable(adrs.nounsDiscoRedeemedAddress)).revokeRole(
