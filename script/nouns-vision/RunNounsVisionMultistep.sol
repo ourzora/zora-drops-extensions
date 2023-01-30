@@ -127,6 +127,7 @@ contract DeployerSignatureMinter is Script {
         //  from token = NOUNS_VISION_DISCO // to token = DISCO_VISION_REDEEMED
         NounsVisionExchangeMinterModule exchangeMinterModule = new NounsVisionExchangeMinterModule({
                 _source: nounsDiscoDrop,
+                _sink: IERC721Drop(nounsDiscoRedeemed),
                 _description: "Nouns Vision Disco Redeemed"
             });
 
