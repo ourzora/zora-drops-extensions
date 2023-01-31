@@ -54,10 +54,6 @@ contract ERC721DropMinterModuleTest is Test {
                 )
             )
         );
-        NounsVisionExchangeMinterModule exchangeModule = new NounsVisionExchangeMinterModule(
-                source,
-                "test description"
-            );
         ERC721Drop sink = ERC721Drop(
             payable(
                 address(
@@ -80,13 +76,18 @@ contract ERC721DropMinterModuleTest is Test {
                                 maxSalePurchasePerAddress: 0,
                                 presaleMerkleRoot: 0x0
                             }),
-                            exchangeModule,
+                            mockRenderer,
                             ""
                         )
                     )
                 )
             )
         );
+        NounsVisionExchangeMinterModule exchangeModule = new NounsVisionExchangeMinterModule(
+                source,
+                sink,
+                "test description"
+            );
         vm.startPrank(OWNER_ADDRESS);
         // init set approval
         sink.grantRole(sink.MINTER_ROLE(), address(exchangeModule));
@@ -124,5 +125,102 @@ contract ERC721DropMinterModuleTest is Test {
         vm.expectRevert("Ran out of color");
         exchangeModule.exchange(fromIds, "Blue");
         exchangeModule.exchange(fromIds, "Red");
+    }
+    function test_ExchangeCorrectOwner() public {
+        MockRenderer mockRenderer = new MockRenderer();
+        ERC721Drop source = ERC721Drop(
+            payable(
+                address(
+                    new ERC721DropProxy(
+                        address(impl),
+                        abi.encodeWithSelector(
+                            ERC721Drop.initialize.selector,
+                            "Source NFT",
+                            "SRC",
+                            OWNER_ADDRESS,
+                            address(0x0),
+                            10,
+                            10,
+                            IERC721Drop.SalesConfiguration({
+                                publicSaleStart: 0,
+                                publicSaleEnd: 0,
+                                presaleStart: 0,
+                                presaleEnd: 0,
+                                publicSalePrice: 0,
+                                maxSalePurchasePerAddress: 0,
+                                presaleMerkleRoot: 0x0
+                            }),
+                            mockRenderer,
+                            ""
+                        )
+                    )
+                )
+            )
+        );
+        ERC721Drop sink = ERC721Drop(
+            payable(
+                address(
+                    new ERC721DropProxy(
+                        address(impl),
+                        abi.encodeWithSelector(
+                            ERC721Drop.initialize.selector,
+                            "Sink NFT",
+                            "SNK",
+                            OWNER_ADDRESS,
+                            address(0x0),
+                            10,
+                            10,
+                            IERC721Drop.SalesConfiguration({
+                                publicSaleStart: 0,
+                                publicSaleEnd: 0,
+                                presaleStart: 0,
+                                presaleEnd: 0,
+                                publicSalePrice: 0,
+                                maxSalePurchasePerAddress: 0,
+                                presaleMerkleRoot: 0x0
+                            }),
+                            mockRenderer,
+                            ""
+                        )
+                    )
+                )
+            )
+        );
+        NounsVisionExchangeMinterModule exchangeModule = new NounsVisionExchangeMinterModule(
+                source,
+                sink,
+                "test description"
+            );
+        vm.startPrank(OWNER_ADDRESS);
+
+        // init set approval
+        sink.grantRole(sink.MINTER_ROLE(), address(exchangeModule));
+        NounsVisionExchangeMinterModule.ColorSetting[]
+            memory settings = new NounsVisionExchangeMinterModule.ColorSetting[](
+                1
+            );
+        settings[0].color = "Black";
+        settings[0].imageURI = "https://example.com/base/black";
+        settings[0].animationURI = "https://example.com/base/black";
+        settings[0].maxCount = 10;
+        exchangeModule.setColorLimits(settings);
+
+        address holder1 = address(0x102);
+        address user2 = address(0x103);
+        source.adminMint(holder1, 4);
+
+        vm.stopPrank();
+        vm.startPrank(holder1);
+        source.setApprovalForAll(address(exchangeModule), true);
+        uint256[] memory fromIds = new uint256[](2);
+        fromIds[0] = 1;
+        fromIds[1] = 2;
+        source.ownerOf(3);
+        vm.stopPrank();
+        vm.prank(user2);
+        source.setApprovalForAll(address(exchangeModule), true);
+        vm.prank(user2);
+        vm.expectRevert("Not owned by sender");
+        exchangeModule.exchange(fromIds, "Black");
     }
 }

@@ -68,6 +68,7 @@ contract DeployNounsVision is Script {
         //  from token = NOUNS_VISION_DISCO // to token = DISCO_VISION_REDEEMED
         NounsVisionExchangeMinterModule exchangeMinterModule = new NounsVisionExchangeMinterModule({
                 _source: IERC721Drop(adrs.nounsDiscoAddress),
+                _sink: IERC721Drop(adrs.nounsDiscoRedeemedAddress),
                 _description: "Nouns Vision Disco Redeemed"
             });
 

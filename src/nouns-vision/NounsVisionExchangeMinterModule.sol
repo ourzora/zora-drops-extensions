@@ -39,7 +39,7 @@ contract NounsVisionExchangeMinterModule is
     event UpdatedDescription(string newDescription);
 
     ERC721Drop public immutable source;
-    ERC721Drop public sink;
+    ERC721Drop public immutable sink;
 
     string description;
     string public contractURI;
@@ -47,8 +47,9 @@ contract NounsVisionExchangeMinterModule is
     mapping(string => ColorInfo) public colors;
     mapping(uint256 => string) public idToColor;
 
-    constructor(IERC721Drop _source, string memory _description) {
+    constructor(IERC721Drop _source, IERC721Drop _sink, string memory _description) {
         source = ERC721Drop(payable(address(_source)));
+        sink = ERC721Drop(payable(address(_sink)));
         description = _description;
     }
 
@@ -71,9 +72,8 @@ contract NounsVisionExchangeMinterModule is
 
     // This is called along with the create callcode in the deployer contract as one
     // function call allowing the init to be a public function since it's within one transaction.
+    // This function currently is a no-op
     function initializeWithData(bytes memory) external {
-        require(address(sink) == address(0x0), "Can only be initialized once");
-        sink = ERC721Drop(payable(msg.sender));
     }
 
     function setColorLimits(ColorSetting[] calldata colorSettings)
@@ -118,6 +118,8 @@ contract NounsVisionExchangeMinterModule is
 
         uint256 resultChunk = sink.adminMint(msg.sender, targetLength);
         for (uint256 i = 0; i < targetLength; ) {
+            require(source.ownerOf(fromIds[i]) == msg.sender, "Not owned by sender");
+
             // If the user (account) is able to burn then they also are able to exchange.
             // If they are not allowed, the burn call will fail.
             source.burn(fromIds[i]);
