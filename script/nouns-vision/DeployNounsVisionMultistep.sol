@@ -26,6 +26,7 @@ contract DeployNounsVision is Script {
         address newAdminAddress;
         address nounsDiscoAddress;
         address nounsDiscoRedeemedAddress;
+        address swapMinterAddress;
     }
 
     uint64 public constant MAX_DISCO_SUPPLY = 500;
@@ -44,25 +45,30 @@ contract DeployNounsVision is Script {
             nounsTokenAddress: vm.envAddress("nouns_token"),
             newAdminAddress: vm.envAddress("new_admin_address"),
             nounsDiscoAddress: vm.envAddress("nouns_vision_disco"),
-            nounsDiscoRedeemedAddress: vm.envAddress("nouns_vision_redeemed")
+            nounsDiscoRedeemedAddress: vm.envAddress("nouns_vision_redeemed"),
+            swapMinterAddress: vm.envAddress("swap_minter_address")
         });
 
         vm.startBroadcast(adrs.deployer);
 
-        // 3 setup the ERC721NounsExchangeSwapMinter (standalone contract that takes nouns and nouns vision contracts)
-        // set minter for NOUNS_VISION_DISCO as ERC721NounsExchangeSwapMinter contract
-        ERC721NounsExchangeSwapMinter swapMinter = new ERC721NounsExchangeSwapMinter({
+        if (adrs.swapMinterAddress == address(0)) {
+            // 3 setup the ERC721NounsExchangeSwapMinter (standalone contract that takes nouns and nouns vision contracts)
+            // set minter for NOUNS_VISION_DISCO as ERC721NounsExchangeSwapMinter contract
+            adrs.swapMinterAddress = address(new ERC721NounsExchangeSwapMinter({
                 _nounsToken: adrs.nounsTokenAddress,
                 _discoGlasses: adrs.nounsDiscoAddress,
                 _maxAirdropCutoffNounId: 200,
                 _costPerNoun: PRICE_PER_DISCO,
                 _initialOwner: adrs.newAdminAddress,
                 _claimPeriodEnd: 1677474000
-            });
+            }));
 
-        ERC721Drop nounsDiscoDrop = ERC721Drop(payable(adrs.nounsDiscoAddress));
-        bytes32 minterRole = nounsDiscoDrop.MINTER_ROLE();
-        nounsDiscoDrop.grantRole(minterRole, address(swapMinter));
+            ERC721Drop nounsDiscoDrop = ERC721Drop(
+                payable(adrs.nounsDiscoAddress)
+            );
+            bytes32 minterRole = nounsDiscoDrop.MINTER_ROLE();
+            nounsDiscoDrop.grantRole(minterRole, adrs.swapMinterAddress);
+        }
 
         // 4 setup the NounsVisionExchangeMinterModule
         //  from token = NOUNS_VISION_DISCO // to token = DISCO_VISION_REDEEMED
