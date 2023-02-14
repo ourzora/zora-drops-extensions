@@ -54,16 +54,14 @@ contract DeployNounsVision is Script {
         if (adrs.swapMinterAddress == address(0)) {
             // 3 setup the ERC721NounsExchangeSwapMinter (standalone contract that takes nouns and nouns vision contracts)
             // set minter for NOUNS_VISION_DISCO as ERC721NounsExchangeSwapMinter contract
-            adrs.swapMinterAddress = address(
-                new ERC721NounsExchangeSwapMinter({
-                    _nounsToken: adrs.nounsTokenAddress,
-                    _discoGlasses: adrs.nounsDiscoAddress,
-                    _maxAirdropCutoffNounId: 200,
-                    _costPerNoun: PRICE_PER_DISCO,
-                    _initialOwner: adrs.newAdminAddress,
-                    _claimPeriodEnd: 1677474000
-                })
-            );
+            adrs.swapMinterAddress = address(new ERC721NounsExchangeSwapMinter({
+                _nounsToken: adrs.nounsTokenAddress,
+                _discoGlasses: adrs.nounsDiscoAddress,
+                _maxAirdropCutoffNounId: 200,
+                _costPerNoun: PRICE_PER_DISCO,
+                _initialOwner: adrs.newAdminAddress,
+                _claimPeriodEnd: 1677474000
+            }));
 
             ERC721Drop nounsDiscoDrop = ERC721Drop(
                 payable(adrs.nounsDiscoAddress)
