@@ -72,7 +72,7 @@ contract TokenGatedMinterModuleTest is Test {
         _;
     }
 
-    function test_onlyAdminCanSetTokenGate()
+    function test_onlyAdminCanSetOrDeleteTokenGate()
         public
         withDropAndTokenGatedMinter
     {
@@ -98,11 +98,11 @@ contract TokenGatedMinterModuleTest is Test {
         vm.stopPrank();
 
         vm.prank(address(0x1234));
-        minter.setTokenGate(address(dummyToken), 101, 0.2 ether, 3);
+        minter.setTokenGate(address(dummyToken), 0, 0.2 ether, 3);
         (amount, mintPrice, mintLimit) = minter.tokenGates(address(dummyToken));
-        assertEq(amount, 101);
-        assertEq(mintPrice, 0.2 ether);
-        assertEq(mintLimit, 3);
+        assertEq(amount, 0);
+        assertEq(mintPrice, 0);
+        assertEq(mintLimit, 0);
     }
 
     function test_mintWithERC20TokenGate() public withDropAndTokenGatedMinter {
@@ -111,11 +111,10 @@ contract TokenGatedMinterModuleTest is Test {
             "DUM"
         );
         dummyToken.mint(address(0x1234), 99);
+        vm.deal(address(0x1234), 1 ether);
 
         vm.prank(DROP_OWNER);
         minter.setTokenGate(address(dummyToken), 100, 0.1 ether, 2);
-
-        vm.deal(address(0x1234), 1 ether);
 
         vm.prank(address(0x1234));
         vm.expectRevert("TokenGatedMinter: must mint at least 1");
@@ -161,11 +160,10 @@ contract TokenGatedMinterModuleTest is Test {
                 ""
             );
         dummyToken.mint(address(0x1234));
+        vm.deal(address(0x1234), 1 ether);
 
         vm.prank(DROP_OWNER);
         minter.setTokenGate(address(dummyToken), 2, 0.1 ether, 2);
-
-        vm.deal(address(0x1234), 1 ether);
 
         vm.prank(address(0x1234));
         vm.expectRevert("TokenGatedMinter: must mint at least 1");
