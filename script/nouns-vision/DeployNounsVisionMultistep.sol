@@ -15,7 +15,7 @@ import {DropMetadataRenderer} from "zora-drops-contracts/metadata/DropMetadataRe
 import {ERC721NounsExchangeSwapMinter} from "../../src/nouns-vision/ERC721NounsExchangeSwapMinter.sol";
 import {NounsVisionExchangeMinterModule} from "../../src/nouns-vision/NounsVisionExchangeMinterModule.sol";
 
-import {Address} from "openzeppelin-contracts/contracts/utils/Address.sol";
+import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 
 contract DeployNounsVision is Script {
     ZoraNFTCreatorV1 creatorProxy;
