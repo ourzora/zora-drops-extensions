@@ -6,8 +6,6 @@ import {IERC721Drop} from "zora-drops-contracts/interfaces/IERC721Drop.sol";
 import {ITokenBalance} from "../utils/ITokenBalance.sol";
 
 contract TokenGatedMinter {
-    address payable public immutable mintingToken;
-
     struct TokenGate {
         uint256 amount;
         uint256 mintPrice;
@@ -19,6 +17,8 @@ contract TokenGatedMinter {
 
     // minter address => token gate contract address => has minted
     mapping(address => mapping(address => bool)) public hasMintedWithTokenGate;
+
+    address payable public immutable mintingToken;
 
     modifier onlyTokenAdmin() {
         require(
@@ -43,6 +43,7 @@ contract TokenGatedMinter {
         }
         if (_amount == 0 || _mintLimit == 0) {
             delete tokenGates[_token];
+            return;
         }
         tokenGates[_token] = TokenGate({
             amount: _amount,

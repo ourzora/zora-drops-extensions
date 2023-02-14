@@ -143,6 +143,12 @@ contract TokenGatedMinterModuleTest is Test {
             "Should have minted 2 tokens for address(0x1234)"
         );
 
+        assertEq(
+            address(drop).balance,
+            0.2 ether,
+            "Should have received 0.2 ether"
+        );
+
         vm.prank(address(0x1234));
         vm.expectRevert("TokenGatedMinter: already minted");
         minter.mintWithAllowedToken{value: 0.1 ether}(address(dummyToken), 1);
@@ -185,6 +191,12 @@ contract TokenGatedMinterModuleTest is Test {
             drop.balanceOf(address(0x1234)),
             2,
             "Should have minted 2 tokens for address(0x1234)"
+        );
+
+        assertEq(
+            address(drop).balance,
+            0.2 ether,
+            "Should have received 0.2 ether"
         );
 
         vm.prank(address(0x1234));
