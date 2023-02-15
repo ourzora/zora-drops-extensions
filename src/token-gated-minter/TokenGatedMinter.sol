@@ -4,7 +4,6 @@ pragma solidity ^0.8.10;
 import {IERC165} from "forge-std/interfaces/IERC165.sol";
 import {IERC721} from "forge-std/interfaces/IERC721.sol";
 import {IERC721Drop} from "zora-drops-contracts/interfaces/IERC721Drop.sol";
-import {ITokenBalance} from "../utils/ITokenBalance.sol";
 
 contract TokenGatedMinter {
     struct TokenGate {
