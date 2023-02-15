@@ -6,29 +6,29 @@ import {IERC721} from "forge-std/interfaces/IERC721.sol";
 import {IERC721Drop} from "zora-drops-contracts/interfaces/IERC721Drop.sol";
 
 contract TokenGatedMinter {
-    struct TokenGate {
+    struct TokenGateDetails {
         uint256 mintPrice;
         uint256 mintLimitPerToken;
     }
 
     // token gate contract address => token gate details
-    mapping(address => TokenGate) public tokenGates;
+    mapping(address => TokenGateDetails) public tokenGates;
 
     // token gate address => token gate tokenId => was used for minting
-    mapping(address => mapping(uint256 => bool)) public tokenUsedForMinting;
+    mapping(address => mapping(uint256 => bool)) public tokenWasUsedToMint;
 
-    address payable public immutable mintingToken;
+    address payable public immutable dropContract;
 
     modifier onlyTokenAdmin() {
         require(
-            IERC721Drop(mintingToken).isAdmin(msg.sender),
+            IERC721Drop(dropContract).isAdmin(msg.sender),
             "TokenGatedMinter: not token admin"
         );
         _;
     }
 
-    constructor(address payable _mintingToken) {
-        mintingToken = _mintingToken;
+    constructor(address payable _dropContract) {
+        dropContract = _dropContract;
     }
 
     function setTokenGate(
@@ -43,7 +43,7 @@ contract TokenGatedMinter {
             delete tokenGates[_token];
             return;
         }
-        tokenGates[_token] = TokenGate({
+        tokenGates[_token] = TokenGateDetails({
             mintPrice: _mintPrice,
             mintLimitPerToken: _mintLimitPerToken
         });
@@ -73,17 +73,17 @@ contract TokenGatedMinter {
         );
         for (uint256 i = 0; i < _tokenIds.length; i++) {
             require(
-                !tokenUsedForMinting[_tokenGate][_tokenIds[i]],
+                !tokenWasUsedToMint[_tokenGate][_tokenIds[i]],
                 "TokenGatedMinter: token already used to mint"
             );
             require(
                 IERC721(_tokenGate).ownerOf(_tokenIds[i]) == msg.sender,
                 "TokenGatedMinter: not token owner"
             );
-            tokenUsedForMinting[_tokenGate][_tokenIds[i]] = true;
+            tokenWasUsedToMint[_tokenGate][_tokenIds[i]] = true;
         }
-        IERC721Drop(mintingToken).adminMint(msg.sender, _amountToMint);
-        (bool sent, ) = mintingToken.call{value: msg.value}("");
+        IERC721Drop(dropContract).adminMint(msg.sender, _amountToMint);
+        (bool sent, ) = dropContract.call{value: msg.value}("");
         require(sent, "TokenGatedMinter: failed to send ether");
     }
 }
