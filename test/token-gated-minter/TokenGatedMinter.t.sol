@@ -76,129 +76,115 @@ contract TokenGatedMinterModuleTest is Test {
         public
         withDropAndTokenGatedMinter
     {
-        ERC20PresetMinterPauser dummyToken = new ERC20PresetMinterPauser(
-            "Dummy",
-            "DUM"
-        );
+        ERC721PresetMinterPauserAutoId dummyToken = new ERC721PresetMinterPauserAutoId(
+                "Dummy",
+                "DUM",
+                ""
+            );
 
         vm.prank(address(0x1234));
         vm.expectRevert("TokenGatedMinter: not token admin");
-        minter.setTokenGate(address(dummyToken), 100, 0.1 ether, 2);
+        minter.setTokenGate(address(dummyToken), 0.1 ether, 2);
 
         vm.startPrank(DROP_OWNER);
-        minter.setTokenGate(address(dummyToken), 100, 0.1 ether, 2);
-        (uint256 amount, uint256 mintPrice, uint256 mintLimit) = minter
-            .tokenGates(address(dummyToken));
+        minter.setTokenGate(address(dummyToken), 0.1 ether, 2);
+        (uint256 mintPrice, uint256 mintLimitPerToken) = minter.tokenGates(
+            address(dummyToken)
+        );
 
-        assertEq(amount, 100);
         assertEq(mintPrice, 0.1 ether);
-        assertEq(mintLimit, 2);
+        assertEq(mintLimitPerToken, 2);
 
         drop.grantRole(drop.DEFAULT_ADMIN_ROLE(), address(0x1234));
         vm.stopPrank();
 
         vm.prank(address(0x1234));
-        minter.setTokenGate(address(dummyToken), 0, 0.2 ether, 3);
-        (amount, mintPrice, mintLimit) = minter.tokenGates(address(dummyToken));
-        assertEq(amount, 0);
+        minter.setTokenGate(address(dummyToken), 0.2 ether, 0);
+        (mintPrice, mintLimitPerToken) = minter.tokenGates(address(dummyToken));
         assertEq(mintPrice, 0);
-        assertEq(mintLimit, 0);
+        assertEq(mintLimitPerToken, 0);
     }
 
-    function test_mintWithERC20TokenGate() public withDropAndTokenGatedMinter {
-        ERC20PresetMinterPauser dummyToken = new ERC20PresetMinterPauser(
-            "Dummy",
-            "DUM"
-        );
-        dummyToken.mint(address(0x1234), 99);
-        vm.deal(address(0x1234), 1 ether);
-
-        vm.prank(DROP_OWNER);
-        minter.setTokenGate(address(dummyToken), 100, 0.1 ether, 2);
-
-        vm.prank(address(0x1234));
-        vm.expectRevert("TokenGatedMinter: must mint at least 1");
-        minter.mintWithAllowedToken(address(dummyToken), 0);
-
-        vm.prank(address(0x1234));
-        vm.expectRevert("TokenGatedMinter: mint limit exceeded");
-        minter.mintWithAllowedToken{value: 0.3 ether}(address(dummyToken), 3);
-
-        vm.prank(address(0x1234));
-        vm.expectRevert("TokenGatedMinter: wrong price");
-        minter.mintWithAllowedToken{value: 0.3 ether}(address(dummyToken), 2);
-
-        vm.prank(address(0x1234));
-        vm.expectRevert("TokenGatedMinter: token gate not met");
-        minter.mintWithAllowedToken{value: 0.2 ether}(address(dummyToken), 2);
-
-        dummyToken.mint(address(0x1234), 1);
-        vm.prank(address(0x1234));
-        minter.mintWithAllowedToken{value: 0.2 ether}(address(dummyToken), 2);
-
-        assertEq(
-            drop.balanceOf(address(0x1234)),
-            2,
-            "Should have minted 2 tokens for address(0x1234)"
-        );
-
-        assertEq(
-            address(drop).balance,
-            0.2 ether,
-            "Should have received 0.2 ether"
-        );
-
-        vm.prank(address(0x1234));
-        vm.expectRevert("TokenGatedMinter: already minted");
-        minter.mintWithAllowedToken{value: 0.1 ether}(address(dummyToken), 1);
-    }
-
-    function test_mintWithERC721TokenGate() public withDropAndTokenGatedMinter {
+    function test_mintWithAllowedTokens() public withDropAndTokenGatedMinter {
         ERC721PresetMinterPauserAutoId dummyToken = new ERC721PresetMinterPauserAutoId(
                 "Dummy",
                 "DUM",
                 ""
             );
         dummyToken.mint(address(0x1234));
+        dummyToken.mint(address(0x1234));
         vm.deal(address(0x1234), 1 ether);
 
         vm.prank(DROP_OWNER);
-        minter.setTokenGate(address(dummyToken), 2, 0.1 ether, 2);
+        minter.setTokenGate(address(dummyToken), 0.1 ether, 2);
 
+        uint256[] memory tokenIds = new uint256[](2);
+        tokenIds[0] = 0;
+        tokenIds[1] = 1;
         vm.prank(address(0x1234));
         vm.expectRevert("TokenGatedMinter: must mint at least 1");
-        minter.mintWithAllowedToken(address(dummyToken), 0);
+        minter.mintWithAllowedTokens(address(dummyToken), 0, tokenIds);
+
+        uint256[] memory emptyTokenIds = new uint256[](0);
+        vm.prank(address(0x1234));
+        vm.expectRevert("TokenGatedMinter: must provide tokens");
+        minter.mintWithAllowedTokens{value: 0.1 ether}(
+            address(dummyToken),
+            1,
+            emptyTokenIds
+        );
 
         vm.prank(address(0x1234));
         vm.expectRevert("TokenGatedMinter: mint limit exceeded");
-        minter.mintWithAllowedToken{value: 0.3 ether}(address(dummyToken), 3);
+        minter.mintWithAllowedTokens{value: 0.5 ether}(
+            address(dummyToken),
+            5,
+            tokenIds
+        );
+
+        uint256[] memory tooManyTokenIds = new uint256[](5);
+        vm.prank(address(0x1234));
+        vm.expectRevert("TokenGatedMinter: too many tokens provided");
+        minter.mintWithAllowedTokens{value: 0.1 ether}(
+            address(dummyToken),
+            1,
+            tooManyTokenIds
+        );
 
         vm.prank(address(0x1234));
         vm.expectRevert("TokenGatedMinter: wrong price");
-        minter.mintWithAllowedToken{value: 0.3 ether}(address(dummyToken), 2);
-
-        vm.prank(address(0x1234));
-        vm.expectRevert("TokenGatedMinter: token gate not met");
-        minter.mintWithAllowedToken{value: 0.2 ether}(address(dummyToken), 2);
-
-        dummyToken.mint(address(0x1234));
-        vm.prank(address(0x1234));
-        minter.mintWithAllowedToken{value: 0.2 ether}(address(dummyToken), 2);
-
-        assertEq(
-            drop.balanceOf(address(0x1234)),
-            2,
-            "Should have minted 2 tokens for address(0x1234)"
+        minter.mintWithAllowedTokens{value: 0.3 ether}(
+            address(dummyToken),
+            4,
+            tokenIds
         );
 
-        assertEq(
-            address(drop).balance,
-            0.2 ether,
-            "Should have received 0.2 ether"
+        dummyToken.mint(address(0x999));
+        tokenIds[1] = 2;
+        vm.prank(address(0x1234));
+        vm.expectRevert("TokenGatedMinter: not token owner");
+        minter.mintWithAllowedTokens{value: 0.4 ether}(
+            address(dummyToken),
+            4,
+            tokenIds
         );
+        tokenIds[1] = 1;
 
         vm.prank(address(0x1234));
-        vm.expectRevert("TokenGatedMinter: already minted");
-        minter.mintWithAllowedToken{value: 0.1 ether}(address(dummyToken), 1);
+        minter.mintWithAllowedTokens{value: 0.4 ether}(
+            address(dummyToken),
+            4,
+            tokenIds
+        );
+        assertEq(drop.balanceOf(address(0x1234)), 4);
+        assertEq(address(drop).balance, 0.4 ether);
+
+        vm.prank(address(0x1234));
+        vm.expectRevert("TokenGatedMinter: token already used to mint");
+        minter.mintWithAllowedTokens{value: 0.4 ether}(
+            address(dummyToken),
+            4,
+            tokenIds
+        );
     }
 }
