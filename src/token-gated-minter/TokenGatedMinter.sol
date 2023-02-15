@@ -25,6 +25,13 @@ contract TokenGatedMinter {
         uint256 mintLimitPerToken
     );
 
+    event MintedUsingGatedToken(
+        address recipient,
+        uint256 amountMinted,
+        address tokenGate,
+        uint256[] tokenGateIds
+    );
+
     modifier onlyTokenAdmin() {
         require(
             IERC721Drop(dropContract).isAdmin(msg.sender),
@@ -90,6 +97,12 @@ contract TokenGatedMinter {
             );
             tokenWasUsedToMint[_tokenGate][_tokenIds[i]] = true;
         }
+        emit MintedUsingGatedToken(
+            msg.sender,
+            _amountToMint,
+            _tokenGate,
+            _tokenIds
+        );
         IERC721Drop(dropContract).adminMint(msg.sender, _amountToMint);
         (bool sent, ) = dropContract.call{value: msg.value}("");
         require(sent, "TokenGatedMinter: failed to send ether");
