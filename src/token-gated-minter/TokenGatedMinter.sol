@@ -19,6 +19,12 @@ contract TokenGatedMinter {
 
     address payable public immutable dropContract;
 
+    event TokenGateUpdated(
+        address tokenGate,
+        uint256 mintPrice,
+        uint256 mintLimitPerToken
+    );
+
     modifier onlyTokenAdmin() {
         require(
             IERC721Drop(dropContract).isAdmin(msg.sender),
@@ -28,6 +34,7 @@ contract TokenGatedMinter {
     }
 
     constructor(address payable _dropContract) {
+        require(_dropContract != address(0), "TokenGatedMinter: zero address");
         dropContract = _dropContract;
     }
 
@@ -36,17 +43,18 @@ contract TokenGatedMinter {
         uint256 _mintPrice,
         uint256 _mintLimitPerToken
     ) external onlyTokenAdmin {
-        if (_token == address(0)) {
-            return;
-        }
+        require(_token != address(0), "TokenGatedMinter: zero address");
+        emit TokenGateUpdated(_token, _mintPrice, _mintLimitPerToken);
         if (_mintLimitPerToken == 0) {
             delete tokenGates[_token];
+            emit TokenGateUpdated(_token, 0, 0);
             return;
         }
         tokenGates[_token] = TokenGateDetails({
             mintPrice: _mintPrice,
             mintLimitPerToken: _mintLimitPerToken
         });
+        emit TokenGateUpdated(_token, _mintPrice, _mintLimitPerToken);
     }
 
     function mintWithAllowedTokens(
