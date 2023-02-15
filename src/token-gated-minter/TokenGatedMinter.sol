@@ -25,7 +25,7 @@ contract TokenGatedMinter {
         uint256 mintLimitPerToken
     );
 
-    event MintedUsingGatedToken(
+    event MintedUsingGatedTokens(
         address recipient,
         uint256 amountMinted,
         address tokenGate,
@@ -64,7 +64,7 @@ contract TokenGatedMinter {
         emit TokenGateUpdated(_token, _mintPrice, _mintLimitPerToken);
     }
 
-    function mintWithAllowedTokens(
+    function mintWithGatedTokens(
         address _tokenGate,
         uint256 _amountToMint,
         uint256[] calldata _tokenIds
@@ -97,7 +97,7 @@ contract TokenGatedMinter {
             );
             tokenWasUsedToMint[_tokenGate][_tokenIds[i]] = true;
         }
-        emit MintedUsingGatedToken(
+        emit MintedUsingGatedTokens(
             msg.sender,
             _amountToMint,
             _tokenGate,
