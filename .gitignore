@@ -1,6 +1,7 @@
 cache/
 .DS_Store
 out/
+broadcast/
 
 .env
 .env*
