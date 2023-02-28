@@ -62,7 +62,7 @@ contract TokenGatedMinterModuleTest is Test {
                 )
             )
         );
-        minter = new TokenGatedMinter(payable(address(drop)));
+        minter = new TokenGatedMinter();
 
         vm.startPrank(DROP_OWNER);
         drop.grantRole(drop.MINTER_ROLE(), address(minter));
@@ -84,11 +84,12 @@ contract TokenGatedMinterModuleTest is Test {
 
         vm.prank(address(0x1234));
         vm.expectRevert("TokenGatedMinter: not token admin");
-        minter.setTokenGate(address(dummyToken), 0.1 ether, 2);
+        minter.setTokenGate(address(drop), address(dummyToken), 0.1 ether, 2);
 
         vm.startPrank(DROP_OWNER);
-        minter.setTokenGate(address(dummyToken), 0.1 ether, 2);
+        minter.setTokenGate(address(drop), address(dummyToken), 0.1 ether, 2);
         (uint256 mintPrice, uint256 mintLimitPerToken) = minter.tokenGates(
+            address(drop),
             address(dummyToken)
         );
 
@@ -99,9 +100,12 @@ contract TokenGatedMinterModuleTest is Test {
         vm.stopPrank();
 
         vm.prank(address(0x1234));
-        minter.setTokenGate(address(dummyToken), 0.2 ether, 0);
-        (mintPrice, mintLimitPerToken) = minter.tokenGates(address(dummyToken));
-        assertEq(mintPrice, 0);
+        minter.setTokenGate(address(drop), address(dummyToken), 0.2 ether, 0);
+        (mintPrice, mintLimitPerToken) = minter.tokenGates(
+            address(drop),
+            address(dummyToken)
+        );
+        assertEq(mintPrice, 0.2 ether);
         assertEq(mintLimitPerToken, 0);
     }
 
@@ -116,19 +120,25 @@ contract TokenGatedMinterModuleTest is Test {
         vm.deal(address(0x1234), 1 ether);
 
         vm.prank(DROP_OWNER);
-        minter.setTokenGate(address(dummyToken), 0.1 ether, 2);
+        minter.setTokenGate(address(drop), address(dummyToken), 0.1 ether, 2);
 
         uint256[] memory tokenIds = new uint256[](2);
         tokenIds[0] = 0;
         tokenIds[1] = 1;
         vm.prank(address(0x1234));
         vm.expectRevert("TokenGatedMinter: must mint at least 1");
-        minter.mintWithGatedTokens(address(dummyToken), 0, tokenIds);
+        minter.mintWithGatedTokens(
+            address(drop),
+            address(dummyToken),
+            0,
+            tokenIds
+        );
 
         uint256[] memory emptyTokenIds = new uint256[](0);
         vm.prank(address(0x1234));
         vm.expectRevert("TokenGatedMinter: must provide tokens");
         minter.mintWithGatedTokens{value: 0.1 ether}(
+            address(drop),
             address(dummyToken),
             1,
             emptyTokenIds
@@ -137,6 +147,7 @@ contract TokenGatedMinterModuleTest is Test {
         vm.prank(address(0x1234));
         vm.expectRevert("TokenGatedMinter: mint limit exceeded");
         minter.mintWithGatedTokens{value: 0.5 ether}(
+            address(drop),
             address(dummyToken),
             5,
             tokenIds
@@ -144,16 +155,20 @@ contract TokenGatedMinterModuleTest is Test {
 
         uint256[] memory tooManyTokenIds = new uint256[](5);
         vm.prank(address(0x1234));
-        vm.expectRevert("TokenGatedMinter: too many tokens provided");
+        vm.expectRevert(
+            "TokenGatedMinter: too many gate tokens provided for mint amount"
+        );
         minter.mintWithGatedTokens{value: 0.1 ether}(
+            address(drop),
             address(dummyToken),
             1,
             tooManyTokenIds
         );
 
         vm.prank(address(0x1234));
-        vm.expectRevert("TokenGatedMinter: wrong price");
+        vm.expectRevert("TokenGatedMinter: incorrect ETH amount sent");
         minter.mintWithGatedTokens{value: 0.3 ether}(
+            address(drop),
             address(dummyToken),
             4,
             tokenIds
@@ -164,6 +179,7 @@ contract TokenGatedMinterModuleTest is Test {
         vm.prank(address(0x1234));
         vm.expectRevert("TokenGatedMinter: not token owner");
         minter.mintWithGatedTokens{value: 0.4 ether}(
+            address(drop),
             address(dummyToken),
             4,
             tokenIds
@@ -172,6 +188,7 @@ contract TokenGatedMinterModuleTest is Test {
 
         vm.prank(address(0x1234));
         minter.mintWithGatedTokens{value: 0.4 ether}(
+            address(drop),
             address(dummyToken),
             4,
             tokenIds
@@ -182,6 +199,7 @@ contract TokenGatedMinterModuleTest is Test {
         vm.prank(address(0x1234));
         vm.expectRevert("TokenGatedMinter: token already used to mint");
         minter.mintWithGatedTokens{value: 0.4 ether}(
+            address(drop),
             address(dummyToken),
             4,
             tokenIds
