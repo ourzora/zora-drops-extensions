@@ -8,3 +8,4 @@ openzeppelin-contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/
 openzeppelin-contracts/=lib/openzeppelin-contracts/
 zora-drops-contracts/=lib/zora-drops-contracts/src/
 ds-test/=lib/zora-drops-contracts/lib/ds-test/src/
+micro-onchain-metadata-utils/=lib/micro-onchain-metadata-utils/src/
