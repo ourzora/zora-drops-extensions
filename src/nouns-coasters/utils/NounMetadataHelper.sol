@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
-import {NounsCoasterMetadataRenderer} from "../../src/metadata/NounsCoasterMetadataRenderer.sol";
-import {INounsCoasterMetadataRendererTypes} from "../../src/interfaces/INounsCoasterMetadataRendererTypes.sol";
+import {NounsCoasterMetadataRenderer} from "../metadata/NounsCoasterMetadataRenderer.sol";
+import {INounsCoasterMetadataRendererTypes} from "../interfaces/INounsCoasterMetadataRendererTypes.sol";
 import "forge-std/console.sol";
 
 abstract contract NounMetadataHelper {
