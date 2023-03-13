@@ -21,6 +21,11 @@ interface INounsCoasterMetadataRendererTypes {
         string[] items;
     }
 
+    struct Item {
+        uint8 index;
+        string name;
+    }
+
     struct Settings {
         address token;
         string projectURI;
@@ -37,6 +42,9 @@ interface INounsCoasterMetadataRendererTypes {
 
     struct NounsCoasterLayerData {
         IPFSGroup ipfs;
-        Property property;
+        address data;
+        uint256 count;
+        bool hasEqualVariants;
+        string name;
     }
 }

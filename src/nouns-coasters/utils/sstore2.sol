@@ -36,7 +36,7 @@ library SSTORE2 {
     function write(bytes memory data) internal returns (address pointer) {
         /// @solidity memory-safe-assembly
         assembly {
-            let originalDataLength := mload(data)
+            let originalDataLength := calldataload(data)
 
             // Add 1 to data size since we are prefixing it with a STOP opcode.
             let dataSize := add(originalDataLength, DATA_OFFSET)
