@@ -16,14 +16,9 @@ interface INounsCoasterMetadataRendererTypes {
         string extension;
     }
 
-    struct Item {
-        uint16 referenceSlot;
-        string name;
-    }
-
     struct Property {
         string name;
-        Item[] items;
+        string[] items;
     }
 
     struct Settings {
@@ -38,5 +33,10 @@ interface INounsCoasterMetadataRendererTypes {
         string key;
         string value;
         bool quote;
+    }
+
+    struct NounsCoasterLayerData {
+        IPFSGroup ipfs;
+        Property property;
     }
 }
