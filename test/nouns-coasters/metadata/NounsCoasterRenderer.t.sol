@@ -8,7 +8,6 @@ import {IMetadataRenderer} from "zora-drops-contracts/interfaces/IMetadataRender
 import {DropMockBase} from "./DropMockBase.sol";
 import {IERC721Drop} from "zora-drops-contracts/interfaces/IERC721Drop.sol";
 import {Ownable2Step} from "openzeppelin-contracts/contracts/access/Ownable2Step.sol";
-import {NounMetadataHelper} from "../../../src/nouns-coasters/utils/NounMetadataHelper.sol";
 import {Test} from "forge-std/Test.sol";
 import "forge-std/console.sol";
 
@@ -52,7 +51,7 @@ contract IERC721OnChainDataMock {
     }
 }
 
-contract NounsCoasterMetadataRendererTest is Test, NounMetadataHelper {
+contract NounsCoasterMetadataRendererTest is Test {
     address public constant mediaContract = address(123456);
     bytes initStrings =
         abi.encode(
@@ -66,174 +65,6 @@ contract NounsCoasterMetadataRendererTest is Test, NounMetadataHelper {
 
     NounsCoasterMetadataRenderer public nounsRenderer;
     IERC721OnChainDataMock public mock;
-
-    function setUp() external {
-        // mock = new IERC721OnChainDataMock(0, 10);
-        // nounsRenderer = new NounsCoasterMetadataRenderer({
-        //     _description: "",
-        //     _contractImage: "",
-        //     _projectURI: "",
-        //     _rendererBase: "",
-        //     _token: address(0),
-        //     _owner: address(0)
-        // });
-
-        // string[] memory names = getBackgroundNames();
-
-        // NounsCoasterMetadataRenderer.ItemParam[]
-        //     memory items = getBackgroundItems();
-
-        // NounsCoasterMetadataRenderer.ItemParam[]
-        //     memory getNounItems_0_3 = getNounItems_0_3();
-        // NounsCoasterMetadataRenderer.ItemParam[]
-        //     memory getNounItems_4 = getNounItems_4();
-        // NounsCoasterMetadataRenderer.ItemParam[]
-        //     memory getNounItems_5_7 = getNounItems_5_7();
-        // NounsCoasterMetadataRenderer.ItemParam[]
-        //     memory getNounItems_8_10 = getNounItems_8_10();
-
-        // INounsCoasterMetadataRendererTypes.IPFSGroup
-        //     memory ipfsGroup = INounsCoasterMetadataRendererTypes.IPFSGroup({
-        //         baseUri: "ipfs://QmZ9UT92uG3oxKHhm6s6Xts9p8HTxZ99KdevVhQbD3vuUj/",
-        //         extension: ".png"
-        //     });
-
-        // // Noun 1 metadata setup
-        // {
-        //     string[] memory noun1Names = getNounNames(0);
-        //     string[] memory noun1Names_0_3 = nameSlicer(noun1Names, 0, 3);
-        //     string[] memory noun1Names_4 = nameSlicer(noun1Names, 4, 4);
-        //     string[] memory noun1Names_5_7 = nameSlicer(noun1Names, 5, 7);
-        //     string[] memory noun1Names_8_10 = nameSlicer(noun1Names, 8, 10);
-
-        //     nounsRenderer.addNounProperties(
-        //         0,
-        //         noun1Names_0_3,
-        //         getNounItems_0_3,
-        //         ipfsGroup
-        //     );
-        //     nounsRenderer.addNounProperties(
-        //         0,
-        //         noun1Names_4,
-        //         getNounItems_4,
-        //         ipfsGroup
-        //     );
-        //     nounsRenderer.addNounProperties(
-        //         0,
-        //         noun1Names_5_7,
-        //         getNounItems_5_7,
-        //         ipfsGroup
-        //     );
-        //     nounsRenderer.addNounProperties(
-        //         0,
-        //         noun1Names_8_10,
-        //         getNounItems_8_10,
-        //         ipfsGroup
-        //     );
-        // }
-
-        // // Noun 2 metadata setup
-        // {
-        //     string[] memory noun2Names = getNounNames(1);
-        //     string[] memory noun2Names_0_3 = nameSlicer(noun2Names, 0, 3);
-        //     string[] memory noun2Names_4 = nameSlicer(noun2Names, 4, 4);
-        //     string[] memory noun2Names_5_7 = nameSlicer(noun2Names, 5, 7);
-        //     string[] memory noun2Names_8_10 = nameSlicer(noun2Names, 8, 10);
-
-        //     nounsRenderer.addNounProperties(
-        //         1,
-        //         noun2Names_0_3,
-        //         getNounItems_0_3,
-        //         ipfsGroup
-        //     );
-        //     nounsRenderer.addNounProperties(
-        //         1,
-        //         noun2Names_4,
-        //         getNounItems_4,
-        //         ipfsGroup
-        //     );
-        //     nounsRenderer.addNounProperties(
-        //         1,
-        //         noun2Names_5_7,
-        //         getNounItems_5_7,
-        //         ipfsGroup
-        //     );
-        //     nounsRenderer.addNounProperties(
-        //         1,
-        //         noun2Names_8_10,
-        //         getNounItems_8_10,
-        //         ipfsGroup
-        //     );
-        // }
-
-        // // Noun 3 metadata setup
-        // {
-        //     string[] memory noun3Names = getNounNames(2);
-        //     string[] memory noun3Names_0_3 = nameSlicer(noun3Names, 0, 3);
-        //     string[] memory noun3Names_4 = nameSlicer(noun3Names, 4, 4);
-        //     string[] memory noun3Names_5_7 = nameSlicer(noun3Names, 5, 7);
-        //     string[] memory noun3Names_8_10 = nameSlicer(noun3Names, 8, 10);
-
-        //     nounsRenderer.addNounProperties(
-        //         2,
-        //         noun3Names_0_3,
-        //         getNounItems_0_3,
-        //         ipfsGroup
-        //     );
-        //     nounsRenderer.addNounProperties(
-        //         2,
-        //         noun3Names_4,
-        //         getNounItems_4,
-        //         ipfsGroup
-        //     );
-        //     nounsRenderer.addNounProperties(
-        //         2,
-        //         noun3Names_5_7,
-        //         getNounItems_5_7,
-        //         ipfsGroup
-        //     );
-        //     nounsRenderer.addNounProperties(
-        //         2,
-        //         noun3Names_8_10,
-        //         getNounItems_8_10,
-        //         ipfsGroup
-        //     );
-        // }
-
-        // // Noun 4 metadata setup
-        // {
-        //     string[] memory noun4Names = getNounNames(3);
-        //     string[] memory noun4Names_0_3 = nameSlicer(noun4Names, 0, 3);
-        //     string[] memory noun4Names_4 = nameSlicer(noun4Names, 4, 4);
-        //     string[] memory noun4Names_5_7 = nameSlicer(noun4Names, 5, 7);
-        //     string[] memory noun4Names_8_10 = nameSlicer(noun4Names, 8, 10);
-
-        //     nounsRenderer.addNounProperties(
-        //         3,
-        //         noun4Names_0_3,
-        //         getNounItems_0_3,
-        //         ipfsGroup
-        //     );
-        //     nounsRenderer.addNounProperties(
-        //         3,
-        //         noun4Names_4,
-        //         getNounItems_4,
-        //         ipfsGroup
-        //     );
-        //     nounsRenderer.addNounProperties(
-        //         3,
-        //         noun4Names_5_7,
-        //         getNounItems_5_7,
-        //         ipfsGroup
-        //     );
-        //     nounsRenderer.addNounProperties(
-        //         3,
-        //         noun4Names_8_10,
-        //         getNounItems_8_10,
-        //         ipfsGroup
-        //     );
-        // }
-    }
 
     function test_NCMetadataInits() public {
         address token = nounsRenderer.token();

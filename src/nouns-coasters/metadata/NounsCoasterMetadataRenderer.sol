@@ -53,9 +53,6 @@ contract NounsCoasterMetadataRenderer is
     /// ]
     mapping(uint16 => Property[]) public nounProperties;
 
-    // /// @notice The IPFS data of all property items
-    // IPFSGroup[] public ipfsData;
-
     ///                                                          ///
     ///                            EVENTS                        ///
     ///                                                          ///
@@ -113,21 +110,9 @@ contract NounsCoasterMetadataRenderer is
         });
     }
 
-    // @notice Adds properties and/or items to be pseudo-randomly chosen from during token minting
-    // @param _names The names of the properties to add
-    // @param _items The items to add to each property
-    // @param _ipfsGroup The IPFS base URI and extension
-    // function addProperties(
-    //     string[] calldata _names,
-    //     ItemParam[] calldata _items,
-    //     IPFSGroup calldata _ipfsGroup
-    // ) external onlyOwner {
-    //     _addProperties(_names, _items, _ipfsGroup);
-    // }
-
     NounsCoasterLayerData[] dataLayers;
 
-    function insertLayerAtIndex(
+    function replaceLayerAtIndex(
         uint256 index,
         IPFSGroup memory ipfs,
         string[] memory items,
@@ -161,255 +146,9 @@ contract NounsCoasterMetadataRenderer is
         );
     }
 
-    // function _addProperties(
-    //     string[] calldata _names,
-    //     ItemParam[] calldata _items,
-    //     IPFSGroup calldata _ipfsGroup
-    // ) internal {
-    //     // Cache the existing amount of IPFS data stored
-    //     uint256 dataLength = ipfsData.length;
-
-    //     // Add the IPFS group information
-    //     ipfsData.push(_ipfsGroup);
-
-    //     // Cache the number of existing properties
-    //     uint256 numStoredProperties = properties.length;
-
-    //     // Cache the number of new properties
-    //     uint256 numNewProperties = _names.length;
-
-    //     // Cache the number of new items
-    //     uint256 numNewItems = _items.length;
-
-    //     // If this is the first time adding metadata:
-    //     if (numStoredProperties == 0) {
-    //         // Ensure at least one property and one item are included
-    //         if (numNewProperties == 0 || numNewItems == 0) {
-    //             revert ONE_PROPERTY_AND_ITEM_REQUIRED();
-    //         }
-    //     }
-
-    //     unchecked {
-    //         // Check if not too many items are stored
-    //         if (numStoredProperties + numNewProperties > 15) {
-    //             revert TOO_MANY_PROPERTIES();
-    //         }
-
-    //         // For each new property:
-    //         for (uint256 i = 0; i < numNewProperties; ++i) {
-    //             // Append storage space
-    //             properties.push();
-
-    //             // Get the new property id
-    //             uint256 propertyId = numStoredProperties + i;
-
-    //             // Store the property name
-    //             properties[propertyId].name = _names[i];
-
-    //             emit PropertyAdded(propertyId, _names[i]);
-    //         }
-
-    //         // For each new item:
-    //         for (uint256 i = 0; i < numNewItems; ++i) {
-    //             // Cache the id of the associated property
-    //             uint256 _propertyId = _items[i].propertyId;
-
-    //             // Offset the id if the item is for a new property
-    //             // Note: Property ids under the hood are offset by 1
-    //             if (_items[i].isNewProperty) {
-    //                 _propertyId += numStoredProperties;
-    //             }
-
-    //             // Ensure the item is for a valid property
-    //             if (_propertyId >= properties.length) {
-    //                 revert INVALID_PROPERTY_SELECTED(_propertyId);
-    //             }
-
-    //             // Get the pointer to the other items for the property
-    //             Item[] storage items = properties[_propertyId].items;
-
-    //             // Append storage space
-    //             items.push();
-
-    //             // Get the index of the new item
-    //             // Cannot underflow as the items array length is ensured to be at least 1
-    //             uint256 newItemIndex = items.length - 1;
-
-    //             // Store the new item
-    //             Item storage newItem = items[newItemIndex];
-
-    //             // Store the new item's name and reference slot
-    //             newItem.name = _items[i].name;
-    //             newItem.referenceSlot = uint16(dataLength);
-    //         }
-    //     }
-    // }
-
-    // function addMoreProperties(uint16 nounId, string[] calldata _names, ItemParam[] calldata _items, IPFSGroup calldata _ipfsGroup) external onlyOwner {
-    //     // Cache the noun property
-    //     Property[] storage _properties = nounProperties[_nounId];
-
-    //     // Cache the number of existing properties
-    //     uint256 numStoredProperties = _properties.length;
-
-    //     // revert of no properties have been stored before calling this function
-    //     if (numStoredProperties == 0) {
-    //         revert PREVIOUS_PROPERITIES_REQUIRED();
-    //     }
-
-    //     // Cache the number of new properties
-    //     uint256 numNewProperties = _names.length;
-
-    //     // Cache the number of new items
-    //     uint256 numNewItems = _items.length;
-
-    //     // Ensure at least one property and one item are included
-    //     if (numNewProperties == 0 || numNewItems == 0) {
-    //         revert ONE_PROPERTY_AND_ITEM_REQUIRED();
-    //     }
-
-    //     unchecked {
-    //         // Check if not too many items are stored
-    //         if (numStoredProperties + numNewProperties > 15) {
-    //             revert TOO_MANY_PROPERTIES();
-    //         }
-    //     }
-    // }
-
-    // function addNounProperties(
-    //     uint16 _nounId,
-    //     string[] calldata _names,
-    //     ItemParam[] calldata _items,
-    //     IPFSGroup calldata _ipfsGroup
-    // ) external onlyOwner {
-    //     _addNounProperties(_nounId, _names, _items, _ipfsGroup);
-    // }
-
-    // function _addNounProperties(
-    //     uint16 _nounId,
-    //     string[] calldata _names,
-    //     ItemParam[] calldata _items,
-    //     IPFSGroup calldata _ipfsGroup
-    // ) internal {
-    //     // Cache the existing amount of IPFS data stored
-    //     uint256 dataLength = ipfsData.length;
-
-    //     // Add the IPFS group information
-    //     ipfsData.push(_ipfsGroup);
-
-    //     // Cache the noun property
-    //     Property[] storage _properties = nounProperties[_nounId];
-
-    //     // Cache the number of existing properties
-    //     uint256 numStoredProperties = _properties.length;
-
-    //     // Cache the number of new properties
-    //     uint256 numNewProperties = _names.length;
-
-    //     // Cache the number of new items
-    //     uint256 numNewItems = _items.length;
-
-    //     // console.log("num new properties", numNewProperties);
-    //     // console.log("num new items", _items.length);
-
-    //     // If this is the first time adding metadata:
-    //     if (numStoredProperties == 0) {
-    //         // Ensure at least one property and one item are included
-    //         if (numNewProperties == 0 || numNewItems == 0) {
-    //             revert ONE_PROPERTY_AND_ITEM_REQUIRED();
-    //         }
-    //     }
-
-    //     unchecked {
-    //         // Check if not too many items are stored
-    //         if (numStoredProperties + numNewProperties > 15) {
-    //             revert TOO_MANY_PROPERTIES();
-    //         }
-
-    //         // For each new property:
-    //         for (uint256 i = 0; i < numNewProperties; ++i) {
-    //             // Append storage space
-    //             _properties.push();
-
-    //             // Get the new property id
-    //             uint256 propertyId = numStoredProperties + i;
-
-    //             // console.log("whats the propertyid", propertyId);
-
-    //             // Store the property name
-    //             _properties[propertyId].name = _names[i];
-
-    //             emit PropertyAdded(propertyId, _names[i]);
-    //         }
-
-    //         // For each new item:
-    //         for (uint256 i = 0; i < numNewItems; ++i) {
-    //             // Cache the id of the associated property
-    //             uint256 _propertyId = _items[i].propertyId;
-
-    //             // // Offset the id if the item is for a new property
-    //             // // Note: Property ids under the hood are offset by 1
-    //             // if (_items[i].isNewProperty) {
-    //             //     _propertyId += numStoredProperties;
-    //             // }
-
-    //             // Ensure the item is for a valid property
-    //             if (_propertyId >= _properties.length) {
-    //                 revert INVALID_PROPERTY_SELECTED(_propertyId);
-    //             }
-
-    //             // Get the pointer to the other items for the property
-    //             Item[] storage items = _properties[_propertyId].items;
-
-    //             // Append storage space
-    //             items.push();
-
-    //             // Get the index of the new item
-    //             // Cannot underflow as the items array length is ensured to be at least 1
-    //             uint256 newItemIndex = items.length - 1;
-
-    //             // Store the new item
-    //             Item storage newItem = items[newItemIndex];
-
-    //             // Store the new item's name and reference slot
-    //             newItem.name = _items[i].name;
-    //             newItem.referenceSlot = uint16(dataLength);
-    //         }
-    //     }
-    // }
-
     ///                                                          ///
     ///                     ATTRIBUTE GENERATION                 ///
     ///                                                          ///
-
-    function _getAttributeIndicesForTokenId(uint256 _tokenId)
-        internal
-        view
-        returns (uint16[24] memory)
-    {
-        uint16[24] memory attributes;
-
-        uint256 seed = _tokenId;
-
-        // First, add the background properties
-        // Note: Background properties are always the first 4 properties
-        unchecked {
-            // For each bg property:
-            for (uint256 i = 0; i < 4; ++i) {
-                // Get the number of items to choose from
-                uint256 numItems = properties[i].items.length;
-
-                // Use the token's seed to select an item
-                attributes[i] = uint16(seed % numItems);
-
-                // console.log("layer - index - numItems: ", i, attributes[i], numItems);
-
-                // Adjust the seed
-                seed >>= 16;
-            }
-        }
-        return attributes;
-    }
 
     /// @notice The properties and query string for a generated token
     /// @param _tokenId The ERC-721 token id
@@ -418,110 +157,59 @@ contract NounsCoasterMetadataRenderer is
         view
         returns (string memory resultAttributes, string memory queryString)
     {
-        return ("", "");
+        uint256 seed = uint256(keccak256(abi.encode(_tokenId)));
+
         // Get the token's query string
-        // queryString = string.concat(
-        //     "?contractAddress=",
-        //     Strings.toHexString(uint256(uint160(address(this))), 20),
-        //     "&tokenId=",
-        //     Strings.toString(_tokenId)
-        // );
-        // // console.log("token qs", queryString);
-        // // Get the token's generated attributes
-        // uint16[16] memory tokenAttributes = _getAttributeIndicesForTokenId(
-        //     _tokenId
-        // );
-        // // Get an array to store the token's generated attribtues
-        // MetadataBuilder.JSONItem[]
-        //     memory arrayAttributesItems = new MetadataBuilder.JSONItem[](24);
-        // unchecked {
-        //     // For each of the token's background properties:
-        //     for (uint256 i = 0; i < 4; ++i) {
-        //         // Get its name and list of associated items
-        //         NounsCoasterLayerData memory property = dataLayers[i];
-        //         // Get the randomly generated index of the item to select for this token
-        //         uint256 attribute = tokenAttributes[i];
-        //         (string[] memory thisProperties) = abi.decode(SSTORE2.read(dataLayers[i].data), (string[]));
-        //         // Store the encoded attributes and query string
-        //         MetadataBuilder.JSONItem memory itemJSON = arrayAttributesItems[
-        //             i
-        //         ];
-        //         itemJSON.key = property.name;
-        //         itemJSON.value = thisProperties[attribute];
-        //         itemJSON.quote = true;
-        //         queryString = string.concat(
-        //             queryString,
-        //             "&images=",
-        //             _getItemImage(property.ipfs, property.name, thisProperties[attribute])
-        //         );
-        //     }
-        //     // console.log("bg qs", queryString);
-        //     // Next, select the attributes for each noun
-        //     uint256 seed = _tokenId;
-        //     // For each noun
-        //     for (uint16 i = 0; i < 4; ++i) {
-        //         // Cache the properties for this noun.
-        //         uint16 variant = uint16(seed % 4);
-        //         seed >>= 16;
-        //         // console.log("noun-variant", i, variant);
-        //         // we know that for each noun, there are 5 total properties that need to be added
-        //         // properties 1 and 2 are variant dependant, and 3,4,5 are independent
-        //         NounsCoasterLayerData memory property = dataLayers[0 + variant];
-        //         uint16 bodyIndex = uint16(seed % property.count);
-        //         // console.log("numBodyProps-index", numBodyProperties, bodyIndex);
-        //         // Get the associated itemData
-        //         (string[] memory thisProperties) = abi.decode(SSTORE2.read(property.data), (string[]));
-        //         // console.log("item.name", item.name);
-        //         // Store the encoded attributes and query string
-        //         MetadataBuilder.JSONItem memory itemJSON = arrayAttributesItems[
-        //             4 + (i * 5)
-        //         ];
-        //         itemJSON.key = property.name;
-        //         itemJSON.value = thisProperties[bodyIndex];
-        //         itemJSON.quote = true;
-        //         queryString = string.concat(
-        //             queryString,
-        //             "&images=",
-        //             _getItemImage(property.ipfs, property.name, thisProperties[bodyIndex])
-        //         );
-        //         // ok, bump the seed and move to property 2
-        //         seed >>= 16;
-        //         NounsCoasterLayerData memory accessoryProperty = dataLayers[4 + variant];
-        //         uint16 accIndex = uint16(seed % accessoryProperty.count);
-        //         (string[] memory items) = abi.decode(SSTORE2.read(accessoryProperty.data), (string[]));
-        //         string memory value = items[accIndex];
-        //         // Store the encoded attributes and query string
-        //         itemJSON = arrayAttributesItems[5 + (i * 5)];
-        //         itemJSON.key = value;
-        //         itemJSON.value = accessoryProperty.name;
-        //         itemJSON.quote = true;
-        //         queryString = string.concat(
-        //             queryString,
-        //             "&images=",
-        //             _getItemImage(accessoryProperty.ipfs, accessoryProperty.name, value)
-        //         );
-        //         // Ok, now that the variant dependent items are out of the way, let's loop through the remaining 3 properties
-        //         for (uint16 j = 0; j < 3; j++) {
-        //             seed >>= 16;
-        //             uint256 numProperties = _properties[8 + j].items.length;
-        //             uint16 index = uint16(seed % numProperties);
-        //             item = _properties[8 + j].items[index];
-        //             itemJSON = arrayAttributesItems[5 + (i * 5)];
-        //             itemJSON.key = _properties[4 + variant].name;
-        //             itemJSON.value = item.name;
-        //             itemJSON.quote = true;
-        //             queryString = string.concat(
-        //                 queryString,
-        //                 "&images=",
-        //                 _getItemImage(item, _properties[8 + j].name)
-        //             );
-        //         }
-        //     }
-        //     // console.log("FINAL", queryString);
-        //     resultAttributes = MetadataBuilder.generateJSON(
-        //         arrayAttributesItems
-        //     );
-        // }
+        queryString = string.concat(
+            "?contractAddress=",
+            Strings.toHexString(uint256(uint160(address(this))), 20),
+            "&tokenId=",
+            Strings.toString(_tokenId)
+        );
+
+        // Get the token's generated attributes
+        MetadataBuilder.JSONItem[]
+            memory arrayAttributesItems = new MetadataBuilder.JSONItem[](
+                dataLayers.length
+            );
+
+        uint256 variantCount = 4;
+
+        uint256 variantChosen = uint256(uint8(seed)) % variantCount;
+        seed >>= 8;
+
+        for (uint256 i = 0; i < dataLayers.length; ++i) {
+            NounsCoasterLayerData memory layerData = dataLayers[i];
+
+            seed >>= 16;
+            uint256 thisLayer = uint256(uint16(seed));
+
+            string[] memory layers = abi.decode(
+                SSTORE2.read(layerData.data),
+                (string[])
+            );
+            string memory chosenLayer;
+            if (layerData.hasEqualVariants) {
+                chosenLayer = layers[
+                    ((thisLayer % layerData.count) / variantCount) +
+                        variantChosen *
+                        (layerData.count / variantCount)
+                ];
+            } else {
+                chosenLayer = layers[thisLayer % layerData.count];
+            }
+
+            MetadataBuilder.JSONItem memory itemJSON = arrayAttributesItems[i];
+            itemJSON.key = layerData.name;
+            itemJSON.value = chosenLayer;
+            itemJSON.quote = true;
+            queryString = string.concat(
+                queryString,
+                "&images=",
+                _getItemImage(layerData.ipfs, layerData.name, chosenLayer)
+            );
+        }
+        resultAttributes = MetadataBuilder.generateJSON(arrayAttributesItems);
     }
 
     /// @dev Encodes the reference URI of an item
@@ -529,7 +217,7 @@ contract NounsCoasterMetadataRenderer is
         IPFSGroup memory group,
         string memory _propertyName,
         string memory _itemName
-    ) private view returns (string memory) {
+    ) private pure returns (string memory) {
         return
             UriEncode.uriEncode(
                 string(
