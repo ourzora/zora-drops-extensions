@@ -2,9 +2,6 @@
 pragma solidity ^0.8.10;
 
 import {IMetadataRenderer} from "zora-drops-contracts/interfaces/IMetadataRenderer.sol";
-import {IERC721Drop} from "zora-drops-contracts/interfaces/IERC721Drop.sol";
-import {IERC721MetadataUpgradeable} from "@openzeppelin/contracts-upgradeable/interfaces/IERC721MetadataUpgradeable.sol";
-import {IERC2981Upgradeable} from "@openzeppelin/contracts-upgradeable/interfaces/IERC2981Upgradeable.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import {UriEncode} from "sol-uriencode/UriEncode.sol";
@@ -16,6 +13,38 @@ import {INounsCoasterMetadataRendererTypes} from "../interfaces/INounsCoasterMet
 import {SSTORE2} from "../utils/SSTORE2.sol";
 import {InflateLib} from "../utils/InflateLib.sol";
 
+/****
+                                                                   
+ ________   _____   ____    ______                                 
+/\_____  \ /\  __`\/\  _`\ /\  _  \                                
+\/____//'/'\ \ \/\ \ \ \L\ \ \ \L\ \                               
+     //'/'  \ \ \ \ \ \ ,  /\ \  __ \                              
+    //'/'___ \ \ \_\ \ \ \\ \\ \ \/\ \                             
+    /\_______\\ \_____\ \_\ \_\ \_\ \_\                            
+    \/_______/ \/_____/\/_/\/ /\/_/\/_/                            
+                                                                   
+                                                                   
+                               __                                  
+                              /\ \                __               
+  ___     ___              ___\ \ \___      __   /\_\    ___       
+ / __`\ /' _ `\  _______  /'___\ \  _ `\  /'__`\ \/\ \ /' _ `\     
+/\ \L\ \/\ \/\ \/\______\/\ \__/\ \ \ \ \/\ \L\.\_\ \ \/\ \/\ \    
+\ \____/\ \_\ \_\/______/\ \____\\ \_\ \_\ \__/.\_\\ \_\ \_\ \_\   
+ \/___/  \/_/\/_/         \/____/ \/_/\/_/\/__/\/_/ \/_/\/_/\/_/   
+                                                                   
+                                                                   
+ ___                                                               
+/\_ \                                                              
+\//\ \      __     __  __     __   _ __    __   _ __    __   _ __  
+  \ \ \   /'__`\  /\ \/\ \  /'__`\/\`'__\/'__`\/\`'__\/'__`\/\`'__\
+   \_\ \_/\ \L\.\_\ \ \_\ \/\  __/\ \ \//\  __/\ \ \//\  __/\ \ \/ 
+   /\____\ \__/.\_\\/`____ \ \____\\ \_\\ \____\\ \_\\ \____\\ \_\ 
+   \/____/\/__/\/_/ `/___/> \/____/ \/_/ \/____/ \/_/ \/____/ \/_/ 
+                       /\___/                                      
+                       \/__/                    
+
+ */
+
 /// @notice NounsCoasterMetadataRenderer
 /// @author @tsbsl / @0xTranqui / @iainnash
 contract NounsCoasterMetadataRenderer is
@@ -24,11 +53,13 @@ contract NounsCoasterMetadataRenderer is
     MetadataRenderAdminCheck
 {
     /// @notice The metadata renderer settings
-    mapping(address => Settings) public settings;
-
+    mapping(address => Settings) settings;
+    /// @notice Data layer storage
     mapping(address => NounsCoasterLayerData[]) dataLayers;
+    /// @notice Variant mapping (optional) array
     mapping(address => mapping(uint256 => VariantInfo[])) variantInfo;
 
+    /// @notice Gets settings for the given target address
     function getSettings(address target)
         external
         view
@@ -36,31 +67,6 @@ contract NounsCoasterMetadataRenderer is
     {
         return settings[target];
     }
-
-    /// @notice The background properties chosen from upon generation
-    /// [
-    ///   background
-    ///   title
-    ///   corner tag
-    ///   ride
-    /// ]
-    // Property[] public properties;
-
-    /// @notice the variant dependent properties for nouns
-    /// [
-    ///   0: body variant 1
-    ///   1: body variant 2
-    ///   2: body variant 3
-    ///   3: body variant 4
-    ///   4: accessories variant 1
-    ///   5: accessories variant 2
-    ///   6: accessories variant 3
-    ///   7: accessories variant 4
-    ///   8: head
-    ///   9: expression
-    ///   10: glasses
-    /// ]
-    // mapping(uint16 => Property[]) public nounProperties;
 
     ///                                                          ///
     ///                            EVENTS                        ///
@@ -117,7 +123,6 @@ contract NounsCoasterMetadataRenderer is
         ) {
             revert VariantCountNotZeroOrExpected();
         }
-        NounsCoasterLayerData memory layerData;
         dataLayers[target][index] = NounsCoasterLayerData({
             name: property,
             count: count,
@@ -156,7 +161,7 @@ contract NounsCoasterMetadataRenderer is
     }
 
     function getLayerData(address target, uint256 index)
-        public 
+        public
         view
         returns (
             NounsCoasterLayerData memory layerData,
@@ -184,8 +189,6 @@ contract NounsCoasterMetadataRenderer is
         view
         returns (string memory resultAttributes, string memory queryString)
     {
-        uint256 seed = uint256(keccak256(abi.encode(_tokenId)));
-
         // Get the token's query string
         queryString = string.concat(
             "?contractAddress=",
@@ -197,27 +200,35 @@ contract NounsCoasterMetadataRenderer is
         // Get the token's generated attributes
         MetadataBuilder.JSONItem[]
             memory arrayAttributesItems = new MetadataBuilder.JSONItem[](
-                dataLayers[target].length
+                dataLayers[target].length + 1
             );
 
-        uint256 variantChosen = uint256(uint8(seed)) %
-            settings[target].variantCount;
-        seed >>= 8;
+        uint256 variantBase = uint256(keccak256(abi.encode(_tokenId)));
+        uint256 variantChosen = variantBase % settings[target].variantCount;
+
+        // render variant
+        if (settings[target].variantCount > 0) {
+            arrayAttributesItems[0] = MetadataBuilder.JSONItem({
+                key: "Variant #",
+                value: Strings.toString(variantChosen),
+                quote: true
+            });
+        }
 
         for (uint256 i = 0; i < dataLayers[target].length; ++i) {
-            (NounsCoasterLayerData memory layerData, VariantInfo[] memory variants, string[] memory layers) = getLayerData(target, i);
+            (
+                NounsCoasterLayerData memory layerData,
+                VariantInfo[] memory variants,
+                string[] memory layers
+            ) = getLayerData(target, i);
 
-            uint256 thisLayer = uint256(uint16(seed));
-            unchecked {
-                seed >>= 8;
-                seed *= thisLayer;
-            }
+            uint256 thisLayer = uint256(
+                keccak256(abi.encode(_tokenId, i, variantBase))
+            );
 
             string memory chosenLayer;
             if (variants.length > 0) {
-                VariantInfo memory chosenVariant = variants[
-                    variantChosen
-                ];
+                VariantInfo memory chosenVariant = variants[variantChosen];
                 chosenLayer = layers[
                     chosenVariant.startAt + (thisLayer % chosenVariant.count)
                 ];
@@ -225,10 +236,11 @@ contract NounsCoasterMetadataRenderer is
                 chosenLayer = layers[thisLayer % layerData.count];
             }
 
-            MetadataBuilder.JSONItem memory itemJSON = arrayAttributesItems[i];
-            itemJSON.key = layerData.name;
-            itemJSON.value = chosenLayer;
-            itemJSON.quote = true;
+            arrayAttributesItems[i + 1] = MetadataBuilder.JSONItem({
+                key: layerData.name,
+                value: chosenLayer,
+                quote: true
+            });
             queryString = string.concat(
                 queryString,
                 "&images=",
@@ -272,7 +284,7 @@ contract NounsCoasterMetadataRenderer is
         address target = msg.sender;
 
         MetadataBuilder.JSONItem[]
-            memory items = new MetadataBuilder.JSONItem[](4);
+            memory items = new MetadataBuilder.JSONItem[](3);
 
         items[0] = MetadataBuilder.JSONItem({
             key: MetadataJSONKeys.keyName,
@@ -287,11 +299,6 @@ contract NounsCoasterMetadataRenderer is
         items[2] = MetadataBuilder.JSONItem({
             key: MetadataJSONKeys.keyImage,
             value: settings[target].contractImage,
-            quote: true
-        });
-        items[3] = MetadataBuilder.JSONItem({
-            key: "external_url",
-            value: settings[target].projectURI,
             quote: true
         });
 

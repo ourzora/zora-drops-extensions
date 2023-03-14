@@ -79,7 +79,7 @@ contract NounsCoasterMetadataRendererTest is Test {
                     description: "Nouns Coaster",
                     contractImage: "https://image.com",
                     projectURI: "https://projectURI.com",
-                    rendererBase: "ipfs://QmZ9UT92uG3oxKHhm7s7Xts9p8HTxZ99KdevVhQbD3vuUj/",
+                    rendererBase: "https://api.zora.co/renderer/stack-images",
                     variantCount: 4
                 })
             )
