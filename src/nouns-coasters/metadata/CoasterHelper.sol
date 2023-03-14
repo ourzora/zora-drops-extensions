@@ -2,7 +2,9 @@
 pragma solidity ^0.8.10;
 
 import {NounsCoasterMetadataRenderer} from "./NounsCoasterMetadataRenderer.sol";
+import {SSTORE2} from "../utils/SSTORE2.sol";
 import {INounsCoasterMetadataRendererTypes} from "../interfaces/INounsCoasterMetadataRendererTypes.sol";
+import {VmSafe} from "forge-std/Vm.sol";
 
 library CoasterHelper {
     function addLayer1(NounsCoasterMetadataRenderer renderer, address target)
@@ -31,13 +33,30 @@ library CoasterHelper {
         items[14] = "Night Purple Roller Coaster";
         items[15] = "Night Purple Water Log";
 
+        bytes memory data = abi.encode(items);
+
+        VmSafe vm = VmSafe(
+            address(uint160(uint256(keccak256("hevm cheat code"))))
+        );
+
+        string[] memory inputs = new string[](3);
+        inputs[0] = "node";
+        inputs[1] = "script/nouns-coasters/deflate.js";
+        inputs[2] = vm.toString(data);
+
+        bytes memory compressedData = vm.ffi(inputs);
+
+        address result = SSTORE2.write(compressedData);
+
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
-            items: items,
+            decompressedSize: data.length,
+            compressedDataAddress: result,
+            count: items.length,
             property: "1 Backgrounds",
             variants: variants
         });
@@ -188,13 +207,31 @@ library CoasterHelper {
             startAt: 90,
             count: 30
         });
+
+        bytes memory data = abi.encode(items);
+
+        VmSafe vm = VmSafe(
+            address(uint160(uint256(keccak256("hevm cheat code"))))
+        );
+
+        string[] memory inputs = new string[](3);
+        inputs[0] = "node";
+        inputs[1] = "script/nouns-coasters/deflate.js";
+        inputs[2] = vm.toString(data);
+
+        bytes memory compressedData = vm.ffi(inputs);
+
+        address result = SSTORE2.write(compressedData);
+
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
-            items: items,
+            decompressedSize: data.length,
+            compressedDataAddress: result,
+            count: items.length,
             property: "5 Body rear left",
             variants: variants
         });
@@ -775,13 +812,31 @@ library CoasterHelper {
             startAt: 413,
             count: 137
         });
+
+        bytes memory data = abi.encode(items);
+
+        VmSafe vm = VmSafe(
+            address(uint160(uint256(keccak256("hevm cheat code"))))
+        );
+
+        string[] memory inputs = new string[](3);
+        inputs[0] = "node";
+        inputs[1] = "script/nouns-coasters/deflate.js";
+        inputs[2] = vm.toString(data);
+
+        bytes memory compressedData = vm.ffi(inputs);
+
+        address result = SSTORE2.write(compressedData);
+
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
-            items: items,
+            decompressedSize: data.length,
+            compressedDataAddress: result,
+            count: items.length,
             property: "6 Accessories rear left",
             variants: variants
         });
@@ -1002,13 +1057,30 @@ library CoasterHelper {
         items[203] = "Wine Sick";
         items[204] = "Wizardhat Happy";
 
+        bytes memory data = abi.encode(items);
+
+        VmSafe vm = VmSafe(
+            address(uint160(uint256(keccak256("hevm cheat code"))))
+        );
+
+        string[] memory inputs = new string[](3);
+        inputs[0] = "node";
+        inputs[1] = "script/nouns-coasters/deflate.js";
+        inputs[2] = vm.toString(data);
+
+        bytes memory compressedData = vm.ffi(inputs);
+
+        address result = SSTORE2.write(compressedData);
+
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
-            items: items,
+            decompressedSize: data.length,
+            compressedDataAddress: result,
+            count: items.length,
             property: "7 Head rear left",
             variants: variants
         });
@@ -1028,13 +1100,30 @@ library CoasterHelper {
         items[2] = "Scared";
         items[3] = "Sick";
 
+        bytes memory data = abi.encode(items);
+
+        VmSafe vm = VmSafe(
+            address(uint160(uint256(keccak256("hevm cheat code"))))
+        );
+
+        string[] memory inputs = new string[](3);
+        inputs[0] = "node";
+        inputs[1] = "script/nouns-coasters/deflate.js";
+        inputs[2] = vm.toString(data);
+
+        bytes memory compressedData = vm.ffi(inputs);
+
+        address result = SSTORE2.write(compressedData);
+
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
-            items: items,
+            decompressedSize: data.length,
+            compressedDataAddress: result,
+            count: items.length,
             property: "8 Expression rear left",
             variants: variants
         });
@@ -1071,13 +1160,30 @@ library CoasterHelper {
         items[19] = "Yellow Orange Multi";
         items[20] = "Yellow Saturated";
 
+        bytes memory data = abi.encode(items);
+
+        VmSafe vm = VmSafe(
+            address(uint160(uint256(keccak256("hevm cheat code"))))
+        );
+
+        string[] memory inputs = new string[](3);
+        inputs[0] = "node";
+        inputs[1] = "script/nouns-coasters/deflate.js";
+        inputs[2] = vm.toString(data);
+
+        bytes memory compressedData = vm.ffi(inputs);
+
+        address result = SSTORE2.write(compressedData);
+
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
-            items: items,
+            decompressedSize: data.length,
+            compressedDataAddress: result,
+            count: items.length,
             property: "9 Glasses rear left",
             variants: variants
         });
@@ -1228,13 +1334,31 @@ library CoasterHelper {
             startAt: 90,
             count: 30
         });
+
+        bytes memory data = abi.encode(items);
+
+        VmSafe vm = VmSafe(
+            address(uint160(uint256(keccak256("hevm cheat code"))))
+        );
+
+        string[] memory inputs = new string[](3);
+        inputs[0] = "node";
+        inputs[1] = "script/nouns-coasters/deflate.js";
+        inputs[2] = vm.toString(data);
+
+        bytes memory compressedData = vm.ffi(inputs);
+
+        address result = SSTORE2.write(compressedData);
+
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
-            items: items,
+            decompressedSize: data.length,
+            compressedDataAddress: result,
+            count: items.length,
             property: "10 Body rear right",
             variants: variants
         });
@@ -1825,13 +1949,31 @@ library CoasterHelper {
             startAt: 423,
             count: 137
         });
+
+        bytes memory data = abi.encode(items);
+
+        VmSafe vm = VmSafe(
+            address(uint160(uint256(keccak256("hevm cheat code"))))
+        );
+
+        string[] memory inputs = new string[](3);
+        inputs[0] = "node";
+        inputs[1] = "script/nouns-coasters/deflate.js";
+        inputs[2] = vm.toString(data);
+
+        bytes memory compressedData = vm.ffi(inputs);
+
+        address result = SSTORE2.write(compressedData);
+
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
-            items: items,
+            decompressedSize: data.length,
+            compressedDataAddress: result,
+            count: items.length,
             property: "11 Accessories rear right",
             variants: variants
         });
@@ -1950,13 +2092,30 @@ library CoasterHelper {
         items[101] = "Weed Scared";
         items[102] = "Weed Sick";
 
+        bytes memory data = abi.encode(items);
+
+        VmSafe vm = VmSafe(
+            address(uint160(uint256(keccak256("hevm cheat code"))))
+        );
+
+        string[] memory inputs = new string[](3);
+        inputs[0] = "node";
+        inputs[1] = "script/nouns-coasters/deflate.js";
+        inputs[2] = vm.toString(data);
+
+        bytes memory compressedData = vm.ffi(inputs);
+
+        address result = SSTORE2.write(compressedData);
+
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
-            items: items,
+            decompressedSize: data.length,
+            compressedDataAddress: result,
+            count: items.length,
             property: "12 Head rear right",
             variants: variants
         });
@@ -1976,13 +2135,30 @@ library CoasterHelper {
         items[2] = "Scared";
         items[3] = "Sick";
 
+        bytes memory data = abi.encode(items);
+
+        VmSafe vm = VmSafe(
+            address(uint160(uint256(keccak256("hevm cheat code"))))
+        );
+
+        string[] memory inputs = new string[](3);
+        inputs[0] = "node";
+        inputs[1] = "script/nouns-coasters/deflate.js";
+        inputs[2] = vm.toString(data);
+
+        bytes memory compressedData = vm.ffi(inputs);
+
+        address result = SSTORE2.write(compressedData);
+
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
-            items: items,
+            decompressedSize: data.length,
+            compressedDataAddress: result,
+            count: items.length,
             property: "13 Expression rear right",
             variants: variants
         });
@@ -2019,13 +2195,30 @@ library CoasterHelper {
         items[19] = "Yellow Orange Multi";
         items[20] = "Yellow Saturated";
 
+        bytes memory data = abi.encode(items);
+
+        VmSafe vm = VmSafe(
+            address(uint160(uint256(keccak256("hevm cheat code"))))
+        );
+
+        string[] memory inputs = new string[](3);
+        inputs[0] = "node";
+        inputs[1] = "script/nouns-coasters/deflate.js";
+        inputs[2] = vm.toString(data);
+
+        bytes memory compressedData = vm.ffi(inputs);
+
+        address result = SSTORE2.write(compressedData);
+
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
-            items: items,
+            decompressedSize: data.length,
+            compressedDataAddress: result,
+            count: items.length,
             property: "14 Glasses rear right",
             variants: variants
         });
@@ -2176,13 +2369,31 @@ library CoasterHelper {
             startAt: 90,
             count: 30
         });
+
+        bytes memory data = abi.encode(items);
+
+        VmSafe vm = VmSafe(
+            address(uint160(uint256(keccak256("hevm cheat code"))))
+        );
+
+        string[] memory inputs = new string[](3);
+        inputs[0] = "node";
+        inputs[1] = "script/nouns-coasters/deflate.js";
+        inputs[2] = vm.toString(data);
+
+        bytes memory compressedData = vm.ffi(inputs);
+
+        address result = SSTORE2.write(compressedData);
+
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
-            items: items,
+            decompressedSize: data.length,
+            compressedDataAddress: result,
+            count: items.length,
             property: "15 Body front left",
             variants: variants
         });
@@ -2754,13 +2965,31 @@ library CoasterHelper {
             startAt: 404,
             count: 137
         });
+
+        bytes memory data = abi.encode(items);
+
+        VmSafe vm = VmSafe(
+            address(uint160(uint256(keccak256("hevm cheat code"))))
+        );
+
+        string[] memory inputs = new string[](3);
+        inputs[0] = "node";
+        inputs[1] = "script/nouns-coasters/deflate.js";
+        inputs[2] = vm.toString(data);
+
+        bytes memory compressedData = vm.ffi(inputs);
+
+        address result = SSTORE2.write(compressedData);
+
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
-            items: items,
+            decompressedSize: data.length,
+            compressedDataAddress: result,
+            count: items.length,
             property: "16 Accessories front left",
             variants: variants
         });
@@ -3219,13 +3448,30 @@ library CoasterHelper {
         items[441] = "Wine Scared";
         items[442] = "Wizardhat Happy";
 
+        bytes memory data = abi.encode(items);
+
+        VmSafe vm = VmSafe(
+            address(uint160(uint256(keccak256("hevm cheat code"))))
+        );
+
+        string[] memory inputs = new string[](3);
+        inputs[0] = "node";
+        inputs[1] = "script/nouns-coasters/deflate.js";
+        inputs[2] = vm.toString(data);
+
+        bytes memory compressedData = vm.ffi(inputs);
+
+        address result = SSTORE2.write(compressedData);
+
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
-            items: items,
+            decompressedSize: data.length,
+            compressedDataAddress: result,
+            count: items.length,
             property: "17 Head front left",
             variants: variants
         });
@@ -3245,13 +3491,30 @@ library CoasterHelper {
         items[2] = "Scared";
         items[3] = "Sick";
 
+        bytes memory data = abi.encode(items);
+
+        VmSafe vm = VmSafe(
+            address(uint160(uint256(keccak256("hevm cheat code"))))
+        );
+
+        string[] memory inputs = new string[](3);
+        inputs[0] = "node";
+        inputs[1] = "script/nouns-coasters/deflate.js";
+        inputs[2] = vm.toString(data);
+
+        bytes memory compressedData = vm.ffi(inputs);
+
+        address result = SSTORE2.write(compressedData);
+
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
-            items: items,
+            decompressedSize: data.length,
+            compressedDataAddress: result,
+            count: items.length,
             property: "18 Expression front left",
             variants: variants
         });
@@ -3288,13 +3551,30 @@ library CoasterHelper {
         items[19] = "Yellow Orange Multi";
         items[20] = "Yellow Saturated";
 
+        bytes memory data = abi.encode(items);
+
+        VmSafe vm = VmSafe(
+            address(uint160(uint256(keccak256("hevm cheat code"))))
+        );
+
+        string[] memory inputs = new string[](3);
+        inputs[0] = "node";
+        inputs[1] = "script/nouns-coasters/deflate.js";
+        inputs[2] = vm.toString(data);
+
+        bytes memory compressedData = vm.ffi(inputs);
+
+        address result = SSTORE2.write(compressedData);
+
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
-            items: items,
+            decompressedSize: data.length,
+            compressedDataAddress: result,
+            count: items.length,
             property: "19 Glasses front left",
             variants: variants
         });
@@ -3435,13 +3715,31 @@ library CoasterHelper {
             startAt: 80,
             count: 30
         });
+
+        bytes memory data = abi.encode(items);
+
+        VmSafe vm = VmSafe(
+            address(uint160(uint256(keccak256("hevm cheat code"))))
+        );
+
+        string[] memory inputs = new string[](3);
+        inputs[0] = "node";
+        inputs[1] = "script/nouns-coasters/deflate.js";
+        inputs[2] = vm.toString(data);
+
+        bytes memory compressedData = vm.ffi(inputs);
+
+        address result = SSTORE2.write(compressedData);
+
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
-            items: items,
+            decompressedSize: data.length,
+            compressedDataAddress: result,
+            count: items.length,
             property: "20 Body front right",
             variants: variants
         });
@@ -3995,13 +4293,31 @@ library CoasterHelper {
             startAt: 386,
             count: 137
         });
+
+        bytes memory data = abi.encode(items);
+
+        VmSafe vm = VmSafe(
+            address(uint160(uint256(keccak256("hevm cheat code"))))
+        );
+
+        string[] memory inputs = new string[](3);
+        inputs[0] = "node";
+        inputs[1] = "script/nouns-coasters/deflate.js";
+        inputs[2] = vm.toString(data);
+
+        bytes memory compressedData = vm.ffi(inputs);
+
+        address result = SSTORE2.write(compressedData);
+
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
-            items: items,
+            decompressedSize: data.length,
+            compressedDataAddress: result,
+            count: items.length,
             property: "21 Accessories front right",
             variants: variants
         });
@@ -4536,13 +4852,30 @@ library CoasterHelper {
         items[517] = "Zebra Happy";
         items[518] = "Zebra Sick";
 
+        bytes memory data = abi.encode(items);
+
+        VmSafe vm = VmSafe(
+            address(uint160(uint256(keccak256("hevm cheat code"))))
+        );
+
+        string[] memory inputs = new string[](3);
+        inputs[0] = "node";
+        inputs[1] = "script/nouns-coasters/deflate.js";
+        inputs[2] = vm.toString(data);
+
+        bytes memory compressedData = vm.ffi(inputs);
+
+        address result = SSTORE2.write(compressedData);
+
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
-            items: items,
+            decompressedSize: data.length,
+            compressedDataAddress: result,
+            count: items.length,
             property: "22 Head front right",
             variants: variants
         });
@@ -4562,13 +4895,30 @@ library CoasterHelper {
         items[2] = "Scared";
         items[3] = "Sick";
 
+        bytes memory data = abi.encode(items);
+
+        VmSafe vm = VmSafe(
+            address(uint160(uint256(keccak256("hevm cheat code"))))
+        );
+
+        string[] memory inputs = new string[](3);
+        inputs[0] = "node";
+        inputs[1] = "script/nouns-coasters/deflate.js";
+        inputs[2] = vm.toString(data);
+
+        bytes memory compressedData = vm.ffi(inputs);
+
+        address result = SSTORE2.write(compressedData);
+
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
-            items: items,
+            decompressedSize: data.length,
+            compressedDataAddress: result,
+            count: items.length,
             property: "23 Expression front right",
             variants: variants
         });
@@ -4605,13 +4955,30 @@ library CoasterHelper {
         items[19] = "Yellow Orange Multi";
         items[20] = "Yellow Saturated";
 
+        bytes memory data = abi.encode(items);
+
+        VmSafe vm = VmSafe(
+            address(uint160(uint256(keccak256("hevm cheat code"))))
+        );
+
+        string[] memory inputs = new string[](3);
+        inputs[0] = "node";
+        inputs[1] = "script/nouns-coasters/deflate.js";
+        inputs[2] = vm.toString(data);
+
+        bytes memory compressedData = vm.ffi(inputs);
+
+        address result = SSTORE2.write(compressedData);
+
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
-            items: items,
+            decompressedSize: data.length,
+            compressedDataAddress: result,
+            count: items.length,
             property: "24 Glasses front right",
             variants: variants
         });

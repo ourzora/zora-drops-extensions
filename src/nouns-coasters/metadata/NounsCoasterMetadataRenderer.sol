@@ -14,6 +14,7 @@ import {NFTMetadataRenderer} from "zora-drops-contracts/utils/NFTMetadataRendere
 import {MetadataRenderAdminCheck} from "zora-drops-contracts/metadata/MetadataRenderAdminCheck.sol";
 import {INounsCoasterMetadataRendererTypes} from "../interfaces/INounsCoasterMetadataRendererTypes.sol";
 import {SSTORE2} from "../utils/SSTORE2.sol";
+import {InflateLib} from "../utils/InflateLib.sol";
 
 /// @notice NounsCoasterMetadataRenderer
 /// @author @tsbsl / @0xTranqui / @iainnash
@@ -104,7 +105,9 @@ contract NounsCoasterMetadataRenderer is
         address target,
         uint256 index,
         IPFSGroup memory ipfs,
-        string[] memory items,
+        address compressedDataAddress,
+        uint256 decompressedSize,
+        uint256 count,
         string memory property,
         VariantInfo[] memory variants
     ) external requireSenderAdmin(target) {
@@ -117,9 +120,10 @@ contract NounsCoasterMetadataRenderer is
         NounsCoasterLayerData memory layerData;
         dataLayers[target][index] = NounsCoasterLayerData({
             name: property,
-            count: items.length,
-            data: SSTORE2.write(abi.encode(items)),
-            ipfs: ipfs
+            count: count,
+            ipfs: ipfs,
+            decompressedSize: decompressedSize,
+            compressedDataAddress: compressedDataAddress
         });
         delete variantInfo[target][index];
         for (uint256 i = 0; i < variants.length; ++i) {
@@ -130,7 +134,9 @@ contract NounsCoasterMetadataRenderer is
     function addLayer(
         address target,
         IPFSGroup memory ipfs,
-        string[] memory items,
+        address compressedDataAddress,
+        uint256 decompressedSize,
+        uint256 count,
         string memory property,
         VariantInfo[] memory variants
     ) external requireSenderAdmin(target) {
@@ -138,9 +144,10 @@ contract NounsCoasterMetadataRenderer is
         dataLayers[target].push(
             NounsCoasterLayerData({
                 name: property,
-                count: items.length,
+                count: count,
                 ipfs: ipfs,
-                data: SSTORE2.write(abi.encode(items))
+                decompressedSize: decompressedSize,
+                compressedDataAddress: compressedDataAddress
             })
         );
         for (uint256 i = 0; i < variants.length; ++i) {
@@ -149,7 +156,7 @@ contract NounsCoasterMetadataRenderer is
     }
 
     function getLayerData(address target, uint256 index)
-        external
+        public 
         view
         returns (
             NounsCoasterLayerData memory layerData,
@@ -159,10 +166,11 @@ contract NounsCoasterMetadataRenderer is
     {
         layerData = dataLayers[target][index];
         variants = variantInfo[target][index];
-        layers = abi.decode(
-            SSTORE2.read(dataLayers[target][index].data),
-            (string[])
+        (, bytes memory decompressed) = InflateLib.puff(
+            SSTORE2.read(dataLayers[target][index].compressedDataAddress),
+            layerData.decompressedSize
         );
+        layers = abi.decode(decompressed, (string[]));
     }
 
     ///                                                          ///
@@ -197,11 +205,7 @@ contract NounsCoasterMetadataRenderer is
         seed >>= 8;
 
         for (uint256 i = 0; i < dataLayers[target].length; ++i) {
-            NounsCoasterLayerData memory layerData = dataLayers[target][i];
-            string[] memory layers = abi.decode(
-                SSTORE2.read(layerData.data),
-                (string[])
-            );
+            (NounsCoasterLayerData memory layerData, VariantInfo[] memory variants, string[] memory layers) = getLayerData(target, i);
 
             uint256 thisLayer = uint256(uint16(seed));
             unchecked {
@@ -210,8 +214,8 @@ contract NounsCoasterMetadataRenderer is
             }
 
             string memory chosenLayer;
-            if (variantInfo[target][i].length > 0) {
-                VariantInfo memory chosenVariant = variantInfo[target][i][
+            if (variants.length > 0) {
+                VariantInfo memory chosenVariant = variants[
                     variantChosen
                 ];
                 chosenLayer = layers[

@@ -31,7 +31,8 @@ interface INounsCoasterMetadataRendererTypes {
     struct NounsCoasterLayerData {
         IPFSGroup ipfs;
         uint256 count;
-        address data;
+        address compressedDataAddress;
+        uint256 decompressedSize;
         string name;
     }
     error VariantCountNotZeroOrExpected();

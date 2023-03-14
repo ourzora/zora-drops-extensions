@@ -11,37 +11,45 @@ import {console2} from "forge-std/console2.sol";
 
 contract SetupNounsCoasters is Script {
     function run() public {
-        address owner = address(this);
-        NounsCoasterMetadataRenderer renderer = new NounsCoasterMetadataRenderer();
-        vm.prank(owner);
+        address deployer = vm.envAddress("DEPLOYER");
+        address rendererAddress = vm.envAddress("RENDERER");
+        vm.startBroadcast(deployer);
+        NounsCoasterMetadataRenderer renderer = NounsCoasterMetadataRenderer(rendererAddress);
         INounsCoasterMetadataRendererTypes.Settings memory settings;
         settings.variantCount = 4;
+        settings.projectURI = "";
+        settings.description = "";
+        settings.contractImage = "";
+        settings.rendererBase = "https://api.zora.co/renderer/stack-images";
 
-        vm.startPrank(owner);
         renderer.initializeWithData(abi.encode(settings));
 
-        CoasterHelper.addLayer1(renderer, owner);
-        CoasterHelper.addLayer5(renderer, owner);
-        CoasterHelper.addLayer6(renderer, owner);
-        CoasterHelper.addLayer7(renderer, owner);
-        CoasterHelper.addLayer8(renderer, owner);
-        CoasterHelper.addLayer9(renderer, owner);
-        CoasterHelper.addLayer10(renderer, owner);
-        CoasterHelper.addLayer11(renderer, owner);
-        CoasterHelper.addLayer12(renderer, owner);
-        CoasterHelper.addLayer13(renderer, owner);
-        CoasterHelper.addLayer14(renderer, owner);
-        CoasterHelper.addLayer15(renderer, owner);
-        CoasterHelper.addLayer16(renderer, owner);
-        CoasterHelper.addLayer17(renderer, owner);
-        CoasterHelper.addLayer18(renderer, owner);
-        CoasterHelper.addLayer19(renderer, owner);
-        CoasterHelper.addLayer20(renderer, owner);
-        CoasterHelper.addLayer21(renderer, owner);
-        CoasterHelper.addLayer22(renderer, owner);
-        CoasterHelper.addLayer23(renderer, owner);
-        CoasterHelper.addLayer24(renderer, owner);
+        CoasterHelper.addLayer1(renderer, deployer);
+        CoasterHelper.addLayer5(renderer, deployer);
+        CoasterHelper.addLayer6(renderer, deployer);
+        CoasterHelper.addLayer7(renderer, deployer);
+        CoasterHelper.addLayer8(renderer, deployer);
+        CoasterHelper.addLayer9(renderer, deployer);
+        CoasterHelper.addLayer10(renderer, deployer);
+        CoasterHelper.addLayer11(renderer, deployer);
+        CoasterHelper.addLayer12(renderer, deployer);
+        CoasterHelper.addLayer13(renderer, deployer);
+        CoasterHelper.addLayer14(renderer, deployer);
+        CoasterHelper.addLayer15(renderer, deployer);
+        CoasterHelper.addLayer16(renderer, deployer);
+        CoasterHelper.addLayer17(renderer, deployer);
+        CoasterHelper.addLayer18(renderer, deployer);
+        CoasterHelper.addLayer19(renderer, deployer);
+        CoasterHelper.addLayer20(renderer, deployer);
+        CoasterHelper.addLayer21(renderer, deployer);
+        CoasterHelper.addLayer22(renderer, deployer);
+        CoasterHelper.addLayer23(renderer, deployer);
+        CoasterHelper.addLayer24(renderer, deployer);
 
-        console2.log(renderer.tokenURI(10));
+        vm.stopBroadcast();
+
+        (string memory _a, string memory _b) = renderer.getAttributes(deployer, 10);
+        console2.log(_a);
+        console2.log(_b);
     }
 }
