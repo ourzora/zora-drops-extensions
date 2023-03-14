@@ -59,8 +59,6 @@ contract ERC721OnChainDataMock {
     }
 
     function isAdmin(address testAdmin) external view returns (bool) {
-        // todo remove
-        return true;
         return testAdmin == admin;
     }
 }
@@ -73,24 +71,30 @@ contract NounsCoasterMetadataRendererTest is Test {
 
     function setUp() public {
         mock = new ERC721OnChainDataMock(10, 1000, admin);
-        nounsRenderer = new NounsCoasterMetadataRenderer({
-            _description: "Nouns Coaster",
-            _contractImage: "https://image.com",
-            _projectURI: "https://projectURI.com",
-            _rendererBase: "ipfs://QmZ9UT92uG3oxKHhm7s7Xts9p8HTxZ99KdevVhQbD3vuUj/",
-            _token: address(mock),
-            _owner: admin
-        });
+        nounsRenderer = new NounsCoasterMetadataRenderer();
+        vm.prank(address(mock));
+        nounsRenderer.initializeWithData(
+            abi.encode(
+                INounsCoasterMetadataRendererTypes.Settings({
+                    description: "Nouns Coaster",
+                    contractImage: "https://image.com",
+                    projectURI: "https://projectURI.com",
+                    rendererBase: "ipfs://QmZ9UT92uG3oxKHhm7s7Xts9p8HTxZ99KdevVhQbD3vuUj/",
+                    variantCount: 4
+                })
+            )
+        );
     }
 
     function test_NCMetadataInits() public {
-        address token = nounsRenderer.token();
-        string memory image = nounsRenderer.contractImage();
+        INounsCoasterMetadataRendererTypes.Settings
+            memory settings = nounsRenderer.getSettings(address(mock));
+        string memory image = settings.contractImage;
+        string memory desc = settings.description;
+        string memory projURI = settings.projectURI;
+        vm.prank(address(mock));
         string memory uri = nounsRenderer.contractURI();
-        string memory desc = nounsRenderer.description();
-        string memory projURI = nounsRenderer.projectURI();
 
-        assertEq(token, address(mock));
         assertEq(image, "https://image.com");
         assertEq(desc, "Nouns Coaster");
         assertEq(projURI, "https://projectURI.com");
@@ -100,50 +104,77 @@ contract NounsCoasterMetadataRendererTest is Test {
         );
     }
 
-    function test_UpdateDescriptionAllowed() public {
+    function test_UpdateSettings() public {
         vm.startPrank(address(this));
-        nounsRenderer.updateDescription("new description");
 
-        string memory description = nounsRenderer.description();
-        assertEq(description, "new description");
+        INounsCoasterMetadataRendererTypes.Settings
+            memory settings = nounsRenderer.getSettings(address(mock));
+
+        settings.description = "new description";
+
+        vm.prank(address(mock));
+        nounsRenderer.updateSettings(address(mock), settings);
+
+        INounsCoasterMetadataRendererTypes.Settings
+            memory settingsResult = nounsRenderer.getSettings(address(mock));
+        assertEq(settingsResult.description, "new description");
     }
 
-    function test_UpdateDescriptionNotAllowed() public {
+    function test_UpdateSettingsNotAllowed() public {
+        INounsCoasterMetadataRendererTypes.Settings memory settings;
         vm.prank(vm.addr(0x1));
         vm.expectRevert();
-        nounsRenderer.updateDescription("new description");
+        nounsRenderer.updateSettings(address(mock), settings);
     }
 
     function test_AddItems() public {
-        vm.startPrank(admin);
 
-        CoasterHelper.addLayer1(nounsRenderer);
-        CoasterHelper.addLayer5(nounsRenderer);
-        CoasterHelper.addLayer6(nounsRenderer);
-        CoasterHelper.addLayer7(nounsRenderer);
-        CoasterHelper.addLayer8(nounsRenderer);
-        CoasterHelper.addLayer9(nounsRenderer);
-        CoasterHelper.addLayer10(nounsRenderer);
-        CoasterHelper.addLayer11(nounsRenderer);
-        CoasterHelper.addLayer12(nounsRenderer);
-        CoasterHelper.addLayer13(nounsRenderer);
-        CoasterHelper.addLayer14(nounsRenderer);
-        CoasterHelper.addLayer15(nounsRenderer);
-        CoasterHelper.addLayer16(nounsRenderer);
-        CoasterHelper.addLayer17(nounsRenderer);
-        CoasterHelper.addLayer18(nounsRenderer);
-        CoasterHelper.addLayer19(nounsRenderer);
-        CoasterHelper.addLayer20(nounsRenderer);
-        CoasterHelper.addLayer21(nounsRenderer);
-        CoasterHelper.addLayer22(nounsRenderer);
-        CoasterHelper.addLayer23(nounsRenderer);
-        CoasterHelper.addLayer24(nounsRenderer);
+        address target = address(mock);
+
+        vm.startPrank(admin);
+        CoasterHelper.addLayer1(nounsRenderer, target);
+        CoasterHelper.addLayer5(nounsRenderer, target);
+        CoasterHelper.addLayer6(nounsRenderer, target);
+        CoasterHelper.addLayer7(nounsRenderer, target);
+        CoasterHelper.addLayer8(nounsRenderer, target);
+        CoasterHelper.addLayer9(nounsRenderer, target);
+        CoasterHelper.addLayer10(nounsRenderer, target);
+        CoasterHelper.addLayer11(nounsRenderer, target);
+        CoasterHelper.addLayer12(nounsRenderer, target);
+        CoasterHelper.addLayer13(nounsRenderer, target);
+        CoasterHelper.addLayer14(nounsRenderer, target);
+        CoasterHelper.addLayer15(nounsRenderer, target);
+        CoasterHelper.addLayer16(nounsRenderer, target);
+        CoasterHelper.addLayer17(nounsRenderer, target);
+        CoasterHelper.addLayer18(nounsRenderer, target);
+        CoasterHelper.addLayer19(nounsRenderer, target);
+        CoasterHelper.addLayer20(nounsRenderer, target);
+        CoasterHelper.addLayer21(nounsRenderer, target);
+        CoasterHelper.addLayer22(nounsRenderer, target);
+        CoasterHelper.addLayer23(nounsRenderer, target);
+        CoasterHelper.addLayer24(nounsRenderer, target);
 
         (string memory _r1, string memory _r2) = nounsRenderer.getAttributes(
+            target,
             10
         );
         console2.log(_r1);
         console2.log(_r2);
+
+        (_r1, _r2) = nounsRenderer.getAttributes(target, 1);
+        console2.log(_r1);
+        console2.log(_r2);
+
+        (_r1, _r2) = nounsRenderer.getAttributes(target, 2);
+        console2.log(_r1);
+        console2.log(_r2);
+
+        vm.stopPrank();
+        vm.startPrank(target);
+
+        console2.log(nounsRenderer.tokenURI(1));
+        console2.log(nounsRenderer.tokenURI(2));
+        console2.log(nounsRenderer.tokenURI(10));
     }
 
     function test_sstore2() public {

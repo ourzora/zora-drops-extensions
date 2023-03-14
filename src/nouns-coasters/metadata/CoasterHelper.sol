@@ -5,8 +5,14 @@ import {NounsCoasterMetadataRenderer} from "./NounsCoasterMetadataRenderer.sol";
 import {INounsCoasterMetadataRendererTypes} from "../interfaces/INounsCoasterMetadataRendererTypes.sol";
 
 library CoasterHelper {
-    function addLayer1(NounsCoasterMetadataRenderer renderer) public {
+    function addLayer1(NounsCoasterMetadataRenderer renderer, address target)
+        internal
+    {
         // 1 Backgrounds
+        INounsCoasterMetadataRendererTypes.VariantInfo[]
+            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
+                0
+            );
         string[] memory items = new string[](16);
         items[0] = "Day Blue Roller Coaster";
         items[1] = "Day Blue Water Log";
@@ -24,19 +30,27 @@ library CoasterHelper {
         items[13] = "Night Pink Water Log";
         items[14] = "Night Purple Roller Coaster";
         items[15] = "Night Purple Water Log";
+
         renderer.addLayer({
+            target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
             property: "1 Backgrounds",
-            hasEqualVariants: false
+            variants: variants
         });
     }
 
-    function addLayer5(NounsCoasterMetadataRenderer renderer) public {
+    function addLayer5(NounsCoasterMetadataRenderer renderer, address target)
+        internal
+    {
         // 5 Body rear left
+        INounsCoasterMetadataRendererTypes.VariantInfo[]
+            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
+                4
+            );
         string[] memory items = new string[](120);
         items[0] = "1-Both Arms Down Bege Bsod";
         items[1] = "1-Both Arms Down Bege Crt";
@@ -158,19 +172,42 @@ library CoasterHelper {
         items[117] = "4-Right Arm Up Teal";
         items[118] = "4-Right Arm Up Teal Light";
         items[119] = "4-Right Arm Up Yellow";
+        variants[0] = INounsCoasterMetadataRendererTypes.VariantInfo({
+            startAt: 0,
+            count: 30
+        });
+        variants[1] = INounsCoasterMetadataRendererTypes.VariantInfo({
+            startAt: 30,
+            count: 30
+        });
+        variants[2] = INounsCoasterMetadataRendererTypes.VariantInfo({
+            startAt: 60,
+            count: 30
+        });
+        variants[3] = INounsCoasterMetadataRendererTypes.VariantInfo({
+            startAt: 90,
+            count: 30
+        });
         renderer.addLayer({
+            target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
             property: "5 Body rear left",
-            hasEqualVariants: true
+            variants: variants
         });
     }
 
-    function addLayer6(NounsCoasterMetadataRenderer renderer) public {
+    function addLayer6(NounsCoasterMetadataRenderer renderer, address target)
+        internal
+    {
         // 6 Accessories rear left
+        INounsCoasterMetadataRendererTypes.VariantInfo[]
+            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
+                4
+            );
         string[] memory items = new string[](550);
         items[0] = "1-Asset Rear Left 1n";
         items[1] = "1-Asset Rear Left Aardvark";
@@ -722,19 +759,42 @@ library CoasterHelper {
         items[547] = "4-Asset Rear Left Wave";
         items[548] = "4-Asset Rear Left Wet Money";
         items[549] = "4-Asset Rear Left Ying Yang";
+        variants[0] = INounsCoasterMetadataRendererTypes.VariantInfo({
+            startAt: 0,
+            count: 139
+        });
+        variants[1] = INounsCoasterMetadataRendererTypes.VariantInfo({
+            startAt: 139,
+            count: 137
+        });
+        variants[2] = INounsCoasterMetadataRendererTypes.VariantInfo({
+            startAt: 276,
+            count: 137
+        });
+        variants[3] = INounsCoasterMetadataRendererTypes.VariantInfo({
+            startAt: 413,
+            count: 137
+        });
         renderer.addLayer({
+            target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
             property: "6 Accessories rear left",
-            hasEqualVariants: true
+            variants: variants
         });
     }
 
-    function addLayer7(NounsCoasterMetadataRenderer renderer) public {
+    function addLayer7(NounsCoasterMetadataRenderer renderer, address target)
+        internal
+    {
         // 7 Head rear left
+        INounsCoasterMetadataRendererTypes.VariantInfo[]
+            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
+                0
+            );
         string[] memory items = new string[](205);
         items[0] = "Bag Happy";
         items[1] = "Bagpipe Bored";
@@ -941,37 +1001,53 @@ library CoasterHelper {
         items[202] = "Wine Barrel Happy";
         items[203] = "Wine Sick";
         items[204] = "Wizardhat Happy";
+
         renderer.addLayer({
+            target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
             property: "7 Head rear left",
-            hasEqualVariants: false
+            variants: variants
         });
     }
 
-    function addLayer8(NounsCoasterMetadataRenderer renderer) public {
+    function addLayer8(NounsCoasterMetadataRenderer renderer, address target)
+        internal
+    {
         // 8 Expression rear left
+        INounsCoasterMetadataRendererTypes.VariantInfo[]
+            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
+                0
+            );
         string[] memory items = new string[](4);
         items[0] = "Bored";
         items[1] = "Happy";
         items[2] = "Scared";
         items[3] = "Sick";
+
         renderer.addLayer({
+            target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
             property: "8 Expression rear left",
-            hasEqualVariants: false
+            variants: variants
         });
     }
 
-    function addLayer9(NounsCoasterMetadataRenderer renderer) public {
+    function addLayer9(NounsCoasterMetadataRenderer renderer, address target)
+        internal
+    {
         // 9 Glasses rear left
+        INounsCoasterMetadataRendererTypes.VariantInfo[]
+            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
+                0
+            );
         string[] memory items = new string[](21);
         items[0] = "Black";
         items[1] = "Black Red Eyes";
@@ -994,19 +1070,27 @@ library CoasterHelper {
         items[18] = "Watermelon";
         items[19] = "Yellow Orange Multi";
         items[20] = "Yellow Saturated";
+
         renderer.addLayer({
+            target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
             property: "9 Glasses rear left",
-            hasEqualVariants: false
+            variants: variants
         });
     }
 
-    function addLayer10(NounsCoasterMetadataRenderer renderer) public {
+    function addLayer10(NounsCoasterMetadataRenderer renderer, address target)
+        internal
+    {
         // 10 Body rear right
+        INounsCoasterMetadataRendererTypes.VariantInfo[]
+            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
+                4
+            );
         string[] memory items = new string[](120);
         items[0] = "1-Both Arms Down Bege Bsod";
         items[1] = "1-Both Arms Down Bege Crt";
@@ -1128,19 +1212,42 @@ library CoasterHelper {
         items[117] = "4-Right Arm Up Teal";
         items[118] = "4-Right Arm Up Teal Light";
         items[119] = "4-Right Arm Up Yellow";
+        variants[0] = INounsCoasterMetadataRendererTypes.VariantInfo({
+            startAt: 0,
+            count: 30
+        });
+        variants[1] = INounsCoasterMetadataRendererTypes.VariantInfo({
+            startAt: 30,
+            count: 30
+        });
+        variants[2] = INounsCoasterMetadataRendererTypes.VariantInfo({
+            startAt: 60,
+            count: 30
+        });
+        variants[3] = INounsCoasterMetadataRendererTypes.VariantInfo({
+            startAt: 90,
+            count: 30
+        });
         renderer.addLayer({
+            target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
             property: "10 Body rear right",
-            hasEqualVariants: true
+            variants: variants
         });
     }
 
-    function addLayer11(NounsCoasterMetadataRenderer renderer) public {
+    function addLayer11(NounsCoasterMetadataRenderer renderer, address target)
+        internal
+    {
         // 11 Accessories rear right
+        INounsCoasterMetadataRendererTypes.VariantInfo[]
+            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
+                4
+            );
         string[] memory items = new string[](560);
         items[0] = "1-Asset Rear Right 1n";
         items[1] = "1-Asset Rear Right Aardvark";
@@ -1702,19 +1809,42 @@ library CoasterHelper {
         items[557] = "4-Asset Rear Right Wave";
         items[558] = "4-Asset Rear Right Wet Money";
         items[559] = "4-Asset Rear Right Ying Yang";
+        variants[0] = INounsCoasterMetadataRendererTypes.VariantInfo({
+            startAt: 0,
+            count: 149
+        });
+        variants[1] = INounsCoasterMetadataRendererTypes.VariantInfo({
+            startAt: 149,
+            count: 137
+        });
+        variants[2] = INounsCoasterMetadataRendererTypes.VariantInfo({
+            startAt: 286,
+            count: 137
+        });
+        variants[3] = INounsCoasterMetadataRendererTypes.VariantInfo({
+            startAt: 423,
+            count: 137
+        });
         renderer.addLayer({
+            target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
             property: "11 Accessories rear right",
-            hasEqualVariants: true
+            variants: variants
         });
     }
 
-    function addLayer12(NounsCoasterMetadataRenderer renderer) public {
+    function addLayer12(NounsCoasterMetadataRenderer renderer, address target)
+        internal
+    {
         // 12 Head rear right
+        INounsCoasterMetadataRendererTypes.VariantInfo[]
+            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
+                0
+            );
         string[] memory items = new string[](103);
         items[0] = "Ape Happy";
         items[1] = "Ape Sick";
@@ -1819,37 +1949,53 @@ library CoasterHelper {
         items[100] = "Wave Scared";
         items[101] = "Weed Scared";
         items[102] = "Weed Sick";
+
         renderer.addLayer({
+            target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
             property: "12 Head rear right",
-            hasEqualVariants: false
+            variants: variants
         });
     }
 
-    function addLayer13(NounsCoasterMetadataRenderer renderer) public {
+    function addLayer13(NounsCoasterMetadataRenderer renderer, address target)
+        internal
+    {
         // 13 Expression rear right
+        INounsCoasterMetadataRendererTypes.VariantInfo[]
+            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
+                0
+            );
         string[] memory items = new string[](4);
         items[0] = "Bored";
         items[1] = "Happy";
         items[2] = "Scared";
         items[3] = "Sick";
+
         renderer.addLayer({
+            target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
             property: "13 Expression rear right",
-            hasEqualVariants: false
+            variants: variants
         });
     }
 
-    function addLayer14(NounsCoasterMetadataRenderer renderer) public {
+    function addLayer14(NounsCoasterMetadataRenderer renderer, address target)
+        internal
+    {
         // 14 Glasses rear right
+        INounsCoasterMetadataRendererTypes.VariantInfo[]
+            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
+                0
+            );
         string[] memory items = new string[](21);
         items[0] = "Black";
         items[1] = "Black Red Eyes";
@@ -1872,19 +2018,27 @@ library CoasterHelper {
         items[18] = "Watermelon";
         items[19] = "Yellow Orange Multi";
         items[20] = "Yellow Saturated";
+
         renderer.addLayer({
+            target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
             property: "14 Glasses rear right",
-            hasEqualVariants: false
+            variants: variants
         });
     }
 
-    function addLayer15(NounsCoasterMetadataRenderer renderer) public {
+    function addLayer15(NounsCoasterMetadataRenderer renderer, address target)
+        internal
+    {
         // 15 Body front left
+        INounsCoasterMetadataRendererTypes.VariantInfo[]
+            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
+                4
+            );
         string[] memory items = new string[](120);
         items[0] = "1-Both Arms Down Bege Bsod";
         items[1] = "1-Both Arms Down Bege Crt";
@@ -2006,19 +2160,42 @@ library CoasterHelper {
         items[117] = "4-Right Arm Up Teal";
         items[118] = "4-Right Arm Up Teal Light";
         items[119] = "4-Right Arm Up Yellow";
+        variants[0] = INounsCoasterMetadataRendererTypes.VariantInfo({
+            startAt: 0,
+            count: 30
+        });
+        variants[1] = INounsCoasterMetadataRendererTypes.VariantInfo({
+            startAt: 30,
+            count: 30
+        });
+        variants[2] = INounsCoasterMetadataRendererTypes.VariantInfo({
+            startAt: 60,
+            count: 30
+        });
+        variants[3] = INounsCoasterMetadataRendererTypes.VariantInfo({
+            startAt: 90,
+            count: 30
+        });
         renderer.addLayer({
+            target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
             property: "15 Body front left",
-            hasEqualVariants: true
+            variants: variants
         });
     }
 
-    function addLayer16(NounsCoasterMetadataRenderer renderer) public {
+    function addLayer16(NounsCoasterMetadataRenderer renderer, address target)
+        internal
+    {
         // 16 Accessories front left
+        INounsCoasterMetadataRendererTypes.VariantInfo[]
+            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
+                4
+            );
         string[] memory items = new string[](541);
         items[0] = "1-Asset Front Left 1n";
         items[1] = "1-Asset Front Left Aardvark";
@@ -2561,19 +2738,42 @@ library CoasterHelper {
         items[538] = "4-Asset Front Left Wave";
         items[539] = "4-Asset Front Left Wet Money";
         items[540] = "4-Asset Front Left Ying Yang";
+        variants[0] = INounsCoasterMetadataRendererTypes.VariantInfo({
+            startAt: 0,
+            count: 130
+        });
+        variants[1] = INounsCoasterMetadataRendererTypes.VariantInfo({
+            startAt: 130,
+            count: 137
+        });
+        variants[2] = INounsCoasterMetadataRendererTypes.VariantInfo({
+            startAt: 267,
+            count: 137
+        });
+        variants[3] = INounsCoasterMetadataRendererTypes.VariantInfo({
+            startAt: 404,
+            count: 137
+        });
         renderer.addLayer({
+            target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
             property: "16 Accessories front left",
-            hasEqualVariants: true
+            variants: variants
         });
     }
 
-    function addLayer17(NounsCoasterMetadataRenderer renderer) public {
+    function addLayer17(NounsCoasterMetadataRenderer renderer, address target)
+        internal
+    {
         // 17 Head front left
+        INounsCoasterMetadataRendererTypes.VariantInfo[]
+            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
+                0
+            );
         string[] memory items = new string[](443);
         items[0] = "Aardvark Scared";
         items[1] = "Abstract Scared";
@@ -3018,37 +3218,53 @@ library CoasterHelper {
         items[440] = "Wine Happy";
         items[441] = "Wine Scared";
         items[442] = "Wizardhat Happy";
+
         renderer.addLayer({
+            target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
             property: "17 Head front left",
-            hasEqualVariants: false
+            variants: variants
         });
     }
 
-    function addLayer18(NounsCoasterMetadataRenderer renderer) public {
+    function addLayer18(NounsCoasterMetadataRenderer renderer, address target)
+        internal
+    {
         // 18 Expression front left
+        INounsCoasterMetadataRendererTypes.VariantInfo[]
+            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
+                0
+            );
         string[] memory items = new string[](4);
         items[0] = "Bored";
         items[1] = "Happy";
         items[2] = "Scared";
         items[3] = "Sick";
+
         renderer.addLayer({
+            target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
             property: "18 Expression front left",
-            hasEqualVariants: false
+            variants: variants
         });
     }
 
-    function addLayer19(NounsCoasterMetadataRenderer renderer) public {
+    function addLayer19(NounsCoasterMetadataRenderer renderer, address target)
+        internal
+    {
         // 19 Glasses front left
+        INounsCoasterMetadataRendererTypes.VariantInfo[]
+            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
+                0
+            );
         string[] memory items = new string[](21);
         items[0] = "Black";
         items[1] = "Black Red Eyes";
@@ -3071,19 +3287,27 @@ library CoasterHelper {
         items[18] = "Watermelon";
         items[19] = "Yellow Orange Multi";
         items[20] = "Yellow Saturated";
+
         renderer.addLayer({
+            target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
             property: "19 Glasses front left",
-            hasEqualVariants: false
+            variants: variants
         });
     }
 
-    function addLayer20(NounsCoasterMetadataRenderer renderer) public {
+    function addLayer20(NounsCoasterMetadataRenderer renderer, address target)
+        internal
+    {
         // 20 Body front right
+        INounsCoasterMetadataRendererTypes.VariantInfo[]
+            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
+                4
+            );
         string[] memory items = new string[](110);
         items[0] = "1-Both Arms Down Bege Bsod";
         items[1] = "1-Both Arms Down Bege Crt";
@@ -3195,19 +3419,42 @@ library CoasterHelper {
         items[107] = "4-Right Arm Up Teal";
         items[108] = "4-Right Arm Up Teal Light";
         items[109] = "4-Right Arm Up Yellow";
+        variants[0] = INounsCoasterMetadataRendererTypes.VariantInfo({
+            startAt: 0,
+            count: 30
+        });
+        variants[1] = INounsCoasterMetadataRendererTypes.VariantInfo({
+            startAt: 30,
+            count: 20
+        });
+        variants[2] = INounsCoasterMetadataRendererTypes.VariantInfo({
+            startAt: 50,
+            count: 30
+        });
+        variants[3] = INounsCoasterMetadataRendererTypes.VariantInfo({
+            startAt: 80,
+            count: 30
+        });
         renderer.addLayer({
+            target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
             property: "20 Body front right",
-            hasEqualVariants: true
+            variants: variants
         });
     }
 
-    function addLayer21(NounsCoasterMetadataRenderer renderer) public {
+    function addLayer21(NounsCoasterMetadataRenderer renderer, address target)
+        internal
+    {
         // 21 Accessories front right
+        INounsCoasterMetadataRendererTypes.VariantInfo[]
+            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
+                4
+            );
         string[] memory items = new string[](523);
         items[0] = "1-Asset Front Right 1n";
         items[1] = "1-Asset Front Right Aardvark";
@@ -3732,19 +3979,42 @@ library CoasterHelper {
         items[520] = "4-Asset Front Right Wave";
         items[521] = "4-Asset Front Right Wet Money";
         items[522] = "4-Asset Front Right Ying Yang";
+        variants[0] = INounsCoasterMetadataRendererTypes.VariantInfo({
+            startAt: 0,
+            count: 119
+        });
+        variants[1] = INounsCoasterMetadataRendererTypes.VariantInfo({
+            startAt: 119,
+            count: 130
+        });
+        variants[2] = INounsCoasterMetadataRendererTypes.VariantInfo({
+            startAt: 249,
+            count: 137
+        });
+        variants[3] = INounsCoasterMetadataRendererTypes.VariantInfo({
+            startAt: 386,
+            count: 137
+        });
         renderer.addLayer({
+            target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
             property: "21 Accessories front right",
-            hasEqualVariants: true
+            variants: variants
         });
     }
 
-    function addLayer22(NounsCoasterMetadataRenderer renderer) public {
+    function addLayer22(NounsCoasterMetadataRenderer renderer, address target)
+        internal
+    {
         // 22 Head front right
+        INounsCoasterMetadataRendererTypes.VariantInfo[]
+            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
+                0
+            );
         string[] memory items = new string[](519);
         items[0] = "Aardvark Bored";
         items[1] = "Aardvark Happy";
@@ -4265,37 +4535,53 @@ library CoasterHelper {
         items[516] = "Zebra Bored";
         items[517] = "Zebra Happy";
         items[518] = "Zebra Sick";
+
         renderer.addLayer({
+            target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
             property: "22 Head front right",
-            hasEqualVariants: false
+            variants: variants
         });
     }
 
-    function addLayer23(NounsCoasterMetadataRenderer renderer) public {
+    function addLayer23(NounsCoasterMetadataRenderer renderer, address target)
+        internal
+    {
         // 23 Expression front right
+        INounsCoasterMetadataRendererTypes.VariantInfo[]
+            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
+                0
+            );
         string[] memory items = new string[](4);
         items[0] = "Bored";
         items[1] = "Happy";
         items[2] = "Scared";
         items[3] = "Sick";
+
         renderer.addLayer({
+            target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
             property: "23 Expression front right",
-            hasEqualVariants: false
+            variants: variants
         });
     }
 
-    function addLayer24(NounsCoasterMetadataRenderer renderer) public {
+    function addLayer24(NounsCoasterMetadataRenderer renderer, address target)
+        internal
+    {
         // 24 Glasses front right
+        INounsCoasterMetadataRendererTypes.VariantInfo[]
+            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
+                0
+            );
         string[] memory items = new string[](21);
         items[0] = "Black";
         items[1] = "Black Red Eyes";
@@ -4318,14 +4604,16 @@ library CoasterHelper {
         items[18] = "Watermelon";
         items[19] = "Yellow Orange Multi";
         items[20] = "Yellow Saturated";
+
         renderer.addLayer({
+            target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
                 baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
             property: "24 Glasses front right",
-            hasEqualVariants: false
+            variants: variants
         });
     }
 }

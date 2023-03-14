@@ -1,37 +1,21 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
-/// @title MetadataRendererTypesV1
-/// @author Iain Nash & Rohan Kulkarni
+/// @title INounsCoasterMetadataRendererTypesV1
+/// @author Iain Nash
 /// @notice The Metadata Renderer custom data types
 interface INounsCoasterMetadataRendererTypes {
-    struct ItemParam {
-        uint256 propertyId;
-        string name;
-        bool isNewProperty;
-    }
-
     struct IPFSGroup {
         string baseUri;
         string extension;
     }
 
-    struct Property {
-        string name;
-        string[] items;
-    }
-
-    struct Item {
-        uint8 index;
-        string name;
-    }
-
     struct Settings {
-        address token;
         string projectURI;
         string description;
         string contractImage;
         string rendererBase;
+        uint256 variantCount;
     }
 
     struct AdditionalTokenProperty {
@@ -40,11 +24,15 @@ interface INounsCoasterMetadataRendererTypes {
         bool quote;
     }
 
+    struct VariantInfo {
+        uint16 startAt;
+        uint16 count;
+    }
     struct NounsCoasterLayerData {
         IPFSGroup ipfs;
-        address data;
         uint256 count;
-        bool hasEqualVariants;
+        address data;
         string name;
     }
+    error VariantCountNotZeroOrExpected();
 }
