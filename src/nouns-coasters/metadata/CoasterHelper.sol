@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
-import {NounsCoasterMetadataRenderer} from "../../src/nouns-coasters/metadata/NounsCoasterMetadataRenderer.sol";
-import {INounsCoasterMetadataRendererTypes} from "../../src/nouns-coasters/interfaces/INounsCoasterMetadataRendererTypes.sol";
+import {NounsCoasterMetadataRenderer} from "./NounsCoasterMetadataRenderer.sol";
+import {INounsCoasterMetadataRendererTypes} from "../interfaces/INounsCoasterMetadataRendererTypes.sol";
 
 library CoasterHelper {
     function addLayer1(NounsCoasterMetadataRenderer renderer) public {
@@ -26,7 +26,7 @@ library CoasterHelper {
         items[15] = "Night Purple Water Log";
         renderer.addLayer({
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://",
+                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
@@ -160,7 +160,7 @@ library CoasterHelper {
         items[119] = "4-Right Arm Up Yellow";
         renderer.addLayer({
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://",
+                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
@@ -724,7 +724,7 @@ library CoasterHelper {
         items[549] = "4-Asset Rear Left Ying Yang";
         renderer.addLayer({
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://",
+                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
@@ -943,7 +943,7 @@ library CoasterHelper {
         items[204] = "Wizardhat Happy";
         renderer.addLayer({
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://",
+                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
@@ -961,7 +961,7 @@ library CoasterHelper {
         items[3] = "Sick";
         renderer.addLayer({
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://",
+                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
@@ -996,7 +996,7 @@ library CoasterHelper {
         items[20] = "Yellow Saturated";
         renderer.addLayer({
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://",
+                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
@@ -1130,7 +1130,7 @@ library CoasterHelper {
         items[119] = "4-Right Arm Up Yellow";
         renderer.addLayer({
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://",
+                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
@@ -1704,7 +1704,7 @@ library CoasterHelper {
         items[559] = "4-Asset Rear Right Ying Yang";
         renderer.addLayer({
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://",
+                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
@@ -1821,7 +1821,7 @@ library CoasterHelper {
         items[102] = "Weed Sick";
         renderer.addLayer({
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://",
+                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
@@ -1839,7 +1839,7 @@ library CoasterHelper {
         items[3] = "Sick";
         renderer.addLayer({
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://",
+                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
@@ -1874,7 +1874,7 @@ library CoasterHelper {
         items[20] = "Yellow Saturated";
         renderer.addLayer({
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://",
+                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
@@ -2008,7 +2008,7 @@ library CoasterHelper {
         items[119] = "4-Right Arm Up Yellow";
         renderer.addLayer({
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://",
+                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
@@ -2563,7 +2563,7 @@ library CoasterHelper {
         items[540] = "4-Asset Front Left Ying Yang";
         renderer.addLayer({
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://",
+                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
@@ -3020,7 +3020,7 @@ library CoasterHelper {
         items[442] = "Wizardhat Happy";
         renderer.addLayer({
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://",
+                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
@@ -3038,7 +3038,7 @@ library CoasterHelper {
         items[3] = "Sick";
         renderer.addLayer({
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://",
+                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
@@ -3073,7 +3073,7 @@ library CoasterHelper {
         items[20] = "Yellow Saturated";
         renderer.addLayer({
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://",
+                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
@@ -3197,7 +3197,7 @@ library CoasterHelper {
         items[109] = "4-Right Arm Up Yellow";
         renderer.addLayer({
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://",
+                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
@@ -3734,7 +3734,7 @@ library CoasterHelper {
         items[522] = "4-Asset Front Right Ying Yang";
         renderer.addLayer({
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://",
+                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
@@ -4267,7 +4267,7 @@ library CoasterHelper {
         items[518] = "Zebra Sick";
         renderer.addLayer({
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://",
+                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
@@ -4285,7 +4285,7 @@ library CoasterHelper {
         items[3] = "Sick";
         renderer.addLayer({
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://",
+                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,
@@ -4320,7 +4320,7 @@ library CoasterHelper {
         items[20] = "Yellow Saturated";
         renderer.addLayer({
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://",
+                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
                 extension: ".png"
             }),
             items: items,

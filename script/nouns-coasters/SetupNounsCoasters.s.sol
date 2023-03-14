@@ -6,8 +6,8 @@ import "forge-std/Script.sol";
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 import {NounsCoasterMetadataRenderer} from "../../src/nouns-coasters/metadata/NounsCoasterMetadataRenderer.sol";
 import {INounsCoasterMetadataRendererTypes} from "../../src/nouns-coasters/interfaces/INounsCoasterMetadataRendererTypes.sol";
-
-import {CoasterHelper} from "./CoasterHelper.sol";
+import {CoasterHelper} from "../../src/nouns-coasters/metadata/CoasterHelper.sol";
+import {console2} from "forge-std/console2.sol";
 
 contract SetupNounsCoasters is Script {
     function run() public {
@@ -42,5 +42,7 @@ contract SetupNounsCoasters is Script {
         CoasterHelper.addLayer22(renderer);
         CoasterHelper.addLayer23(renderer);
         CoasterHelper.addLayer24(renderer);
+
+        console2.log(renderer.tokenURI(10));
     }
 }

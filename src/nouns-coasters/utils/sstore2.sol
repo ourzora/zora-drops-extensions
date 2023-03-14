@@ -36,7 +36,7 @@ library SSTORE2 {
     function write(bytes memory data) internal returns (address pointer) {
         /// @solidity memory-safe-assembly
         assembly {
-            let originalDataLength := calldataload(data)
+            let originalDataLength := mload(data)
 
             // Add 1 to data size since we are prefixing it with a STOP opcode.
             let dataSize := add(originalDataLength, DATA_OFFSET)
@@ -50,7 +50,7 @@ library SSTORE2 {
              * 60 0xa      | PUSH1 0xa       | 0xa codeSize codeSize   |                     |
              * 3D          | RETURNDATASIZE  | 0 0xa codeSize codeSize |                     |
              * 39          | CODECOPY        | codeSize                | [0..codeSize): code |
-             * 3D          | RETURNDATASZIE  | 0 codeSize              | [0..codeSize): code |
+             * 3D          | RETURNDATASIZE  | 0 codeSize              | [0..codeSize): code |
              * F3          | RETURN          |                         | [0..codeSize): code |
              * 00          | STOP            |                         |                     |
              * ------------------------------------------------------------------------------+
@@ -211,54 +211,6 @@ library SSTORE2 {
             mstore(data, size)
             mstore(add(add(data, 0x20), size), 0) // Zeroize the last slot.
             extcodecopy(pointer, add(data, 0x20), add(start, DATA_OFFSET), size)
-        }
-    }
-
-    /// @dev Returns the `data` from the bytecode of the storage contract at `pointer`,
-    /// from the byte at `start`, to the byte at `end` (exclusive) of the data stored.
-    function readBytes32(address pointer, uint256 start)
-        internal
-        view
-        returns (bytes32 data)
-    {
-        /// @solidity memory-safe-assembly
-        assembly {
-            let pointerCodesize := extcodesize(pointer)
-            if iszero(pointerCodesize) {
-                // Store the function selector of `InvalidPointer()`.
-                mstore(0x00, 0x11052bb4)
-                // Revert with (offset, size).
-                revert(0x1c, 0x04)
-            }
-
-            let end := add(start, 32)
-
-            // If `!(pointer.code.size > end) || (start > end)`, revert.
-            // This also handles the cases where
-            // `end + DATA_OFFSET` or `start + DATA_OFFSET` overflows.
-            if iszero(
-                and(
-                    gt(pointerCodesize, end), // Within bounds.
-                    iszero(gt(start, end)) // Valid range.
-                )
-            ) {
-                // Store the function selector of `ReadOutOfBounds()`.
-                mstore(0x00, 0x84eb0dd1)
-                // Revert with (offset, size).
-                revert(0x1c, 0x04)
-            }
-            let size := sub(end, start)
-
-            // Get the pointer to the free memory and allocate
-            // enough 32-byte words for the data and the length of the data,
-            // then copy the code to the allocated memory.
-            // Masking with 0xffe0 will suffice, since contract size is less than 16 bits.
-            data := mload(0x40)
-            // mstore(0x40, add(data, and(add(size, 0x3f), 0xffe0)))
-            // mstore(data, size)
-            // mstore(add(add(data, 0x20), size), 0) // Zeroize the last slot.
-            // extcodecopy(pointer, add(data, 0x20), add(start, DATA_OFFSET), size)
-            extcodecopy(pointer, data, add(start, DATA_OFFSET), 32)
         }
     }
 

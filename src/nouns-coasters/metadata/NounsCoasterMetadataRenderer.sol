@@ -13,16 +13,14 @@ import {MetadataJSONKeys} from "micro-onchain-metadata-utils/MetadataJSONKeys.so
 import {NFTMetadataRenderer} from "zora-drops-contracts/utils/NFTMetadataRenderer.sol";
 import {MetadataRenderAdminCheck} from "zora-drops-contracts/metadata/MetadataRenderAdminCheck.sol";
 import {INounsCoasterMetadataRendererTypes} from "../interfaces/INounsCoasterMetadataRendererTypes.sol";
-import {Ownable2Step} from "openzeppelin-contracts/contracts/access/Ownable2Step.sol";
 import {SSTORE2} from "../utils/SSTORE2.sol";
 
-import "forge-std/console.sol";
+import "forge-std/console2.sol";
 
 /// @notice NounsCoasterMetadataRenderer
 contract NounsCoasterMetadataRenderer is
     IMetadataRenderer,
     INounsCoasterMetadataRendererTypes,
-    Ownable2Step,
     MetadataRenderAdminCheck
 {
     /// @notice The metadata renderer settings
@@ -98,8 +96,7 @@ contract NounsCoasterMetadataRenderer is
         string memory _rendererBase,
         address _token,
         address _owner
-    ) Ownable2Step() {
-        _transferOwnership(_owner);
+    ) {
         // Store the renderer settings
         settings = Settings({
             projectURI: _projectURI,
@@ -118,10 +115,11 @@ contract NounsCoasterMetadataRenderer is
         string[] memory items,
         string memory property,
         bool hasEqualVariants // if the layer has global variants use this variant here
-    ) external onlyOwner {
+    ) external requireSenderAdmin(address(settings.token)) {
+        address newData = SSTORE2.write(abi.encode(items));
         // existing layer
         dataLayers[index] = NounsCoasterLayerData({
-            data: SSTORE2.write(abi.encode(items)),
+            data: newData,
             name: property,
             count: items.length,
             ipfs: ipfs,
@@ -134,10 +132,12 @@ contract NounsCoasterMetadataRenderer is
         string[] memory items,
         string memory property,
         bool hasEqualVariants
-    ) external onlyOwner {
+    ) external requireSenderAdmin(address(settings.token)) {
+        address data = SSTORE2.write(abi.encode(items));
+        console2.log(data);
         dataLayers.push(
             NounsCoasterLayerData({
-                data: SSTORE2.write(abi.encode(items)),
+                data: data,
                 name: property,
                 count: items.length,
                 hasEqualVariants: hasEqualVariants,
@@ -181,10 +181,10 @@ contract NounsCoasterMetadataRenderer is
         for (uint256 i = 0; i < dataLayers.length; ++i) {
             NounsCoasterLayerData memory layerData = dataLayers[i];
 
-            seed >>= 16;
+            seed >>= 8;
             uint256 thisLayer = uint256(uint16(seed));
 
-            string[] memory layers = abi.decode(
+            (string[] memory layers) = abi.decode(
                 SSTORE2.read(layerData.data),
                 (string[])
             );
@@ -347,7 +347,7 @@ contract NounsCoasterMetadataRenderer is
     /// @param _newContractImage The new contract image
     function updateContractImage(string memory _newContractImage)
         external
-        onlyOwner
+        requireSenderAdmin(address(settings.token))
     {
         emit ContractImageUpdated(settings.contractImage, _newContractImage);
 
@@ -358,7 +358,7 @@ contract NounsCoasterMetadataRenderer is
     /// @param _newRendererBase The new renderer base
     function updateRendererBase(string memory _newRendererBase)
         external
-        onlyOwner
+        requireSenderAdmin(address(settings.token))
     {
         emit RendererBaseUpdated(settings.rendererBase, _newRendererBase);
 
@@ -369,14 +369,17 @@ contract NounsCoasterMetadataRenderer is
     /// @param _newDescription The new description
     function updateDescription(string memory _newDescription)
         external
-        onlyOwner
+        requireSenderAdmin(address(settings.token))
     {
         emit DescriptionUpdated(settings.description, _newDescription);
 
         settings.description = _newDescription;
     }
 
-    function updateProjectURI(string memory _newProjectURI) external onlyOwner {
+    function updateProjectURI(string memory _newProjectURI)
+        external
+        requireSenderAdmin(address(settings.token))
+    {
         emit WebsiteURIUpdated(settings.projectURI, _newProjectURI);
 
         settings.projectURI = _newProjectURI;
