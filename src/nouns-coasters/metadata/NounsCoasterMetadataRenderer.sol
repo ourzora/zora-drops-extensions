@@ -46,7 +46,7 @@ import {InflateLib} from "../utils/InflateLib.sol";
  */
 
 /// @notice NounsCoasterMetadataRenderer
-/// @author @tsbsl / @0xTranqui / @iainnash
+/// @author @iainnash / @tbtstl / @0xTranqui
 contract NounsCoasterMetadataRenderer is
     IMetadataRenderer,
     INounsCoasterMetadataRendererTypes,
