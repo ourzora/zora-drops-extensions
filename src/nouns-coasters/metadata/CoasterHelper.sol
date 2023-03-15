@@ -51,7 +51,7 @@ library CoasterHelper {
 
         bytes memory compressedData = vm.ffi(inputs);
 
-        address result = SSTORE2.write(compressedData);
+        // address result = SSTORE2.write(compressedData);
 
         renderer.addLayer({
             target: target,
@@ -60,7 +60,7 @@ library CoasterHelper {
                 extension: ".png"
             }),
             decompressedSize: data.length,
-            compressedDataAddress: result,
+            compressedData: compressedData,
             count: items.length,
             property: "1 Backgrounds",
             variantProperty: variantPropertyParameters
@@ -239,7 +239,7 @@ library CoasterHelper {
 
         bytes memory compressedData = vm.ffi(inputs);
 
-        address result = SSTORE2.write(compressedData);
+        // address result = SSTORE2.write(compressedData);
 
         renderer.addLayer({
             target: target,
@@ -248,7 +248,7 @@ library CoasterHelper {
                 extension: ".png"
             }),
             decompressedSize: data.length,
-            compressedDataAddress: result,
+            compressedData: compressedData,
             count: items.length,
             property: "5 Body rear left",
             variantProperty: variantPropertyParameters
@@ -857,7 +857,7 @@ library CoasterHelper {
 
         bytes memory compressedData = vm.ffi(inputs);
 
-        address result = SSTORE2.write(compressedData);
+        // address result = SSTORE2.write(compressedData);
 
         renderer.addLayer({
             target: target,
@@ -866,7 +866,7 @@ library CoasterHelper {
                 extension: ".png"
             }),
             decompressedSize: data.length,
-            compressedDataAddress: result,
+            compressedData: compressedData,
             count: items.length,
             property: "6 Accessories rear left",
             variantProperty: variantPropertyParameters
@@ -1106,7 +1106,7 @@ library CoasterHelper {
 
         bytes memory compressedData = vm.ffi(inputs);
 
-        address result = SSTORE2.write(compressedData);
+        // address result = SSTORE2.write(compressedData);
 
         renderer.addLayer({
             target: target,
@@ -1115,7 +1115,7 @@ library CoasterHelper {
                 extension: ".png"
             }),
             decompressedSize: data.length,
-            compressedDataAddress: result,
+            compressedData: compressedData,
             count: items.length,
             property: "7 Head rear left",
             variantProperty: variantPropertyParameters
@@ -1154,7 +1154,7 @@ library CoasterHelper {
 
         bytes memory compressedData = vm.ffi(inputs);
 
-        address result = SSTORE2.write(compressedData);
+        // address result = SSTORE2.write(compressedData);
 
         renderer.addLayer({
             target: target,
@@ -1163,7 +1163,7 @@ library CoasterHelper {
                 extension: ".png"
             }),
             decompressedSize: data.length,
-            compressedDataAddress: result,
+            compressedData: compressedData,
             count: items.length,
             property: "8 Expression rear left",
             variantProperty: variantPropertyParameters
@@ -1219,7 +1219,7 @@ library CoasterHelper {
 
         bytes memory compressedData = vm.ffi(inputs);
 
-        address result = SSTORE2.write(compressedData);
+        // address result = SSTORE2.write(compressedData);
 
         renderer.addLayer({
             target: target,
@@ -1228,7 +1228,7 @@ library CoasterHelper {
                 extension: ".png"
             }),
             decompressedSize: data.length,
-            compressedDataAddress: result,
+            compressedData: compressedData,
             count: items.length,
             property: "9 Glasses rear left",
             variantProperty: variantPropertyParameters
@@ -1407,7 +1407,7 @@ library CoasterHelper {
 
         bytes memory compressedData = vm.ffi(inputs);
 
-        address result = SSTORE2.write(compressedData);
+        // address result = SSTORE2.write(compressedData);
 
         renderer.addLayer({
             target: target,
@@ -1416,7 +1416,7 @@ library CoasterHelper {
                 extension: ".png"
             }),
             decompressedSize: data.length,
-            compressedDataAddress: result,
+            compressedData: compressedData,
             count: items.length,
             property: "10 Body rear right",
             variantProperty: variantPropertyParameters
@@ -2035,7 +2035,7 @@ library CoasterHelper {
 
         bytes memory compressedData = vm.ffi(inputs);
 
-        address result = SSTORE2.write(compressedData);
+        // address result = SSTORE2.write(compressedData);
 
         renderer.addLayer({
             target: target,
@@ -2044,7 +2044,7 @@ library CoasterHelper {
                 extension: ".png"
             }),
             decompressedSize: data.length,
-            compressedDataAddress: result,
+            compressedData: compressedData,
             count: items.length,
             property: "11 Accessories rear right",
             variantProperty: variantPropertyParameters
@@ -2182,7 +2182,7 @@ library CoasterHelper {
 
         bytes memory compressedData = vm.ffi(inputs);
 
-        address result = SSTORE2.write(compressedData);
+        // address result = SSTORE2.write(compressedData);
 
         renderer.addLayer({
             target: target,
@@ -2191,7 +2191,7 @@ library CoasterHelper {
                 extension: ".png"
             }),
             decompressedSize: data.length,
-            compressedDataAddress: result,
+            compressedData: compressedData,
             count: items.length,
             property: "12 Head rear right",
             variantProperty: variantPropertyParameters
@@ -2230,7 +2230,7 @@ library CoasterHelper {
 
         bytes memory compressedData = vm.ffi(inputs);
 
-        address result = SSTORE2.write(compressedData);
+        // address result = SSTORE2.write(compressedData);
 
         renderer.addLayer({
             target: target,
@@ -2239,7 +2239,7 @@ library CoasterHelper {
                 extension: ".png"
             }),
             decompressedSize: data.length,
-            compressedDataAddress: result,
+            compressedData: compressedData,
             count: items.length,
             property: "13 Expression rear right",
             variantProperty: variantPropertyParameters
@@ -2295,7 +2295,7 @@ library CoasterHelper {
 
         bytes memory compressedData = vm.ffi(inputs);
 
-        address result = SSTORE2.write(compressedData);
+        // address result = SSTORE2.write(compressedData);
 
         renderer.addLayer({
             target: target,
@@ -2304,7 +2304,7 @@ library CoasterHelper {
                 extension: ".png"
             }),
             decompressedSize: data.length,
-            compressedDataAddress: result,
+            compressedData: compressedData,
             count: items.length,
             property: "14 Glasses rear right",
             variantProperty: variantPropertyParameters
@@ -2483,7 +2483,7 @@ library CoasterHelper {
 
         bytes memory compressedData = vm.ffi(inputs);
 
-        address result = SSTORE2.write(compressedData);
+        // address result = SSTORE2.write(compressedData);
 
         renderer.addLayer({
             target: target,
@@ -2492,7 +2492,7 @@ library CoasterHelper {
                 extension: ".png"
             }),
             decompressedSize: data.length,
-            compressedDataAddress: result,
+            compressedData: compressedData,
             count: items.length,
             property: "15 Body front left",
             variantProperty: variantPropertyParameters
@@ -3092,7 +3092,7 @@ library CoasterHelper {
 
         bytes memory compressedData = vm.ffi(inputs);
 
-        address result = SSTORE2.write(compressedData);
+        // address result = SSTORE2.write(compressedData);
 
         renderer.addLayer({
             target: target,
@@ -3101,7 +3101,7 @@ library CoasterHelper {
                 extension: ".png"
             }),
             decompressedSize: data.length,
-            compressedDataAddress: result,
+            compressedData: compressedData,
             count: items.length,
             property: "16 Accessories front left",
             variantProperty: variantPropertyParameters
@@ -3579,7 +3579,7 @@ library CoasterHelper {
 
         bytes memory compressedData = vm.ffi(inputs);
 
-        address result = SSTORE2.write(compressedData);
+        // address result = SSTORE2.write(compressedData);
 
         renderer.addLayer({
             target: target,
@@ -3588,7 +3588,7 @@ library CoasterHelper {
                 extension: ".png"
             }),
             decompressedSize: data.length,
-            compressedDataAddress: result,
+            compressedData: compressedData,
             count: items.length,
             property: "17 Head front left",
             variantProperty: variantPropertyParameters
@@ -3627,7 +3627,7 @@ library CoasterHelper {
 
         bytes memory compressedData = vm.ffi(inputs);
 
-        address result = SSTORE2.write(compressedData);
+        // address result = SSTORE2.write(compressedData);
 
         renderer.addLayer({
             target: target,
@@ -3636,7 +3636,7 @@ library CoasterHelper {
                 extension: ".png"
             }),
             decompressedSize: data.length,
-            compressedDataAddress: result,
+            compressedData: compressedData,
             count: items.length,
             property: "18 Expression front left",
             variantProperty: variantPropertyParameters
@@ -3692,7 +3692,7 @@ library CoasterHelper {
 
         bytes memory compressedData = vm.ffi(inputs);
 
-        address result = SSTORE2.write(compressedData);
+        // address result = SSTORE2.write(compressedData);
 
         renderer.addLayer({
             target: target,
@@ -3701,7 +3701,7 @@ library CoasterHelper {
                 extension: ".png"
             }),
             decompressedSize: data.length,
-            compressedDataAddress: result,
+            compressedData: compressedData,
             count: items.length,
             property: "19 Glasses front left",
             variantProperty: variantPropertyParameters
@@ -3870,7 +3870,7 @@ library CoasterHelper {
 
         bytes memory compressedData = vm.ffi(inputs);
 
-        address result = SSTORE2.write(compressedData);
+        // address result = SSTORE2.write(compressedData);
 
         renderer.addLayer({
             target: target,
@@ -3879,7 +3879,7 @@ library CoasterHelper {
                 extension: ".png"
             }),
             decompressedSize: data.length,
-            compressedDataAddress: result,
+            compressedData: compressedData,
             count: items.length,
             property: "20 Body front right",
             variantProperty: variantPropertyParameters
@@ -4461,7 +4461,7 @@ library CoasterHelper {
 
         bytes memory compressedData = vm.ffi(inputs);
 
-        address result = SSTORE2.write(compressedData);
+        // address result = SSTORE2.write(compressedData);
 
         renderer.addLayer({
             target: target,
@@ -4470,7 +4470,7 @@ library CoasterHelper {
                 extension: ".png"
             }),
             decompressedSize: data.length,
-            compressedDataAddress: result,
+            compressedData: compressedData,
             count: items.length,
             property: "21 Accessories front right",
             variantProperty: variantPropertyParameters
@@ -5024,7 +5024,7 @@ library CoasterHelper {
 
         bytes memory compressedData = vm.ffi(inputs);
 
-        address result = SSTORE2.write(compressedData);
+        // address result = SSTORE2.write(compressedData);
 
         renderer.addLayer({
             target: target,
@@ -5033,7 +5033,7 @@ library CoasterHelper {
                 extension: ".png"
             }),
             decompressedSize: data.length,
-            compressedDataAddress: result,
+            compressedData: compressedData,
             count: items.length,
             property: "22 Head front right",
             variantProperty: variantPropertyParameters
@@ -5072,7 +5072,7 @@ library CoasterHelper {
 
         bytes memory compressedData = vm.ffi(inputs);
 
-        address result = SSTORE2.write(compressedData);
+        // address result = SSTORE2.write(compressedData);
 
         renderer.addLayer({
             target: target,
@@ -5081,7 +5081,7 @@ library CoasterHelper {
                 extension: ".png"
             }),
             decompressedSize: data.length,
-            compressedDataAddress: result,
+            compressedData: compressedData,
             count: items.length,
             property: "23 Expression front right",
             variantProperty: variantPropertyParameters
@@ -5137,7 +5137,7 @@ library CoasterHelper {
 
         bytes memory compressedData = vm.ffi(inputs);
 
-        address result = SSTORE2.write(compressedData);
+        // address result = SSTORE2.write(compressedData);
 
         renderer.addLayer({
             target: target,
@@ -5146,7 +5146,7 @@ library CoasterHelper {
                 extension: ".png"
             }),
             decompressedSize: data.length,
-            compressedDataAddress: result,
+            compressedData: compressedData,
             count: items.length,
             property: "24 Glasses front right",
             variantProperty: variantPropertyParameters

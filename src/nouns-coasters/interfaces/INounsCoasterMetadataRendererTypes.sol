@@ -15,7 +15,6 @@ interface INounsCoasterMetadataRendererTypes {
         string description;
         string contractImage;
         string rendererBase;
-        uint256 variantCount;
     }
 
     struct AdditionalTokenProperty {

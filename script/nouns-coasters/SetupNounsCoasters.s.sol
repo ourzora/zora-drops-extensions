@@ -17,9 +17,8 @@ contract SetupNounsCoasters is Script {
         vm.startBroadcast(deployer);
         NounsCoasterMetadataRenderer renderer = NounsCoasterMetadataRenderer(rendererAddress);
         INounsCoasterMetadataRendererTypes.Settings memory settings;
-        settings.variantCount = 4;
         settings.projectURI = "https://www.comicsdao.wtf/nouns";
-        settings.description = "DESCRIPTION PLACEHOLDER TESTING";
+        settings.description = unicode'Mint a unique piece from the “Themed Park Nouns” collection. \\nThe covers are randomly generated from over 7000 pieces of hand drawn artwork representing the entire set of Nouns traits. There is over 500 million possible permutations of the Special Edition Cover. \\nAll proceeds go to purchase physical versions of Nouns Comic #1 for donation to youth hospitals in North America.';
         settings.contractImage = "ipfs://bafybeiew2wnmisaojqfkmjmzll4nhsnokneo3e4d6gcszhqscf4flslq4u";
         settings.rendererBase = "https://api.zora.co/renderer/stack-images";
 

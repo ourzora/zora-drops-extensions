@@ -107,11 +107,13 @@ contract NounsCoasterMetadataRenderer is
         }
     }
 
+    event LayerUpdated(address indexed target, uint256 indexed index, address by);
+
     function replaceLayerAtIndex(
         address target,
         uint256 index,
         IPFSGroup memory ipfs,
-        address compressedDataAddress,
+        bytes memory compressedData,
         uint256 decompressedSize,
         uint256 count,
         string memory property,
@@ -122,8 +124,10 @@ contract NounsCoasterMetadataRenderer is
             count: count,
             ipfs: ipfs,
             decompressedSize: decompressedSize,
-            compressedDataAddress: compressedDataAddress
+            compressedDataAddress: SSTORE2.write(compressedData)
         });
+
+        emit LayerUpdated(target, index, msg.sender);
 
         variantInfo[target].groupsSizes[variantProperty.id] = variantProperty
             .count;
@@ -138,7 +142,7 @@ contract NounsCoasterMetadataRenderer is
     function addLayer(
         address target,
         IPFSGroup memory ipfs,
-        address compressedDataAddress,
+        bytes memory compressedData,
         uint256 decompressedSize,
         uint256 count,
         string memory property,
@@ -151,9 +155,11 @@ contract NounsCoasterMetadataRenderer is
                 count: count,
                 ipfs: ipfs,
                 decompressedSize: decompressedSize,
-                compressedDataAddress: compressedDataAddress
+                compressedDataAddress: SSTORE2.write(compressedData)
             })
         );
+
+        emit LayerUpdated(target, added, msg.sender);
 
         if (variantProperty.count > 0) {
             variantInfo[target].groupsSizes[
@@ -288,7 +294,7 @@ contract NounsCoasterMetadataRenderer is
         address target = msg.sender;
 
         MetadataBuilder.JSONItem[]
-            memory items = new MetadataBuilder.JSONItem[](3);
+            memory items = new MetadataBuilder.JSONItem[](4);
 
         items[0] = MetadataBuilder.JSONItem({
             key: MetadataJSONKeys.keyName,
@@ -305,6 +311,11 @@ contract NounsCoasterMetadataRenderer is
             value: settings[target].contractImage,
             quote: true
         });
+        items[3] = MetadataBuilder.JSONItem({
+            key: "external_url",
+            value: settings[target].projectURI,
+            quote: true
+        });
 
         return MetadataBuilder.generateEncodedJSON(items);
     }
@@ -319,7 +330,7 @@ contract NounsCoasterMetadataRenderer is
         );
 
         MetadataBuilder.JSONItem[]
-            memory items = new MetadataBuilder.JSONItem[](5);
+            memory items = new MetadataBuilder.JSONItem[](4);
 
         items[0] = MetadataBuilder.JSONItem({
             key: MetadataJSONKeys.keyName,
@@ -344,11 +355,6 @@ contract NounsCoasterMetadataRenderer is
             key: MetadataJSONKeys.keyProperties,
             value: _attributes,
             quote: false
-        });
-        items[4] = MetadataBuilder.JSONItem({
-            key: "external_url",
-            value: settings[target].projectURI,
-            quote: true
         });
 
         return MetadataBuilder.generateEncodedJSON(items);
