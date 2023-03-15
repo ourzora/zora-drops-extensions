@@ -11,10 +11,15 @@ library CoasterHelper {
         internal
     {
         // 1 Backgrounds
-        INounsCoasterMetadataRendererTypes.VariantInfo[]
-            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
-                0
-            );
+        INounsCoasterMetadataRendererTypes.VariantPropertyParameters
+            memory variantPropertyParameters;
+        variantPropertyParameters
+            .offsets = new INounsCoasterMetadataRendererTypes.VariantOffset[](
+            0
+        );
+        variantPropertyParameters.id = 0;
+        variantPropertyParameters.count = 0;
+
         string[] memory items = new string[](16);
         items[0] = "Day Blue Roller Coaster";
         items[1] = "Day Blue Water Log";
@@ -51,14 +56,14 @@ library CoasterHelper {
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
+                baseUri: "ipfs://bafybeidmllp5rev4k2na7t34bmwxjjp2dt4w6papy4aicynmmshgojny2e/",
                 extension: ".png"
             }),
             decompressedSize: data.length,
             compressedDataAddress: result,
             count: items.length,
             property: "1 Backgrounds",
-            variants: variants
+            variantProperty: variantPropertyParameters
         });
     }
 
@@ -66,10 +71,39 @@ library CoasterHelper {
         internal
     {
         // 5 Body rear left
-        INounsCoasterMetadataRendererTypes.VariantInfo[]
-            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
-                4
-            );
+        INounsCoasterMetadataRendererTypes.VariantPropertyParameters
+            memory variantPropertyParameters;
+        variantPropertyParameters
+            .offsets = new INounsCoasterMetadataRendererTypes.VariantOffset[](
+            4
+        );
+        variantPropertyParameters.id = 0;
+        variantPropertyParameters.count = 4;
+        variantPropertyParameters.offsets[
+            0
+        ] = INounsCoasterMetadataRendererTypes.VariantOffset({
+            startAt: 0,
+            count: 30
+        });
+        variantPropertyParameters.offsets[
+            1
+        ] = INounsCoasterMetadataRendererTypes.VariantOffset({
+            startAt: 30,
+            count: 30
+        });
+        variantPropertyParameters.offsets[
+            2
+        ] = INounsCoasterMetadataRendererTypes.VariantOffset({
+            startAt: 60,
+            count: 30
+        });
+        variantPropertyParameters.offsets[
+            3
+        ] = INounsCoasterMetadataRendererTypes.VariantOffset({
+            startAt: 90,
+            count: 30
+        });
+
         string[] memory items = new string[](120);
         items[0] = "1-Both Arms Down Bege Bsod";
         items[1] = "1-Both Arms Down Bege Crt";
@@ -191,22 +225,6 @@ library CoasterHelper {
         items[117] = "4-Right Arm Up Teal";
         items[118] = "4-Right Arm Up Teal Light";
         items[119] = "4-Right Arm Up Yellow";
-        variants[0] = INounsCoasterMetadataRendererTypes.VariantInfo({
-            startAt: 0,
-            count: 30
-        });
-        variants[1] = INounsCoasterMetadataRendererTypes.VariantInfo({
-            startAt: 30,
-            count: 30
-        });
-        variants[2] = INounsCoasterMetadataRendererTypes.VariantInfo({
-            startAt: 60,
-            count: 30
-        });
-        variants[3] = INounsCoasterMetadataRendererTypes.VariantInfo({
-            startAt: 90,
-            count: 30
-        });
 
         bytes memory data = abi.encode(items);
 
@@ -226,14 +244,14 @@ library CoasterHelper {
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
+                baseUri: "ipfs://bafybeidmllp5rev4k2na7t34bmwxjjp2dt4w6papy4aicynmmshgojny2e/",
                 extension: ".png"
             }),
             decompressedSize: data.length,
             compressedDataAddress: result,
             count: items.length,
             property: "5 Body rear left",
-            variants: variants
+            variantProperty: variantPropertyParameters
         });
     }
 
@@ -241,10 +259,39 @@ library CoasterHelper {
         internal
     {
         // 6 Accessories rear left
-        INounsCoasterMetadataRendererTypes.VariantInfo[]
-            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
-                4
-            );
+        INounsCoasterMetadataRendererTypes.VariantPropertyParameters
+            memory variantPropertyParameters;
+        variantPropertyParameters
+            .offsets = new INounsCoasterMetadataRendererTypes.VariantOffset[](
+            4
+        );
+        variantPropertyParameters.id = 0;
+        variantPropertyParameters.count = 4;
+        variantPropertyParameters.offsets[
+            0
+        ] = INounsCoasterMetadataRendererTypes.VariantOffset({
+            startAt: 0,
+            count: 139
+        });
+        variantPropertyParameters.offsets[
+            1
+        ] = INounsCoasterMetadataRendererTypes.VariantOffset({
+            startAt: 139,
+            count: 137
+        });
+        variantPropertyParameters.offsets[
+            2
+        ] = INounsCoasterMetadataRendererTypes.VariantOffset({
+            startAt: 276,
+            count: 137
+        });
+        variantPropertyParameters.offsets[
+            3
+        ] = INounsCoasterMetadataRendererTypes.VariantOffset({
+            startAt: 413,
+            count: 137
+        });
+
         string[] memory items = new string[](550);
         items[0] = "1-Asset Rear Left 1n";
         items[1] = "1-Asset Rear Left Aardvark";
@@ -796,22 +843,6 @@ library CoasterHelper {
         items[547] = "4-Asset Rear Left Wave";
         items[548] = "4-Asset Rear Left Wet Money";
         items[549] = "4-Asset Rear Left Ying Yang";
-        variants[0] = INounsCoasterMetadataRendererTypes.VariantInfo({
-            startAt: 0,
-            count: 139
-        });
-        variants[1] = INounsCoasterMetadataRendererTypes.VariantInfo({
-            startAt: 139,
-            count: 137
-        });
-        variants[2] = INounsCoasterMetadataRendererTypes.VariantInfo({
-            startAt: 276,
-            count: 137
-        });
-        variants[3] = INounsCoasterMetadataRendererTypes.VariantInfo({
-            startAt: 413,
-            count: 137
-        });
 
         bytes memory data = abi.encode(items);
 
@@ -831,14 +862,14 @@ library CoasterHelper {
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
+                baseUri: "ipfs://bafybeidmllp5rev4k2na7t34bmwxjjp2dt4w6papy4aicynmmshgojny2e/",
                 extension: ".png"
             }),
             decompressedSize: data.length,
             compressedDataAddress: result,
             count: items.length,
             property: "6 Accessories rear left",
-            variants: variants
+            variantProperty: variantPropertyParameters
         });
     }
 
@@ -846,10 +877,15 @@ library CoasterHelper {
         internal
     {
         // 7 Head rear left
-        INounsCoasterMetadataRendererTypes.VariantInfo[]
-            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
-                0
-            );
+        INounsCoasterMetadataRendererTypes.VariantPropertyParameters
+            memory variantPropertyParameters;
+        variantPropertyParameters
+            .offsets = new INounsCoasterMetadataRendererTypes.VariantOffset[](
+            0
+        );
+        variantPropertyParameters.id = 0;
+        variantPropertyParameters.count = 0;
+
         string[] memory items = new string[](205);
         items[0] = "Bag Happy";
         items[1] = "Bagpipe Bored";
@@ -1075,14 +1111,14 @@ library CoasterHelper {
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
+                baseUri: "ipfs://bafybeidmllp5rev4k2na7t34bmwxjjp2dt4w6papy4aicynmmshgojny2e/",
                 extension: ".png"
             }),
             decompressedSize: data.length,
             compressedDataAddress: result,
             count: items.length,
             property: "7 Head rear left",
-            variants: variants
+            variantProperty: variantPropertyParameters
         });
     }
 
@@ -1090,10 +1126,15 @@ library CoasterHelper {
         internal
     {
         // 8 Expression rear left
-        INounsCoasterMetadataRendererTypes.VariantInfo[]
-            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
-                0
-            );
+        INounsCoasterMetadataRendererTypes.VariantPropertyParameters
+            memory variantPropertyParameters;
+        variantPropertyParameters
+            .offsets = new INounsCoasterMetadataRendererTypes.VariantOffset[](
+            0
+        );
+        variantPropertyParameters.id = 0;
+        variantPropertyParameters.count = 0;
+
         string[] memory items = new string[](4);
         items[0] = "Bored";
         items[1] = "Happy";
@@ -1118,14 +1159,14 @@ library CoasterHelper {
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
+                baseUri: "ipfs://bafybeidmllp5rev4k2na7t34bmwxjjp2dt4w6papy4aicynmmshgojny2e/",
                 extension: ".png"
             }),
             decompressedSize: data.length,
             compressedDataAddress: result,
             count: items.length,
             property: "8 Expression rear left",
-            variants: variants
+            variantProperty: variantPropertyParameters
         });
     }
 
@@ -1133,10 +1174,15 @@ library CoasterHelper {
         internal
     {
         // 9 Glasses rear left
-        INounsCoasterMetadataRendererTypes.VariantInfo[]
-            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
-                0
-            );
+        INounsCoasterMetadataRendererTypes.VariantPropertyParameters
+            memory variantPropertyParameters;
+        variantPropertyParameters
+            .offsets = new INounsCoasterMetadataRendererTypes.VariantOffset[](
+            0
+        );
+        variantPropertyParameters.id = 0;
+        variantPropertyParameters.count = 0;
+
         string[] memory items = new string[](21);
         items[0] = "Black";
         items[1] = "Black Red Eyes";
@@ -1178,14 +1224,14 @@ library CoasterHelper {
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
+                baseUri: "ipfs://bafybeidmllp5rev4k2na7t34bmwxjjp2dt4w6papy4aicynmmshgojny2e/",
                 extension: ".png"
             }),
             decompressedSize: data.length,
             compressedDataAddress: result,
             count: items.length,
             property: "9 Glasses rear left",
-            variants: variants
+            variantProperty: variantPropertyParameters
         });
     }
 
@@ -1193,10 +1239,39 @@ library CoasterHelper {
         internal
     {
         // 10 Body rear right
-        INounsCoasterMetadataRendererTypes.VariantInfo[]
-            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
-                4
-            );
+        INounsCoasterMetadataRendererTypes.VariantPropertyParameters
+            memory variantPropertyParameters;
+        variantPropertyParameters
+            .offsets = new INounsCoasterMetadataRendererTypes.VariantOffset[](
+            4
+        );
+        variantPropertyParameters.id = 1;
+        variantPropertyParameters.count = 4;
+        variantPropertyParameters.offsets[
+            0
+        ] = INounsCoasterMetadataRendererTypes.VariantOffset({
+            startAt: 0,
+            count: 30
+        });
+        variantPropertyParameters.offsets[
+            1
+        ] = INounsCoasterMetadataRendererTypes.VariantOffset({
+            startAt: 30,
+            count: 30
+        });
+        variantPropertyParameters.offsets[
+            2
+        ] = INounsCoasterMetadataRendererTypes.VariantOffset({
+            startAt: 60,
+            count: 30
+        });
+        variantPropertyParameters.offsets[
+            3
+        ] = INounsCoasterMetadataRendererTypes.VariantOffset({
+            startAt: 90,
+            count: 30
+        });
+
         string[] memory items = new string[](120);
         items[0] = "1-Both Arms Down Bege Bsod";
         items[1] = "1-Both Arms Down Bege Crt";
@@ -1318,22 +1393,6 @@ library CoasterHelper {
         items[117] = "4-Right Arm Up Teal";
         items[118] = "4-Right Arm Up Teal Light";
         items[119] = "4-Right Arm Up Yellow";
-        variants[0] = INounsCoasterMetadataRendererTypes.VariantInfo({
-            startAt: 0,
-            count: 30
-        });
-        variants[1] = INounsCoasterMetadataRendererTypes.VariantInfo({
-            startAt: 30,
-            count: 30
-        });
-        variants[2] = INounsCoasterMetadataRendererTypes.VariantInfo({
-            startAt: 60,
-            count: 30
-        });
-        variants[3] = INounsCoasterMetadataRendererTypes.VariantInfo({
-            startAt: 90,
-            count: 30
-        });
 
         bytes memory data = abi.encode(items);
 
@@ -1353,14 +1412,14 @@ library CoasterHelper {
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
+                baseUri: "ipfs://bafybeidmllp5rev4k2na7t34bmwxjjp2dt4w6papy4aicynmmshgojny2e/",
                 extension: ".png"
             }),
             decompressedSize: data.length,
             compressedDataAddress: result,
             count: items.length,
             property: "10 Body rear right",
-            variants: variants
+            variantProperty: variantPropertyParameters
         });
     }
 
@@ -1368,10 +1427,39 @@ library CoasterHelper {
         internal
     {
         // 11 Accessories rear right
-        INounsCoasterMetadataRendererTypes.VariantInfo[]
-            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
-                4
-            );
+        INounsCoasterMetadataRendererTypes.VariantPropertyParameters
+            memory variantPropertyParameters;
+        variantPropertyParameters
+            .offsets = new INounsCoasterMetadataRendererTypes.VariantOffset[](
+            4
+        );
+        variantPropertyParameters.id = 1;
+        variantPropertyParameters.count = 4;
+        variantPropertyParameters.offsets[
+            0
+        ] = INounsCoasterMetadataRendererTypes.VariantOffset({
+            startAt: 0,
+            count: 149
+        });
+        variantPropertyParameters.offsets[
+            1
+        ] = INounsCoasterMetadataRendererTypes.VariantOffset({
+            startAt: 149,
+            count: 137
+        });
+        variantPropertyParameters.offsets[
+            2
+        ] = INounsCoasterMetadataRendererTypes.VariantOffset({
+            startAt: 286,
+            count: 137
+        });
+        variantPropertyParameters.offsets[
+            3
+        ] = INounsCoasterMetadataRendererTypes.VariantOffset({
+            startAt: 423,
+            count: 137
+        });
+
         string[] memory items = new string[](560);
         items[0] = "1-Asset Rear Right 1n";
         items[1] = "1-Asset Rear Right Aardvark";
@@ -1933,22 +2021,6 @@ library CoasterHelper {
         items[557] = "4-Asset Rear Right Wave";
         items[558] = "4-Asset Rear Right Wet Money";
         items[559] = "4-Asset Rear Right Ying Yang";
-        variants[0] = INounsCoasterMetadataRendererTypes.VariantInfo({
-            startAt: 0,
-            count: 149
-        });
-        variants[1] = INounsCoasterMetadataRendererTypes.VariantInfo({
-            startAt: 149,
-            count: 137
-        });
-        variants[2] = INounsCoasterMetadataRendererTypes.VariantInfo({
-            startAt: 286,
-            count: 137
-        });
-        variants[3] = INounsCoasterMetadataRendererTypes.VariantInfo({
-            startAt: 423,
-            count: 137
-        });
 
         bytes memory data = abi.encode(items);
 
@@ -1968,14 +2040,14 @@ library CoasterHelper {
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
+                baseUri: "ipfs://bafybeidmllp5rev4k2na7t34bmwxjjp2dt4w6papy4aicynmmshgojny2e/",
                 extension: ".png"
             }),
             decompressedSize: data.length,
             compressedDataAddress: result,
             count: items.length,
             property: "11 Accessories rear right",
-            variants: variants
+            variantProperty: variantPropertyParameters
         });
     }
 
@@ -1983,10 +2055,15 @@ library CoasterHelper {
         internal
     {
         // 12 Head rear right
-        INounsCoasterMetadataRendererTypes.VariantInfo[]
-            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
-                0
-            );
+        INounsCoasterMetadataRendererTypes.VariantPropertyParameters
+            memory variantPropertyParameters;
+        variantPropertyParameters
+            .offsets = new INounsCoasterMetadataRendererTypes.VariantOffset[](
+            0
+        );
+        variantPropertyParameters.id = 0;
+        variantPropertyParameters.count = 0;
+
         string[] memory items = new string[](103);
         items[0] = "Ape Happy";
         items[1] = "Ape Sick";
@@ -2110,14 +2187,14 @@ library CoasterHelper {
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
+                baseUri: "ipfs://bafybeidmllp5rev4k2na7t34bmwxjjp2dt4w6papy4aicynmmshgojny2e/",
                 extension: ".png"
             }),
             decompressedSize: data.length,
             compressedDataAddress: result,
             count: items.length,
             property: "12 Head rear right",
-            variants: variants
+            variantProperty: variantPropertyParameters
         });
     }
 
@@ -2125,10 +2202,15 @@ library CoasterHelper {
         internal
     {
         // 13 Expression rear right
-        INounsCoasterMetadataRendererTypes.VariantInfo[]
-            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
-                0
-            );
+        INounsCoasterMetadataRendererTypes.VariantPropertyParameters
+            memory variantPropertyParameters;
+        variantPropertyParameters
+            .offsets = new INounsCoasterMetadataRendererTypes.VariantOffset[](
+            0
+        );
+        variantPropertyParameters.id = 0;
+        variantPropertyParameters.count = 0;
+
         string[] memory items = new string[](4);
         items[0] = "Bored";
         items[1] = "Happy";
@@ -2153,14 +2235,14 @@ library CoasterHelper {
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
+                baseUri: "ipfs://bafybeidmllp5rev4k2na7t34bmwxjjp2dt4w6papy4aicynmmshgojny2e/",
                 extension: ".png"
             }),
             decompressedSize: data.length,
             compressedDataAddress: result,
             count: items.length,
             property: "13 Expression rear right",
-            variants: variants
+            variantProperty: variantPropertyParameters
         });
     }
 
@@ -2168,10 +2250,15 @@ library CoasterHelper {
         internal
     {
         // 14 Glasses rear right
-        INounsCoasterMetadataRendererTypes.VariantInfo[]
-            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
-                0
-            );
+        INounsCoasterMetadataRendererTypes.VariantPropertyParameters
+            memory variantPropertyParameters;
+        variantPropertyParameters
+            .offsets = new INounsCoasterMetadataRendererTypes.VariantOffset[](
+            0
+        );
+        variantPropertyParameters.id = 0;
+        variantPropertyParameters.count = 0;
+
         string[] memory items = new string[](21);
         items[0] = "Black";
         items[1] = "Black Red Eyes";
@@ -2213,14 +2300,14 @@ library CoasterHelper {
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
+                baseUri: "ipfs://bafybeidmllp5rev4k2na7t34bmwxjjp2dt4w6papy4aicynmmshgojny2e/",
                 extension: ".png"
             }),
             decompressedSize: data.length,
             compressedDataAddress: result,
             count: items.length,
             property: "14 Glasses rear right",
-            variants: variants
+            variantProperty: variantPropertyParameters
         });
     }
 
@@ -2228,10 +2315,39 @@ library CoasterHelper {
         internal
     {
         // 15 Body front left
-        INounsCoasterMetadataRendererTypes.VariantInfo[]
-            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
-                4
-            );
+        INounsCoasterMetadataRendererTypes.VariantPropertyParameters
+            memory variantPropertyParameters;
+        variantPropertyParameters
+            .offsets = new INounsCoasterMetadataRendererTypes.VariantOffset[](
+            4
+        );
+        variantPropertyParameters.id = 2;
+        variantPropertyParameters.count = 4;
+        variantPropertyParameters.offsets[
+            0
+        ] = INounsCoasterMetadataRendererTypes.VariantOffset({
+            startAt: 0,
+            count: 30
+        });
+        variantPropertyParameters.offsets[
+            1
+        ] = INounsCoasterMetadataRendererTypes.VariantOffset({
+            startAt: 30,
+            count: 30
+        });
+        variantPropertyParameters.offsets[
+            2
+        ] = INounsCoasterMetadataRendererTypes.VariantOffset({
+            startAt: 60,
+            count: 30
+        });
+        variantPropertyParameters.offsets[
+            3
+        ] = INounsCoasterMetadataRendererTypes.VariantOffset({
+            startAt: 90,
+            count: 30
+        });
+
         string[] memory items = new string[](120);
         items[0] = "1-Both Arms Down Bege Bsod";
         items[1] = "1-Both Arms Down Bege Crt";
@@ -2353,22 +2469,6 @@ library CoasterHelper {
         items[117] = "4-Right Arm Up Teal";
         items[118] = "4-Right Arm Up Teal Light";
         items[119] = "4-Right Arm Up Yellow";
-        variants[0] = INounsCoasterMetadataRendererTypes.VariantInfo({
-            startAt: 0,
-            count: 30
-        });
-        variants[1] = INounsCoasterMetadataRendererTypes.VariantInfo({
-            startAt: 30,
-            count: 30
-        });
-        variants[2] = INounsCoasterMetadataRendererTypes.VariantInfo({
-            startAt: 60,
-            count: 30
-        });
-        variants[3] = INounsCoasterMetadataRendererTypes.VariantInfo({
-            startAt: 90,
-            count: 30
-        });
 
         bytes memory data = abi.encode(items);
 
@@ -2388,14 +2488,14 @@ library CoasterHelper {
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
+                baseUri: "ipfs://bafybeidmllp5rev4k2na7t34bmwxjjp2dt4w6papy4aicynmmshgojny2e/",
                 extension: ".png"
             }),
             decompressedSize: data.length,
             compressedDataAddress: result,
             count: items.length,
             property: "15 Body front left",
-            variants: variants
+            variantProperty: variantPropertyParameters
         });
     }
 
@@ -2403,10 +2503,39 @@ library CoasterHelper {
         internal
     {
         // 16 Accessories front left
-        INounsCoasterMetadataRendererTypes.VariantInfo[]
-            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
-                4
-            );
+        INounsCoasterMetadataRendererTypes.VariantPropertyParameters
+            memory variantPropertyParameters;
+        variantPropertyParameters
+            .offsets = new INounsCoasterMetadataRendererTypes.VariantOffset[](
+            4
+        );
+        variantPropertyParameters.id = 2;
+        variantPropertyParameters.count = 4;
+        variantPropertyParameters.offsets[
+            0
+        ] = INounsCoasterMetadataRendererTypes.VariantOffset({
+            startAt: 0,
+            count: 130
+        });
+        variantPropertyParameters.offsets[
+            1
+        ] = INounsCoasterMetadataRendererTypes.VariantOffset({
+            startAt: 130,
+            count: 137
+        });
+        variantPropertyParameters.offsets[
+            2
+        ] = INounsCoasterMetadataRendererTypes.VariantOffset({
+            startAt: 267,
+            count: 137
+        });
+        variantPropertyParameters.offsets[
+            3
+        ] = INounsCoasterMetadataRendererTypes.VariantOffset({
+            startAt: 404,
+            count: 137
+        });
+
         string[] memory items = new string[](541);
         items[0] = "1-Asset Front Left 1n";
         items[1] = "1-Asset Front Left Aardvark";
@@ -2949,22 +3078,6 @@ library CoasterHelper {
         items[538] = "4-Asset Front Left Wave";
         items[539] = "4-Asset Front Left Wet Money";
         items[540] = "4-Asset Front Left Ying Yang";
-        variants[0] = INounsCoasterMetadataRendererTypes.VariantInfo({
-            startAt: 0,
-            count: 130
-        });
-        variants[1] = INounsCoasterMetadataRendererTypes.VariantInfo({
-            startAt: 130,
-            count: 137
-        });
-        variants[2] = INounsCoasterMetadataRendererTypes.VariantInfo({
-            startAt: 267,
-            count: 137
-        });
-        variants[3] = INounsCoasterMetadataRendererTypes.VariantInfo({
-            startAt: 404,
-            count: 137
-        });
 
         bytes memory data = abi.encode(items);
 
@@ -2984,14 +3097,14 @@ library CoasterHelper {
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
+                baseUri: "ipfs://bafybeidmllp5rev4k2na7t34bmwxjjp2dt4w6papy4aicynmmshgojny2e/",
                 extension: ".png"
             }),
             decompressedSize: data.length,
             compressedDataAddress: result,
             count: items.length,
             property: "16 Accessories front left",
-            variants: variants
+            variantProperty: variantPropertyParameters
         });
     }
 
@@ -2999,10 +3112,15 @@ library CoasterHelper {
         internal
     {
         // 17 Head front left
-        INounsCoasterMetadataRendererTypes.VariantInfo[]
-            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
-                0
-            );
+        INounsCoasterMetadataRendererTypes.VariantPropertyParameters
+            memory variantPropertyParameters;
+        variantPropertyParameters
+            .offsets = new INounsCoasterMetadataRendererTypes.VariantOffset[](
+            0
+        );
+        variantPropertyParameters.id = 0;
+        variantPropertyParameters.count = 0;
+
         string[] memory items = new string[](443);
         items[0] = "Aardvark Scared";
         items[1] = "Abstract Scared";
@@ -3466,14 +3584,14 @@ library CoasterHelper {
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
+                baseUri: "ipfs://bafybeidmllp5rev4k2na7t34bmwxjjp2dt4w6papy4aicynmmshgojny2e/",
                 extension: ".png"
             }),
             decompressedSize: data.length,
             compressedDataAddress: result,
             count: items.length,
             property: "17 Head front left",
-            variants: variants
+            variantProperty: variantPropertyParameters
         });
     }
 
@@ -3481,10 +3599,15 @@ library CoasterHelper {
         internal
     {
         // 18 Expression front left
-        INounsCoasterMetadataRendererTypes.VariantInfo[]
-            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
-                0
-            );
+        INounsCoasterMetadataRendererTypes.VariantPropertyParameters
+            memory variantPropertyParameters;
+        variantPropertyParameters
+            .offsets = new INounsCoasterMetadataRendererTypes.VariantOffset[](
+            0
+        );
+        variantPropertyParameters.id = 0;
+        variantPropertyParameters.count = 0;
+
         string[] memory items = new string[](4);
         items[0] = "Bored";
         items[1] = "Happy";
@@ -3509,14 +3632,14 @@ library CoasterHelper {
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
+                baseUri: "ipfs://bafybeidmllp5rev4k2na7t34bmwxjjp2dt4w6papy4aicynmmshgojny2e/",
                 extension: ".png"
             }),
             decompressedSize: data.length,
             compressedDataAddress: result,
             count: items.length,
             property: "18 Expression front left",
-            variants: variants
+            variantProperty: variantPropertyParameters
         });
     }
 
@@ -3524,10 +3647,15 @@ library CoasterHelper {
         internal
     {
         // 19 Glasses front left
-        INounsCoasterMetadataRendererTypes.VariantInfo[]
-            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
-                0
-            );
+        INounsCoasterMetadataRendererTypes.VariantPropertyParameters
+            memory variantPropertyParameters;
+        variantPropertyParameters
+            .offsets = new INounsCoasterMetadataRendererTypes.VariantOffset[](
+            0
+        );
+        variantPropertyParameters.id = 0;
+        variantPropertyParameters.count = 0;
+
         string[] memory items = new string[](21);
         items[0] = "Black";
         items[1] = "Black Red Eyes";
@@ -3569,14 +3697,14 @@ library CoasterHelper {
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
+                baseUri: "ipfs://bafybeidmllp5rev4k2na7t34bmwxjjp2dt4w6papy4aicynmmshgojny2e/",
                 extension: ".png"
             }),
             decompressedSize: data.length,
             compressedDataAddress: result,
             count: items.length,
             property: "19 Glasses front left",
-            variants: variants
+            variantProperty: variantPropertyParameters
         });
     }
 
@@ -3584,10 +3712,39 @@ library CoasterHelper {
         internal
     {
         // 20 Body front right
-        INounsCoasterMetadataRendererTypes.VariantInfo[]
-            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
-                4
-            );
+        INounsCoasterMetadataRendererTypes.VariantPropertyParameters
+            memory variantPropertyParameters;
+        variantPropertyParameters
+            .offsets = new INounsCoasterMetadataRendererTypes.VariantOffset[](
+            4
+        );
+        variantPropertyParameters.id = 3;
+        variantPropertyParameters.count = 4;
+        variantPropertyParameters.offsets[
+            0
+        ] = INounsCoasterMetadataRendererTypes.VariantOffset({
+            startAt: 0,
+            count: 30
+        });
+        variantPropertyParameters.offsets[
+            1
+        ] = INounsCoasterMetadataRendererTypes.VariantOffset({
+            startAt: 30,
+            count: 20
+        });
+        variantPropertyParameters.offsets[
+            2
+        ] = INounsCoasterMetadataRendererTypes.VariantOffset({
+            startAt: 50,
+            count: 30
+        });
+        variantPropertyParameters.offsets[
+            3
+        ] = INounsCoasterMetadataRendererTypes.VariantOffset({
+            startAt: 80,
+            count: 30
+        });
+
         string[] memory items = new string[](110);
         items[0] = "1-Both Arms Down Bege Bsod";
         items[1] = "1-Both Arms Down Bege Crt";
@@ -3699,22 +3856,6 @@ library CoasterHelper {
         items[107] = "4-Right Arm Up Teal";
         items[108] = "4-Right Arm Up Teal Light";
         items[109] = "4-Right Arm Up Yellow";
-        variants[0] = INounsCoasterMetadataRendererTypes.VariantInfo({
-            startAt: 0,
-            count: 30
-        });
-        variants[1] = INounsCoasterMetadataRendererTypes.VariantInfo({
-            startAt: 30,
-            count: 20
-        });
-        variants[2] = INounsCoasterMetadataRendererTypes.VariantInfo({
-            startAt: 50,
-            count: 30
-        });
-        variants[3] = INounsCoasterMetadataRendererTypes.VariantInfo({
-            startAt: 80,
-            count: 30
-        });
 
         bytes memory data = abi.encode(items);
 
@@ -3734,14 +3875,14 @@ library CoasterHelper {
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
+                baseUri: "ipfs://bafybeidmllp5rev4k2na7t34bmwxjjp2dt4w6papy4aicynmmshgojny2e/",
                 extension: ".png"
             }),
             decompressedSize: data.length,
             compressedDataAddress: result,
             count: items.length,
             property: "20 Body front right",
-            variants: variants
+            variantProperty: variantPropertyParameters
         });
     }
 
@@ -3749,10 +3890,39 @@ library CoasterHelper {
         internal
     {
         // 21 Accessories front right
-        INounsCoasterMetadataRendererTypes.VariantInfo[]
-            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
-                4
-            );
+        INounsCoasterMetadataRendererTypes.VariantPropertyParameters
+            memory variantPropertyParameters;
+        variantPropertyParameters
+            .offsets = new INounsCoasterMetadataRendererTypes.VariantOffset[](
+            4
+        );
+        variantPropertyParameters.id = 3;
+        variantPropertyParameters.count = 4;
+        variantPropertyParameters.offsets[
+            0
+        ] = INounsCoasterMetadataRendererTypes.VariantOffset({
+            startAt: 0,
+            count: 119
+        });
+        variantPropertyParameters.offsets[
+            1
+        ] = INounsCoasterMetadataRendererTypes.VariantOffset({
+            startAt: 119,
+            count: 130
+        });
+        variantPropertyParameters.offsets[
+            2
+        ] = INounsCoasterMetadataRendererTypes.VariantOffset({
+            startAt: 249,
+            count: 137
+        });
+        variantPropertyParameters.offsets[
+            3
+        ] = INounsCoasterMetadataRendererTypes.VariantOffset({
+            startAt: 386,
+            count: 137
+        });
+
         string[] memory items = new string[](523);
         items[0] = "1-Asset Front Right 1n";
         items[1] = "1-Asset Front Right Aardvark";
@@ -4277,22 +4447,6 @@ library CoasterHelper {
         items[520] = "4-Asset Front Right Wave";
         items[521] = "4-Asset Front Right Wet Money";
         items[522] = "4-Asset Front Right Ying Yang";
-        variants[0] = INounsCoasterMetadataRendererTypes.VariantInfo({
-            startAt: 0,
-            count: 119
-        });
-        variants[1] = INounsCoasterMetadataRendererTypes.VariantInfo({
-            startAt: 119,
-            count: 130
-        });
-        variants[2] = INounsCoasterMetadataRendererTypes.VariantInfo({
-            startAt: 249,
-            count: 137
-        });
-        variants[3] = INounsCoasterMetadataRendererTypes.VariantInfo({
-            startAt: 386,
-            count: 137
-        });
 
         bytes memory data = abi.encode(items);
 
@@ -4312,14 +4466,14 @@ library CoasterHelper {
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
+                baseUri: "ipfs://bafybeidmllp5rev4k2na7t34bmwxjjp2dt4w6papy4aicynmmshgojny2e/",
                 extension: ".png"
             }),
             decompressedSize: data.length,
             compressedDataAddress: result,
             count: items.length,
             property: "21 Accessories front right",
-            variants: variants
+            variantProperty: variantPropertyParameters
         });
     }
 
@@ -4327,10 +4481,15 @@ library CoasterHelper {
         internal
     {
         // 22 Head front right
-        INounsCoasterMetadataRendererTypes.VariantInfo[]
-            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
-                0
-            );
+        INounsCoasterMetadataRendererTypes.VariantPropertyParameters
+            memory variantPropertyParameters;
+        variantPropertyParameters
+            .offsets = new INounsCoasterMetadataRendererTypes.VariantOffset[](
+            0
+        );
+        variantPropertyParameters.id = 0;
+        variantPropertyParameters.count = 0;
+
         string[] memory items = new string[](519);
         items[0] = "Aardvark Bored";
         items[1] = "Aardvark Happy";
@@ -4870,14 +5029,14 @@ library CoasterHelper {
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
+                baseUri: "ipfs://bafybeidmllp5rev4k2na7t34bmwxjjp2dt4w6papy4aicynmmshgojny2e/",
                 extension: ".png"
             }),
             decompressedSize: data.length,
             compressedDataAddress: result,
             count: items.length,
             property: "22 Head front right",
-            variants: variants
+            variantProperty: variantPropertyParameters
         });
     }
 
@@ -4885,10 +5044,15 @@ library CoasterHelper {
         internal
     {
         // 23 Expression front right
-        INounsCoasterMetadataRendererTypes.VariantInfo[]
-            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
-                0
-            );
+        INounsCoasterMetadataRendererTypes.VariantPropertyParameters
+            memory variantPropertyParameters;
+        variantPropertyParameters
+            .offsets = new INounsCoasterMetadataRendererTypes.VariantOffset[](
+            0
+        );
+        variantPropertyParameters.id = 0;
+        variantPropertyParameters.count = 0;
+
         string[] memory items = new string[](4);
         items[0] = "Bored";
         items[1] = "Happy";
@@ -4913,14 +5077,14 @@ library CoasterHelper {
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
+                baseUri: "ipfs://bafybeidmllp5rev4k2na7t34bmwxjjp2dt4w6papy4aicynmmshgojny2e/",
                 extension: ".png"
             }),
             decompressedSize: data.length,
             compressedDataAddress: result,
             count: items.length,
             property: "23 Expression front right",
-            variants: variants
+            variantProperty: variantPropertyParameters
         });
     }
 
@@ -4928,10 +5092,15 @@ library CoasterHelper {
         internal
     {
         // 24 Glasses front right
-        INounsCoasterMetadataRendererTypes.VariantInfo[]
-            memory variants = new INounsCoasterMetadataRendererTypes.VariantInfo[](
-                0
-            );
+        INounsCoasterMetadataRendererTypes.VariantPropertyParameters
+            memory variantPropertyParameters;
+        variantPropertyParameters
+            .offsets = new INounsCoasterMetadataRendererTypes.VariantOffset[](
+            0
+        );
+        variantPropertyParameters.id = 0;
+        variantPropertyParameters.count = 0;
+
         string[] memory items = new string[](21);
         items[0] = "Black";
         items[1] = "Black Red Eyes";
@@ -4973,14 +5142,14 @@ library CoasterHelper {
         renderer.addLayer({
             target: target,
             ipfs: INounsCoasterMetadataRendererTypes.IPFSGroup({
-                baseUri: "ipfs://bafybeic4jjwp3rbtuixq25pmiy5mh2fil2prkeliz5dsyxytqmr5dd2wre/",
+                baseUri: "ipfs://bafybeidmllp5rev4k2na7t34bmwxjjp2dt4w6papy4aicynmmshgojny2e/",
                 extension: ".png"
             }),
             decompressedSize: data.length,
             compressedDataAddress: result,
             count: items.length,
             property: "24 Glasses front right",
-            variants: variants
+            variantProperty: variantPropertyParameters
         });
     }
 }

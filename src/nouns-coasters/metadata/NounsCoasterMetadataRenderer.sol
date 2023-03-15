@@ -57,7 +57,7 @@ contract NounsCoasterMetadataRenderer is
     /// @notice Data layer storage
     mapping(address => NounsCoasterLayerData[]) dataLayers;
     /// @notice Variant mapping (optional) array
-    mapping(address => mapping(uint256 => VariantInfo[])) variantInfo;
+    mapping(address => VariantSettings) variantInfo;
 
     /// @notice Gets settings for the given target address
     function getSettings(address target)
@@ -115,14 +115,8 @@ contract NounsCoasterMetadataRenderer is
         uint256 decompressedSize,
         uint256 count,
         string memory property,
-        VariantInfo[] memory variants
+        VariantPropertyParameters memory variantProperty
     ) external requireSenderAdmin(target) {
-        if (
-            variants.length > 0 &&
-            variants.length != settings[target].variantCount
-        ) {
-            revert VariantCountNotZeroOrExpected();
-        }
         dataLayers[target][index] = NounsCoasterLayerData({
             name: property,
             count: count,
@@ -130,9 +124,14 @@ contract NounsCoasterMetadataRenderer is
             decompressedSize: decompressedSize,
             compressedDataAddress: compressedDataAddress
         });
-        delete variantInfo[target][index];
-        for (uint256 i = 0; i < variants.length; ++i) {
-            variantInfo[target][index].push(variants[i]);
+
+        variantInfo[target].groupsSizes[variantProperty.id] = variantProperty
+            .count;
+        delete variantInfo[target].byLayer[index].offsets;
+        for (uint256 i = 0; i < variantProperty.offsets.length; ++i) {
+            variantInfo[target].byLayer[index].offsets.push(
+                variantProperty.offsets[i]
+            );
         }
     }
 
@@ -143,7 +142,7 @@ contract NounsCoasterMetadataRenderer is
         uint256 decompressedSize,
         uint256 count,
         string memory property,
-        VariantInfo[] memory variants
+        VariantPropertyParameters memory variantProperty
     ) external requireSenderAdmin(target) {
         uint256 added = dataLayers[target].length;
         dataLayers[target].push(
@@ -155,8 +154,17 @@ contract NounsCoasterMetadataRenderer is
                 compressedDataAddress: compressedDataAddress
             })
         );
-        for (uint256 i = 0; i < variants.length; ++i) {
-            variantInfo[target][added].push(variants[i]);
+
+        if (variantProperty.count > 0) {
+            variantInfo[target].groupsSizes[
+                variantProperty.id
+            ] = variantProperty.count;
+        }
+        variantInfo[target].byLayer[added].id = variantProperty.id;
+        for (uint256 i = 0; i < variantProperty.offsets.length; ++i) {
+            variantInfo[target].byLayer[added].offsets.push(
+                variantProperty.offsets[i]
+            );
         }
     }
 
@@ -165,12 +173,12 @@ contract NounsCoasterMetadataRenderer is
         view
         returns (
             NounsCoasterLayerData memory layerData,
-            VariantInfo[] memory variants,
+            VariantTokenDetails memory variantSettings,
             string[] memory layers
         )
     {
         layerData = dataLayers[target][index];
-        variants = variantInfo[target][index];
+        variantSettings = variantInfo[target].byLayer[index];
         (, bytes memory decompressed) = InflateLib.puff(
             SSTORE2.read(dataLayers[target][index].compressedDataAddress),
             layerData.decompressedSize
@@ -200,35 +208,31 @@ contract NounsCoasterMetadataRenderer is
         // Get the token's generated attributes
         MetadataBuilder.JSONItem[]
             memory arrayAttributesItems = new MetadataBuilder.JSONItem[](
-                dataLayers[target].length + 1
+                dataLayers[target].length
             );
 
-        uint256 variantBase = uint256(keccak256(abi.encode(_tokenId)));
-        uint256 variantChosen = variantBase % settings[target].variantCount;
+        uint256 variantBaseSeed = uint256(
+            keccak256(abi.encode(_tokenId, queryString))
+        );
 
-        // render variant
-        if (settings[target].variantCount > 0) {
-            arrayAttributesItems[0] = MetadataBuilder.JSONItem({
-                key: "Variant #",
-                value: Strings.toString(variantChosen),
-                quote: true
-            });
-        }
 
         for (uint256 i = 0; i < dataLayers[target].length; ++i) {
             (
                 NounsCoasterLayerData memory layerData,
-                VariantInfo[] memory variants,
+                VariantTokenDetails memory variants,
                 string[] memory layers
             ) = getLayerData(target, i);
 
             uint256 thisLayer = uint256(
-                keccak256(abi.encode(_tokenId, i, variantBase))
+                keccak256(abi.encode(_tokenId, i, variantBaseSeed))
             );
 
             string memory chosenLayer;
-            if (variants.length > 0) {
-                VariantInfo memory chosenVariant = variants[variantChosen];
+            if (variants.offsets.length > 0 && variantInfo[target].groupsSizes[variants.id] > 0) {
+                uint256 variantChoice = uint256(
+                    uint8(variantBaseSeed >> (8 * variants.id))
+                ) % variantInfo[target].groupsSizes[variants.id];
+                VariantOffset memory chosenVariant = variants.offsets[variantChoice];
                 chosenLayer = layers[
                     chosenVariant.startAt + (thisLayer % chosenVariant.count)
                 ];
@@ -236,7 +240,7 @@ contract NounsCoasterMetadataRenderer is
                 chosenLayer = layers[thisLayer % layerData.count];
             }
 
-            arrayAttributesItems[i + 1] = MetadataBuilder.JSONItem({
+            arrayAttributesItems[i] = MetadataBuilder.JSONItem({
                 key: layerData.name,
                 value: chosenLayer,
                 quote: true

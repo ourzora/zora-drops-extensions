@@ -24,10 +24,13 @@ interface INounsCoasterMetadataRendererTypes {
         bool quote;
     }
 
-    struct VariantInfo {
+    /// @notice VariantOffset list of offsets to use when indexing the variants 
+    struct VariantOffset {
         uint16 startAt;
         uint16 count;
     }
+    
+    /// @notice Nouns Coaster Layer data
     struct NounsCoasterLayerData {
         IPFSGroup ipfs;
         uint256 count;
@@ -35,5 +38,32 @@ interface INounsCoasterMetadataRendererTypes {
         uint256 decompressedSize;
         string name;
     }
+
+    /// @notice Nested variant group offset info
+    struct VariantGroupInfo {
+        uint8 count;
+        uint8 id;
+    }
+
+    /// @notice Variant Token Details list of offsets and ids, used in storage
+    struct VariantTokenDetails {
+        VariantOffset[] offsets;
+        uint16 id;
+    }
+
+    /// @notice VariantPropertyParameters used to pass in and setup the variant
+    struct VariantPropertyParameters {
+        VariantOffset[] offsets;
+        uint8 id;
+        uint8 count;
+    }
+
+    /// @notice VariantSettings settings list used for storage
+    struct VariantSettings {
+        mapping(uint256 => VariantTokenDetails) byLayer;
+        uint8[32] groupsSizes;
+    }
+
+    /// @notice Error response for variant count
     error VariantCountNotZeroOrExpected();
 }
