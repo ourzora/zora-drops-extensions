@@ -85,8 +85,21 @@ contract NounsCoasterMetadataRenderer is
     /// @dev Reverts if querying attributes for a token not minted
     error TOKEN_NOT_MINTED(uint256 tokenId);
 
+    error COLLECTION_UPDATE_FROZEN();
+
+    modifier whileNotFrozen(address target) {
+        if (settings[target].freezeAt > 0) {
+            if (settings[target].freezeAt < block.timestamp) {
+                revert COLLECTION_UPDATE_FROZEN();
+            }
+        }
+
+        _;
+    }
+
     function updateSettings(address target, Settings memory newSettings)
         external
+        whileNotFrozen(target)
         requireSenderAdmin(target)
     {
         _updateSettings(target, newSettings);
@@ -118,7 +131,7 @@ contract NounsCoasterMetadataRenderer is
         uint256 count,
         string memory property,
         VariantPropertyParameters memory variantProperty
-    ) external requireSenderAdmin(target) {
+    ) external requireSenderAdmin(target) whileNotFrozen(target) {
         dataLayers[target][index] = NounsCoasterLayerData({
             name: property,
             count: count,
@@ -147,7 +160,7 @@ contract NounsCoasterMetadataRenderer is
         uint256 count,
         string memory property,
         VariantPropertyParameters memory variantProperty
-    ) external requireSenderAdmin(target) {
+    ) external requireSenderAdmin(target) whileNotFrozen(target) {
         uint256 added = dataLayers[target].length;
         dataLayers[target].push(
             NounsCoasterLayerData({

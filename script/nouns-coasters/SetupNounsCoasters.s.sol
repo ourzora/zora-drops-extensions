@@ -6,21 +6,22 @@ import "forge-std/Script.sol";
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 import {NounsCoasterMetadataRenderer} from "../../src/nouns-coasters/metadata/NounsCoasterMetadataRenderer.sol";
 import {INounsCoasterMetadataRendererTypes} from "../../src/nouns-coasters/interfaces/INounsCoasterMetadataRendererTypes.sol";
-import {CoasterHelper} from "../../src/nouns-coasters/metadata/CoasterHelper.sol";
+import {CoasterHelper} from "../../src/nouns-coasters/data/CoasterHelper.sol";
 import {console2} from "forge-std/console2.sol";
 
 contract SetupNounsCoasters is Script {
     function run() public {
         address deployer = vm.envAddress("DEPLOYER");
         address target = vm.envAddress("TARGET");
-        address rendererAddress = vm.envAddress("RENDERER");
+
         vm.startBroadcast(deployer);
-        NounsCoasterMetadataRenderer renderer = NounsCoasterMetadataRenderer(rendererAddress);
+        NounsCoasterMetadataRenderer renderer = new NounsCoasterMetadataRenderer();
         INounsCoasterMetadataRendererTypes.Settings memory settings;
         settings.projectURI = "https://www.comicsdao.wtf/nouns";
         settings.description = unicode'Mint a unique piece from the “Themed Park Nouns” collection. \\nThe covers are randomly generated from over 7000 pieces of hand drawn artwork representing the entire set of Nouns traits. There is over 500 million possible permutations of the Special Edition Cover. \\nAll proceeds go to purchase physical versions of Nouns Comic #1 for donation to youth hospitals in North America.';
         settings.contractImage = "ipfs://bafybeiew2wnmisaojqfkmjmzll4nhsnokneo3e4d6gcszhqscf4flslq4u";
         settings.rendererBase = "https://api.zora.co/renderer/stack-images";
+        settings.freezeAt = 0;
 
         renderer.updateSettings(target, settings);
 

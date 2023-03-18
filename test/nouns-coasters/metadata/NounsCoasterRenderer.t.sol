@@ -3,7 +3,7 @@ pragma solidity ^0.8.10;
 
 import {NounsCoasterMetadataRenderer} from "../../../src/nouns-coasters/metadata/NounsCoasterMetadataRenderer.sol";
 import {INounsCoasterMetadataRendererTypes} from "../../../src/nouns-coasters/interfaces/INounsCoasterMetadataRendererTypes.sol";
-import {CoasterHelper} from "../../../src/nouns-coasters/metadata/CoasterHelper.sol";
+import {CoasterHelper} from "../../../src/nouns-coasters/data/CoasterHelper.sol";
 import {MetadataRenderAdminCheck} from "zora-drops-contracts/metadata/MetadataRenderAdminCheck.sol";
 import {IMetadataRenderer} from "zora-drops-contracts/interfaces/IMetadataRenderer.sol";
 import {DropMockBase} from "./DropMockBase.sol";
@@ -80,7 +80,7 @@ contract NounsCoasterMetadataRendererTest is Test {
                     contractImage: "https://image.com",
                     projectURI: "https://projectURI.com",
                     rendererBase: "https://api.zora.co/renderer/stack-images",
-                    variantCount: 4
+                    freezeAt: 0
                 })
             )
         );
@@ -102,6 +102,20 @@ contract NounsCoasterMetadataRendererTest is Test {
             uri,
             "data:application/json;base64,eyJuYW1lIjogIk1PQ0sgTkFNRSIsImRlc2NyaXB0aW9uIjogIk5vdW5zIENvYXN0ZXIiLCJpbWFnZSI6ICJodHRwczovL2ltYWdlLmNvbSIsImV4dGVybmFsX3VybCI6ICJodHRwczovL3Byb2plY3RVUkkuY29tIn0="
         );
+    }
+
+    function test_Frozen() public {
+        INounsCoasterMetadataRendererTypes.Settings memory newSettings;
+        newSettings.freezeAt = 0;
+        nounsRenderer.updateSettings(address(this), newSettings);
+        newSettings.freezeAt = 1000000;
+        nounsRenderer.updateSettings(address(this), newSettings);
+        vm.warp(1 hours);
+        nounsRenderer.updateSettings(address(this), newSettings);
+        newSettings.freezeAt = 100;
+        nounsRenderer.updateSettings(address(this), newSettings);
+        vm.expectRevert();
+        nounsRenderer.updateSettings(address(this), newSettings);
     }
 
     function test_UpdateSettings() public {

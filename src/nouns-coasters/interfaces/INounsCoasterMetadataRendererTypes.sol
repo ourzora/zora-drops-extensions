@@ -15,6 +15,8 @@ interface INounsCoasterMetadataRendererTypes {
         string description;
         string contractImage;
         string rendererBase;
+        /// @notice freezes updates – set to 0 to not freeze
+        uint256 freezeAt;
     }
 
     struct AdditionalTokenProperty {
