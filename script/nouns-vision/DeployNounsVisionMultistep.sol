@@ -4,7 +4,6 @@ pragma solidity ^0.8.10;
 import "forge-std/Script.sol";
 import {ZoraNFTCreatorV1} from "zora-drops-contracts/ZoraNFTCreatorV1.sol";
 import {ZoraNFTCreatorProxy} from "zora-drops-contracts/ZoraNFTCreatorProxy.sol";
-import {ZoraFeeManager} from "zora-drops-contracts/ZoraFeeManager.sol";
 import {ERC721Drop} from "zora-drops-contracts/ERC721Drop.sol";
 import {IERC721Drop} from "zora-drops-contracts/interfaces/IERC721Drop.sol";
 import {IMetadataRenderer} from "zora-drops-contracts/interfaces/IMetadataRenderer.sol";
