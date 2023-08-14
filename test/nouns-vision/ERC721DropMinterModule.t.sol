@@ -20,7 +20,8 @@ contract ERC721DropMinterModuleTest is Test {
             FactoryUpgradeGate(address(0)),
             address(0),
             0,
-            payable(address(0))
+            payable(address(0)),
+            address(0)
         );
     }
 
