@@ -16,7 +16,7 @@ pragma solidity ^0.8.13;
 import {IMetadataRenderer} from "zora-drops-contracts/interfaces/IMetadataRenderer.sol";
 import {IERC721Drop} from "zora-drops-contracts/interfaces/IERC721Drop.sol";
 import {IERC2981Upgradeable} from "zora-drops-contracts/ERC721Drop.sol";
-import {IERC721MetadataUpgradeable} from "zora-drops-contracts/../lib/openzeppelin-contracts-upgradeable/contracts/interfaces/IERC721MetadataUpgradeable.sol";
+import {IERC721MetadataUpgradeable} from "openzeppelin-contracts-upgradeable/contracts/interfaces/IERC721MetadataUpgradeable.sol";
 import {NFTMetadataRenderer} from "zora-drops-contracts/utils/NFTMetadataRenderer.sol";
 import {MetadataRenderAdminCheck} from "zora-drops-contracts/metadata/MetadataRenderAdminCheck.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
