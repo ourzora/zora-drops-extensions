@@ -174,7 +174,7 @@ contract SvgConcatRenderer is
 
         string memory imageURI = bytes(info.imageURIBase).length == 0
             ? ""
-            : string.concat(info.imageURIBase, Strings.toHexString(tokenId, 2), info.imageURISuffix);
+            : string.concat(info.imageURIBase, Strings.toString(tokenId), info.imageURISuffix);
 
         return
             NFTMetadataRenderer.createMetadataEdition({
