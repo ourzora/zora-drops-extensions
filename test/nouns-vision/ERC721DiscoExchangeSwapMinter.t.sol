@@ -6,7 +6,6 @@ import {Test} from "forge-std/Test.sol";
 import {ERC721Drop} from "zora-drops-contracts/ERC721Drop.sol";
 import {IERC721Drop} from "zora-drops-contracts/interfaces/IERC721Drop.sol";
 import {ERC721DropProxy} from "zora-drops-contracts/ERC721DropProxy.sol";
-import {IZoraFeeManager} from "zora-drops-contracts/interfaces/IZoraFeeManager.sol";
 import {FactoryUpgradeGate} from "zora-drops-contracts/FactoryUpgradeGate.sol";
 
 import {ERC721NounsExchangeSwapMinter} from "../../src/nouns-vision/ERC721NounsExchangeSwapMinter.sol";
@@ -34,9 +33,12 @@ contract ERC721DiscoExchangeSwapMinterTest is Test {
 
     function setUp() public {
         impl = new ERC721Drop(
-            IZoraFeeManager(address(0x0)),
-            address(0x0),
-            FactoryUpgradeGate(address(0x0))
+            address(0),
+            FactoryUpgradeGate(address(0)),
+            address(0),
+            0,
+            payable(address(0)),
+            address(0)
         );
 
         _createSwapContracts();

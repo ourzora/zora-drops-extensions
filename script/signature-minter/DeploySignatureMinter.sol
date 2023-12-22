@@ -11,7 +11,7 @@ contract DeployerSignatureMinter is Script {
 
         console.log(msg.sender);
 
-        SignatureMinter minter = new SignatureMinter("1");
+        SignatureMinter minter = new SignatureMinter("2");
 
         console2.log("Deploying SignatureMinter to ", address(minter));
 

@@ -7,7 +7,6 @@ import {ERC721Drop} from "zora-drops-contracts/ERC721Drop.sol";
 import {IERC721Drop} from "zora-drops-contracts/interfaces/IERC721Drop.sol";
 import {ERC721DropProxy} from "zora-drops-contracts/ERC721DropProxy.sol";
 import {NounsVisionExchangeMinterModule} from "../../src/nouns-vision/NounsVisionExchangeMinterModule.sol";
-import {IZoraFeeManager} from "zora-drops-contracts/interfaces/IZoraFeeManager.sol";
 import {FactoryUpgradeGate} from "zora-drops-contracts/FactoryUpgradeGate.sol";
 import {MockRenderer} from "../utils/MockRenderer.sol";
 
@@ -17,9 +16,12 @@ contract ERC721DropMinterModuleTest is Test {
 
     function setUp() public {
         impl = new ERC721Drop(
-            IZoraFeeManager(address(0x0)),
-            address(0x0),
-            FactoryUpgradeGate(address(0x0))
+            address(0),
+            FactoryUpgradeGate(address(0)),
+            address(0),
+            0,
+            payable(address(0)),
+            address(0)
         );
     }
 

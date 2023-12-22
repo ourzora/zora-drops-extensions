@@ -5,7 +5,6 @@ import "forge-std/Script.sol";
 
 import {ZoraNFTCreatorV1} from "zora-drops-contracts/ZoraNFTCreatorV1.sol";
 import {ZoraNFTCreatorProxy} from "zora-drops-contracts/ZoraNFTCreatorProxy.sol";
-import {ZoraFeeManager} from "zora-drops-contracts/ZoraFeeManager.sol";
 import {ERC721Drop} from "zora-drops-contracts/ERC721Drop.sol";
 import {IERC721Drop} from "zora-drops-contracts/interfaces/IERC721Drop.sol";
 import {IMetadataRenderer} from "zora-drops-contracts/interfaces/IMetadataRenderer.sol";
@@ -24,11 +23,13 @@ contract DeployerSignatureMinter is Script {
     function _getOrCreateCreator() internal returns (ZoraNFTCreatorV1) {
         creatorProxy = ZoraNFTCreatorV1(vm.envAddress("creatorProxy"));
         if (address(creatorProxy) == address(0)) {
-            ZoraFeeManager feeManager = new ZoraFeeManager(0, address(0));
             ERC721Drop dropImpl = new ERC721Drop(
-                feeManager,
                 address(0),
-                FactoryUpgradeGate(address(0))
+                FactoryUpgradeGate(address(0)),
+                address(0),
+                0,
+                payable(address(0)),
+                address(0)
             );
             EditionMetadataRenderer editionMetadataRenderer = new EditionMetadataRenderer();
             ZoraNFTCreatorV1 impl = new ZoraNFTCreatorV1(
